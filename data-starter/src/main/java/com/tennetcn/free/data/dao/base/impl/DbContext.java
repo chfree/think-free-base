@@ -5,10 +5,11 @@ import java.lang.reflect.Type;
 
 import javax.annotation.Resource;
 
+import lombok.Data;
 import org.apache.ibatis.session.SqlSessionFactory;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.tennetcn.free.data.message.ModelBase;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /** 
  * @author      chenghuan
@@ -16,6 +17,7 @@ import com.tennetcn.free.data.message.ModelBase;
  * @comment 
  */
 
+@Data
 public abstract class DbContext<E extends ModelBase> {
 	protected Class<E> entityClass;
 
@@ -25,28 +27,7 @@ public abstract class DbContext<E extends ModelBase> {
 		Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
 		this.entityClass = (Class<E>) params[0];	
 	}
-	
-	private SqlSessionFactory sqlSessionFactory;
 
-	public SqlSessionFactory getSqlSessionFactory() {
-		return sqlSessionFactory;
-	}
-
-	@Resource(name="sqlSessionFactory")
-	public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
-		this.sqlSessionFactory = sqlSessionFactory;
-	}
-	
-	private DruidDataSource dataSource;
-
-	public DruidDataSource getDataSource() {
-		return dataSource;
-	}
-	
-	@Resource(name="dataSource")
-	public void setDataSource(DruidDataSource dataSource) {
-		this.dataSource = dataSource;
-	}
-	
-	
+	@Autowired
+	protected SqlSessionFactory sqlSessionFactory;
 }

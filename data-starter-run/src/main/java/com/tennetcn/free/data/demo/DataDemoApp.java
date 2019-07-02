@@ -27,8 +27,8 @@ public class DataDemoApp implements CommandLineRunner {
 
         List<LoginUser> loginUsers = loginUserService.queryList();
 
-//        loginUsers.forEach(user->{
-//            System.out.println(user.getName());
-//        });
+        loginUsers.forEach(user->{
+            System.out.println(user.getName());
+        });
     }
 }
