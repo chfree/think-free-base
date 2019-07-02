@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.tennetcn.free.data.boot.autoconfig.DataAutoConfiguration
+
