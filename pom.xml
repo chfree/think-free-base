@@ -12,6 +12,7 @@
         <module>core-starter</module>
         <module>data-starter</module>
         <module>web-starter</module>
+        <module>data-starter-run</module>
     </modules>
 
     <parent>
@@ -36,6 +37,10 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
 
