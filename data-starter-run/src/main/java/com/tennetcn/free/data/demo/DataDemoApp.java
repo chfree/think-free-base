@@ -7,6 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.Arrays;
 import java.util.List;
 
 @SpringBootApplication
@@ -27,8 +28,15 @@ public class DataDemoApp implements CommandLineRunner {
 
         List<LoginUser> loginUsers = loginUserService.queryList();
 
+        System.out.println("query list");
         loginUsers.forEach(user->{
-            System.out.println(user.getName());
+            System.out.println(user.getId()+":"+user.getName());
+        });
+
+        System.out.println("query list mp by ids");
+        List<LoginUser> usersByIds = loginUserService.queryListMPByIds(Arrays.asList("123","1234"));
+        usersByIds.forEach(user->{
+            System.out.println(user.getId()+":"+user.getName());
         });
     }
 }

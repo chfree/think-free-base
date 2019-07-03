@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.tennetcn.free.data.demo.logical.mapper.LoginUserMapper">
+    <resultMap type="LoginUser" id="loginUserMap">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>  
+        <result column="code" property="code"/>
+        <result column="markCode" property="markCode"/>
+        <result column="account" property="account"/>
+        <result column="password" property="password"/>
+        <result column="sex" property="sex"/>
+        <result column="theme" property="theme"/>
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="deleteMark" property="deleteMark"/>
+        <result column="createDate" property="createDate"/>
+        <result column="createUserId" property="createUserId"/>
+        <result column="createUserName" property="createUserName"/>
+        <result column="modifyDate" property="modifyDate"/>
+        <result column="modifyUserId" property="modifyUserId"/>
+        <result column="modifyUserName" property="modifyUserName"/>
+        <result column="userMark" property="userMark"/>
+        <result column="isLocked" property="isLocked"/>
+        <result column="isLogin" property="isLogin"/>
+        <result column="uniqueMark" property="uniqueMark"/>
+        <result column="businessId" property="businessId"/>
+<!--        <association property="business" resultMap="com.tennetcn.free.data.demo.logical.mapper.BusinessMapper.loginUserBusinessMap" javaType="Business">-->
+<!--            -->
+<!--        </association>  -->
+    </resultMap>  
+</mapper>

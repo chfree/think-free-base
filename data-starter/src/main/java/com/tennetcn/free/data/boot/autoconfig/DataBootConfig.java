@@ -6,7 +6,4 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @PropertySource("classpath:data-boot.properties")
 public class DataBootConfig {
-    public DataBootConfig(){
-        System.out.println("DataBootConfig: start");
-    }
 }
