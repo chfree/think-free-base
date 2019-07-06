@@ -12,6 +12,7 @@ import java.util.Map;
 public class BaseApplicationListener implements ApplicationListener<ContextRefreshedEvent> {
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        CommonApplicationContextUtil.setCurrentContext(contextRefreshedEvent.getApplicationContext());
         //执行applicationstart的intceptor
         Map<String, IApplicationStartedIntceptor> applicationStartedMap= CommonApplicationContextUtil.getCurrentContext().getBeansOfType(IApplicationStartedIntceptor.class);
         if(applicationStartedMap!=null) {

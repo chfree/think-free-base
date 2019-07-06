@@ -13,6 +13,7 @@
         <module>data-starter</module>
         <module>web-starter</module>
         <module>data-starter-run</module>
+        <module>web-starter-run</module>
     </modules>
 
     <parent>
