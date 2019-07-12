@@ -11,6 +11,7 @@ public class HomeApi extends FirstApi {
 
     @GetMapping(value = "/hello")
     public String hello(){
+        servletResponse.setHeader("aaa","xxx");
         return "hello";
     }
 }
