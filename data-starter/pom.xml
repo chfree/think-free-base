@@ -41,6 +41,12 @@
         <dependency>
             <groupId>tk.mybatis</groupId>
             <artifactId>mapper-spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>tk.mybatis</groupId>
+                    <artifactId>mapper-spring-boot-autoconfigure</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>
