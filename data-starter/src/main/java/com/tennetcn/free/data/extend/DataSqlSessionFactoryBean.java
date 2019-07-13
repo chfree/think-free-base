@@ -1,26 +1,14 @@
 package com.tennetcn.free.data.extend;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-import static org.springframework.util.StringUtils.hasLength;
-import static org.springframework.util.StringUtils.tokenizeToStringArray;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.sql.DataSource;
-
 import cn.hutool.core.util.ArrayUtil;
 import com.tennetcn.free.core.utils.CommonApplicationContextUtil;
+import com.tennetcn.free.data.extend.config.InterceptorPluginBean;
+import com.tennetcn.free.data.extend.config.MapperLocationBean;
+import com.tennetcn.free.data.extend.config.TypeAliasBean;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.executor.ErrorContext;
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
@@ -36,22 +24,24 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.NestedIOException;
 import org.springframework.core.io.Resource;
 
-import com.tennetcn.free.data.extend.config.InterceptorPluginBean;
-import com.tennetcn.free.data.extend.config.MapperLocationBean;
-import com.tennetcn.free.data.extend.config.TypeAliasBean;
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.*;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
+import static org.springframework.util.StringUtils.hasLength;
+import static org.springframework.util.StringUtils.tokenizeToStringArray;
 
 
 /**
- * @author chenghuan
- * @email 79763939@qq.com
- * @createtime 2018年3月28日 上午9:46:30
- * @comment
+ * @author chfree
+ * @email chfree001@gmail.com
+ * @create 2018-03-28 9:46:30
  */
 
+@Slf4j
 public class DataSqlSessionFactoryBean extends SqlSessionFactoryBean {
-
-	private static final Log LOGGER = LogFactory.getLog(DataSqlSessionFactoryBean.class);
-
 	private List<String> getTypeAliasPackagesByBean() {
 		Map<String, TypeAliasBean> typeAliasBeanMaps = CommonApplicationContextUtil.getCurrentContext().getBeansOfType(TypeAliasBean.class);
 
@@ -243,8 +233,8 @@ public class DataSqlSessionFactoryBean extends SqlSessionFactoryBean {
 			xmlConfigBuilder = new XMLConfigBuilder(this.localConfigLocation.getInputStream(), null, this.localConfigurationProperties);
 			configuration_ = xmlConfigBuilder.getConfiguration();
 		} else {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Property `configuration` or 'configLocation' not specified, using default MyBatis Configuration");
+			if (log.isDebugEnabled()) {
+				log.debug("Property `configuration` or 'configLocation' not specified, using default MyBatis Configuration");
 			}
 			configuration_ = new Configuration();
 			configuration_.setVariables(this.localConfigurationProperties);
@@ -265,8 +255,8 @@ public class DataSqlSessionFactoryBean extends SqlSessionFactoryBean {
 			String[] typeAliasPackageArray = tokenizeToStringArray(this.localTypeAliasesPackage, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
 			for (String packageToScan : typeAliasPackageArray) {
 				configuration_.getTypeAliasRegistry().registerAliases(packageToScan, localTypeAliasesSuperType == null ? Object.class : localTypeAliasesSuperType);
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Scanned package: '" + packageToScan + "' for aliases");
+				if (log.isDebugEnabled()) {
+					log.debug("Scanned package: '" + packageToScan + "' for aliases");
 				}
 			}
 		}
@@ -274,8 +264,8 @@ public class DataSqlSessionFactoryBean extends SqlSessionFactoryBean {
 		if (!isEmpty(this.localTypeAliases)) {
 			for (Class<?> typeAlias : this.localTypeAliases) {
 				configuration_.getTypeAliasRegistry().registerAlias(typeAlias);
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Registered type alias: '" + typeAlias + "'");
+				if (log.isDebugEnabled()) {
+					log.debug("Registered type alias: '" + typeAlias + "'");
 				}
 			}
 		}
@@ -291,8 +281,8 @@ public class DataSqlSessionFactoryBean extends SqlSessionFactoryBean {
 		if (!isEmpty(getLocalPlugins())) {
 			for (Interceptor plugin : getLocalPlugins()) {
 				configuration_.addInterceptor(plugin);
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Registered plugin: '" + plugin + "'");
+				if (log.isDebugEnabled()) {
+					log.debug("Registered plugin: '" + plugin + "'");
 				}
 			}
 		}
@@ -301,8 +291,8 @@ public class DataSqlSessionFactoryBean extends SqlSessionFactoryBean {
 			String[] typeHandlersPackageArray = tokenizeToStringArray(this.localTypeHandlersPackage, ConfigurableApplicationContext.CONFIG_LOCATION_DELIMITERS);
 			for (String packageToScan : typeHandlersPackageArray) {
 				configuration_.getTypeHandlerRegistry().register(packageToScan);
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Scanned package: '" + packageToScan + "' for type handlers");
+				if (log.isDebugEnabled()) {
+					log.debug("Scanned package: '" + packageToScan + "' for type handlers");
 				}
 			}
 		}
@@ -310,8 +300,8 @@ public class DataSqlSessionFactoryBean extends SqlSessionFactoryBean {
 		if (!isEmpty(this.localTypeHandlers)) {
 			for (TypeHandler<?> typeHandler : this.localTypeHandlers) {
 				configuration_.getTypeHandlerRegistry().register(typeHandler);
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Registered type handler: '" + typeHandler + "'");
+				if (log.isDebugEnabled()) {
+					log.debug("Registered type handler: '" + typeHandler + "'");
 				}
 			}
 		}
@@ -332,8 +322,8 @@ public class DataSqlSessionFactoryBean extends SqlSessionFactoryBean {
 			try {
 				xmlConfigBuilder.parse();
 
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Parsed configuration file: '" + this.localConfigLocation + "'");
+				if (log.isDebugEnabled()) {
+					log.debug("Parsed configuration file: '" + this.localConfigLocation + "'");
 				}
 			} catch (Exception ex) {
 				throw new NestedIOException("Failed to parse config resource: " + this.localConfigLocation, ex);
@@ -363,13 +353,13 @@ public class DataSqlSessionFactoryBean extends SqlSessionFactoryBean {
 					ErrorContext.instance().reset();
 				}
 
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Parsed mapper file: '" + mapperLocation + "'");
+				if (log.isDebugEnabled()) {
+					log.debug("Parsed mapper file: '" + mapperLocation + "'");
 				}
 			}
 		} else {
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Property 'mapperLocations' was not specified or no matching resources found");
+			if (log.isDebugEnabled()) {
+				log.debug("Property 'mapperLocations' was not specified or no matching resources found");
 			}
 		}
 		

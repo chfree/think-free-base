@@ -1,11 +1,7 @@
 package com.tennetcn.free.data.boot.autoconfig.mybatis;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import javax.sql.DataSource;
-
 import com.tennetcn.free.core.utils.CommonApplicationContextUtil;
+import com.tennetcn.free.data.extend.DataSqlSessionFactoryBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
@@ -14,8 +10,6 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -52,6 +46,11 @@ import tk.mybatis.spring.mapper.ClassPathMapperScanner;
 import tk.mybatis.spring.mapper.MapperFactoryBean;
 import tk.mybatis.spring.mapper.SpringBootBindUtil;
 
+import javax.sql.DataSource;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
 @Configuration
 @ConditionalOnClass({SqlSessionFactory.class, SqlSessionFactoryBean.class})
 @ConditionalOnSingleCandidate(DataSource.class)
@@ -69,11 +68,12 @@ public class MapperAutoConfiguration implements InitializingBean, ApplicationCon
 	private final List<ConfigurationCustomizer> configurationCustomizers;
 
 	public MapperAutoConfiguration(MybatisProperties properties, ObjectProvider<Interceptor[]> interceptorsProvider, ResourceLoader resourceLoader, ObjectProvider<DatabaseIdProvider> databaseIdProvider, ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider) {
+		System.out.println("MapperAutoConfiguration");
 		this.properties = properties;
-		this.interceptors = (Interceptor[])interceptorsProvider.getIfAvailable();
+		this.interceptors = interceptorsProvider.getIfAvailable();
 		this.resourceLoader = resourceLoader;
-		this.databaseIdProvider = (DatabaseIdProvider)databaseIdProvider.getIfAvailable();
-		this.configurationCustomizers = (List)configurationCustomizersProvider.getIfAvailable();
+		this.databaseIdProvider = databaseIdProvider.getIfAvailable();
+		this.configurationCustomizers = configurationCustomizersProvider.getIfAvailable();
 	}
 
 	public void afterPropertiesSet() {
@@ -91,7 +91,7 @@ public class MapperAutoConfiguration implements InitializingBean, ApplicationCon
 	@Bean
 	@ConditionalOnMissingBean
 	public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
-		SqlSessionFactoryBean factory = new SqlSessionFactoryBean();
+		SqlSessionFactoryBean factory = new DataSqlSessionFactoryBean();
 		factory.setDataSource(dataSource);
 		factory.setVfs(SpringBootVFS.class);
 		if (StringUtils.hasText(this.properties.getConfigLocation())) {
@@ -137,10 +137,8 @@ public class MapperAutoConfiguration implements InitializingBean, ApplicationCon
 		}
 
 		if (configuration != null && !CollectionUtils.isEmpty(this.configurationCustomizers)) {
-			Iterator var3 = this.configurationCustomizers.iterator();
 
-			while(var3.hasNext()) {
-				ConfigurationCustomizer customizer = (ConfigurationCustomizer)var3.next();
+			for (ConfigurationCustomizer customizer : this.configurationCustomizers) {
 				customizer.customize(configuration);
 			}
 		}
@@ -216,7 +214,7 @@ public class MapperAutoConfiguration implements InitializingBean, ApplicationCon
 					}
 				}
 
-				BaseProperties properties = (BaseProperties)SpringBootBindUtil.bind(this.environment, BaseProperties.class, "mybatis");
+				BaseProperties properties = SpringBootBindUtil.bind(this.environment, BaseProperties.class, "mybatis");
 				if (properties != null && properties.getBasePackages() != null && properties.getBasePackages().length > 0) {
 					packages.addAll(Arrays.asList(properties.getBasePackages()));
 				} else {

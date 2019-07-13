@@ -4,4 +4,19 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean class="com.tennetcn.free.data.extend.config.TypeAliasBean">
+        <property name="packageNames">
+            <list>
+                <value>com.tennetcn.free.data.demo.logical</value>
+            </list>
+        </property>
+    </bean>
+    <bean class="com.tennetcn.free.data.extend.config.MapperLocationBean">
+        <property name="mapperLocations">
+            <list>
+                <value>classpath*:mapper/authority/**/*.xml</value>
+            </list>
+        </property>
+    </bean>
 </beans>
