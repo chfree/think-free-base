@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="com.tennetcn.free.data.demo.logical.mapper.BusinessMapper">
+    <resultMap type="business" id="businessMap">
+        <id column="buId" property="buId"/>
+        <result column="name" property="name"/>
+        <result column="nature" property="nature"/>
+        <result column="shortName" property="shortName"/>
+        <result column="code" property="code"/>
+        <result column="markCode" property="markCode"/>
+        <result column="address" property="address"/>
+        <result column="phone" property="phone"/>
+        <result column="sortCode" property="sortCode"/>
+        <result column="deleteMark" property="deleteMark"/>
+        <result column="createDate" property="createDate"/>
+        <result column="createUserId" property="createUserId"/>
+        <result column="createUserName" property="createUserName"/>
+        <result column="modifyDate" property="modifyDate"/>
+        <result column="modifyUserId" property="modifyUserId"/>
+        <result column="modifyUserName" property="modifyUserName"/>
+        <result column="comments" property="comments"/>
+    </resultMap>
+    <resultMap type="business" id="loginUserBusinessMap" extends="businessMap">
+    </resultMap>
+</mapper>
