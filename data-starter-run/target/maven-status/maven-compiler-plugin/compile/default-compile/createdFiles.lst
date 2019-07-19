@@ -1,8 +1,0 @@
-com/tennetcn/free/data/demo/autoconfig/DataRunAutoConfiguration.class
-com/tennetcn/free/data/demo/logical/model/Business.class
-com/tennetcn/free/data/demo/logical/mapper/LoginUserMapper.class
-com/tennetcn/free/data/demo/logical/model/LoginUser.class
-com/tennetcn/free/data/demo/DataDemoApp.class
-com/tennetcn/free/data/demo/logical/service/ILoginUserService.class
-com/tennetcn/free/data/demo/logical/mapper/BusinessMapper.class
-com/tennetcn/free/data/demo/logical/service/impl/LoginUserServiceImpl.class
