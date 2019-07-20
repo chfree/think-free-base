@@ -14,6 +14,7 @@
         <module>web-starter</module>
         <module>data-starter-run</module>
         <module>web-starter-run</module>
+        <module>swagger-starter</module>
     </modules>
 
     <parent>
@@ -61,11 +62,6 @@
                 <groupId>javax.persistence</groupId>
                 <artifactId>persistence-api</artifactId>
                 <version>1.0.2</version>
-            </dependency>
-            <dependency>
-                <groupId>tk.mybatis</groupId>
-                <artifactId>mapper</artifactId>
-                <version>4.1.5</version>
             </dependency>
             <dependency>
                 <groupId>tk.mybatis</groupId>

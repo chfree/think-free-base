@@ -25,10 +25,6 @@
             <groupId>javax.persistence</groupId>
             <artifactId>persistence-api</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>tk.mybatis</groupId>-->
-<!--            <artifactId>mapper</artifactId>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>com.tennetcn.free</groupId>
             <artifactId>core-starter</artifactId>

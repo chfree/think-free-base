@@ -1,7 +1,10 @@
 package com.tennetcn.free.web.autoconfig;
 
+import com.tennetcn.free.web.configuration.ThinkWebConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -13,7 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
+@Import(ThinkWebConfig.class)
 public class CorsConfig implements WebMvcConfigurer {
+
+    @Autowired
+    ThinkWebConfig webConfig;
 
     private CorsConfiguration buildConfig() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
@@ -34,7 +41,9 @@ public class CorsConfig implements WebMvcConfigurer {
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", buildConfig());
+        if(webConfig.isCorsEnable()){
+            source.registerCorsConfiguration("/**", buildConfig());
+        }
         return new CorsFilter(source);
     }
 }
