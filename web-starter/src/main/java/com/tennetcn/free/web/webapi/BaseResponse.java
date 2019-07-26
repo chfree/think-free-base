@@ -15,6 +15,11 @@ import java.util.Map;
  * @email chfree001@gmail.com
  * @create 2019-07-14 23:07
  * @comment
+ * 关于message和allMessge的设计：
+ * message用于直接返回给用户的提示信息，allMessage则更具体；
+ * 比如验证用户名和密码不为空，提示可以是 用户名不能为空，
+ * 但是前端需要统一进行处理的时候，用户名不能为空对应界面只能写死
+ * 此时的allMessage就可以是: {field: 'username',message:'用户名不能为空'}
  */
 
 @Data
@@ -28,9 +33,14 @@ public class BaseResponse {
     private String status;
 
     /**
-     * 消息
+     * 消息，给用户查看
      */
     private String message;
+
+    /**
+     * 完整消息，给业务判断更多的逻辑信息
+     */
+    private String allMessage;
 
     /**
      * 跟踪号

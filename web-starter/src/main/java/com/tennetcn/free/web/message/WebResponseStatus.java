@@ -14,4 +14,7 @@ public class WebResponseStatus {
 
     //数据异常
     public static final String DATA_ERROR="1999";
+
+    //数据异常
+    public static final String DATA_NULL_ERROR="1998";
 }
