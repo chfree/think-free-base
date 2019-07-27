@@ -1,6 +1,7 @@
 package com.tennetcn.free.web.webapi;
 
 import com.tennetcn.free.web.base.DateEditor;
+import com.tennetcn.free.web.base.IntegerEditor;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
@@ -23,10 +24,10 @@ public abstract class FirstApi {
     @Autowired
     protected HttpSession session;
 
-    private String bindDateFormat = "yyyy-MM-dd";
-
     @InitBinder
     private void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Date.class, new DateEditor());
+
+        binder.registerCustomEditor(Integer.class,new IntegerEditor());
     }
 }
