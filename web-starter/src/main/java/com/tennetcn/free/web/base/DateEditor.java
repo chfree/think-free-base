@@ -1,4 +1,6 @@
-package com.tennetcn.free.web.message;
+package com.tennetcn.free.web.base;
+
+import org.springframework.util.StringUtils;
 
 import java.beans.PropertyEditorSupport;
 import java.text.DateFormat;
@@ -6,10 +8,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * @author chfree
+ * @email chfree001@gmail.com
+ * @create 2019-07-27 22:27
+ * @comment
+ */
 
-import org.springframework.util.StringUtils;
-
-public class DateEditor extends PropertyEditorSupport{
+public class DateEditor extends PropertyEditorSupport {
 
     private static final DateFormat DATEFORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private static final DateFormat TIMEFORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -35,7 +41,7 @@ public class DateEditor extends PropertyEditorSupport{
      */
     @Override
     public void setAsText(String text) throws IllegalArgumentException {
-        if (this.allowEmpty && !StringUtils.hasText(text)) {
+        if (this.allowEmpty && (StringUtils.isEmpty(text)||"null".equals(text))) {
             // Treat empty String as null value.
             setValue(null);
         } else {
@@ -49,7 +55,7 @@ public class DateEditor extends PropertyEditorSupport{
                         setValue(DATEFORMAT.parse(text));
                 }
             } catch (ParseException ex) {
-                throw new IllegalArgumentException("Could not parse date: " + ex.getMessage(), ex);
+                throw new IllegalArgumentException("Could not parse date:" + ex.getMessage(), ex);
             }
         }
     }

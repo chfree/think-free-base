@@ -1,6 +1,6 @@
 package com.tennetcn.free.web.webapi;
 
-import com.tennetcn.free.web.message.DateEditor;
+import com.tennetcn.free.web.base.DateEditor;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
