@@ -1,7 +1,6 @@
 package com.tennetcn.free.web.webapi;
 
-import com.tennetcn.free.web.base.DateEditor;
-import com.tennetcn.free.web.base.IntegerEditor;
+import com.tennetcn.free.web.base.*;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
@@ -27,7 +26,22 @@ public abstract class FirstApi {
     @InitBinder
     private void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Date.class, new DateEditor());
-
         binder.registerCustomEditor(Integer.class,new IntegerEditor());
+        binder.registerCustomEditor(Double.class,new DoubleEditor());
+        binder.registerCustomEditor(Float.class,new FloatEditor());
+        binder.registerCustomEditor(Boolean.class,new BooleanEditor());
+
+        tryRegisterCustomEditor(binder);
+    }
+
+    private void tryRegisterCustomEditor(WebDataBinder binder){
+        try {
+            Class<?> modelStatusClass= Class.forName("com.tennetcn.free.data.enums.ModelStatus");
+            if(modelStatusClass!=null){
+                binder.registerCustomEditor(modelStatusClass,new ModelStatusEditor());
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
