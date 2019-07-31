@@ -1,36 +1,28 @@
 package com.tennetcn.free.data.dao.base.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
+import com.tennetcn.free.data.dao.base.IMapper;
+import com.tennetcn.free.data.dao.base.ISqlExpression;
+import com.tennetcn.free.data.dao.base.ISuperService;
+import com.tennetcn.free.data.dao.base.mapper.SqlMapper;
+import com.tennetcn.free.data.enums.ModelStatus;
 import com.tennetcn.free.data.enums.YesOrNo;
 import com.tennetcn.free.data.enums.YesOrNoInteger;
+import com.tennetcn.free.data.message.*;
+import com.tennetcn.free.data.utils.ClassAnnotationUtils;
+import com.tennetcn.free.data.utils.SqlExpressionFactory;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-
-import com.tennetcn.free.data.dao.base.ISqlExpression;
-import com.tennetcn.free.data.dao.base.IMapper;
-import com.tennetcn.free.data.dao.base.ISuperService;
-import com.tennetcn.free.data.dao.base.mapper.SqlMapper;
-import com.tennetcn.free.data.enums.ModelStatus;
-import com.tennetcn.free.data.message.DaoBaseRuntimeException;
-import com.tennetcn.free.data.message.DaoBaseRuntimeException;
-import com.tennetcn.free.data.message.ModelBase;
-import com.tennetcn.free.data.message.OrderByEnum;
-import com.tennetcn.free.data.message.OrderInfo;
-import com.tennetcn.free.data.message.PagerModel;
-import com.tennetcn.free.data.message.SearchModel;
-import com.tennetcn.free.data.utils.ClassAnnotationUtils;
-import com.tennetcn.free.data.utils.SqlExpressionFactory;
-
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.entity.Example.Criteria;
 import tk.mybatis.mapper.entity.Example.OrderBy;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author chenghuan
@@ -121,7 +113,7 @@ public abstract class SuperService<E extends ModelBase> extends DbContext<E> imp
 			criteria.andEqualTo("deleteMark", YesOrNo.NO);
 		}
 
-		setOrderBy(example, pagerModel);
+		setOrderBy(example);
 
 		return getMapper().selectByExampleAndRowBounds(example, pagerModel.getRowBounds());
 	}
@@ -194,31 +186,7 @@ public abstract class SuperService<E extends ModelBase> extends DbContext<E> imp
 		}
 	}
 
-	private void setOrderBy(Object exampleObj, PagerModel pager) {
-		List<OrderInfo> orderInfoList = pager.getOrderInfoList();
-		if (orderInfoList == null) {
-			// 有pager的orderInfo的时候就不取默认的注解orderby
-			setOrderBy(exampleObj);
-			return;
-		}
 
-		Example example = (Example) exampleObj;
-		OrderBy orderBy = null;
-
-		for (OrderInfo orderInfo : orderInfoList) {
-			if (orderBy == null) {
-				orderBy = example.orderBy(orderInfo.getProperty());
-			} else {
-				orderBy.orderBy(orderInfo.getProperty());
-			}
-
-			if (OrderByEnum.ASC.equals(orderInfo.getOrderBy().toUpperCase())) {
-				orderBy.asc();
-			} else {
-				orderBy.desc();
-			}
-		}
-	}
 
 	@Override
 	public List<E> queryList(E e) throws DaoBaseRuntimeException {
@@ -233,7 +201,7 @@ public abstract class SuperService<E extends ModelBase> extends DbContext<E> imp
 
 	@Override
 	public List<E> queryList(Object example, PagerModel pagerModel) throws DaoBaseRuntimeException {
-		setOrderBy(example, pagerModel);
+		setOrderBy(example);
 		return getMapper().selectByExampleAndRowBounds(example, pagerModel.getRowBounds());
 	}
 
@@ -687,7 +655,6 @@ public abstract class SuperService<E extends ModelBase> extends DbContext<E> imp
 	public List<E> queryList(ISqlExpression sqlExpression, PagerModel pagerModel) {
 		try {
 			if (pagerModel != null) {
-				sqlExpression.addOrderInfoList(pagerModel.getOrderInfoList());
 				return selectList(sqlExpression.toSql(), sqlExpression.getParams(), pagerModel.getRowBounds(), entityClass);
 			} else {
 				return queryList(sqlExpression);
@@ -708,7 +675,6 @@ public abstract class SuperService<E extends ModelBase> extends DbContext<E> imp
 	@Override
 	public List<Map<String, Object>> queryListEx(ISqlExpression sqlExpression, PagerModel pagerModel) {
 		try {
-			sqlExpression.addOrderInfoList(pagerModel.getOrderInfoList());
 			return selectListEx(sqlExpression.toSql(), sqlExpression.getParams(), pagerModel.getRowBounds());
 		} catch (DaoBaseRuntimeException e) {
 			e.printStackTrace();
@@ -725,7 +691,6 @@ public abstract class SuperService<E extends ModelBase> extends DbContext<E> imp
 	@Override
 	public <T> List<T> queryList(ISqlExpression sqlExpression, PagerModel pagerModel, Class<T> resultType) {
 		try {
-			sqlExpression.addOrderInfoList(pagerModel.getOrderInfoList());
 			return selectList(sqlExpression.toSql(), sqlExpression.getParams(), pagerModel.getRowBounds(), resultType);
 		} catch (DaoBaseRuntimeException e) {
 			e.printStackTrace();
@@ -803,18 +768,7 @@ public abstract class SuperService<E extends ModelBase> extends DbContext<E> imp
 
 	@Override
 	public double queryAggreg(ISqlExpression sqlExpression) {
-		List<Map<String, Object>> list;
-		try {
-			list = selectList(sqlExpression.toSql(), sqlExpression.getParams());
-			if (list == null || list.size() == 0) {
-				return 0.0;
-			}
-			Map<String, Object> map = list.get(0);
-			return Double.parseDouble(map.get(map.keySet().toArray()[0]).toString());
-		} catch (DaoBaseRuntimeException e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		}
+		return querySum(sqlExpression);
 	}
 
 	@Override
