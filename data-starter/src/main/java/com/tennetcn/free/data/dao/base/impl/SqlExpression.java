@@ -96,7 +96,7 @@ public class SqlExpression implements ISqlExpression{
 	@Override
 	public ISqlExpression andRightLike(String column, String value) {
 		String paramName=resolveColumn(column);
-		this.andWhere(column+" not like #{"+paramName+"}")
+		this.andWhere(column+" like #{"+paramName+"}")
 				.setParam(paramName, value+"%");
 		return this;
 	}
