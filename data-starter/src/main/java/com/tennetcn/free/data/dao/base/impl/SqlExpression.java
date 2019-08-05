@@ -84,7 +84,39 @@ public class SqlExpression implements ISqlExpression{
 			.setParam(paramName, value);
 		return this;
 	}
-	
+
+	@Override
+	public ISqlExpression andLike(String column, String value) {
+		String paramName=resolveColumn(column);
+		this.andWhere(column+" like #{"+paramName+"}")
+				.setParam(paramName, "%"+value+"%");
+		return this;
+	}
+
+	@Override
+	public ISqlExpression andRightLike(String column, String value) {
+		String paramName=resolveColumn(column);
+		this.andWhere(column+" not like #{"+paramName+"}")
+				.setParam(paramName, value+"%");
+		return this;
+	}
+
+	@Override
+	public ISqlExpression andLikeNoEmpty(String column, String value) {
+		if(!StringUtils.isEmpty(value)) {
+			return andLike(column,value);
+		}
+		return this;
+	}
+
+	@Override
+	public ISqlExpression andRightLikeNoEmpty(String column, String value) {
+		if(!StringUtils.isEmpty(value)) {
+			return andRightLike(column,value);
+		}
+		return this;
+	}
+
 	@Override
 	public ISqlExpression andEqNoEmpty(String column, String value) {
 		if(!StringUtils.isEmpty(value)) {
@@ -100,7 +132,23 @@ public class SqlExpression implements ISqlExpression{
 			.setParam(paramName, value);
 		return this;
 	}
-	
+
+	@Override
+	public ISqlExpression andNotLike(String column, String value) {
+		String paramName=resolveColumn(column);
+		this.andWhere(column+" not like #{"+paramName+"}")
+				.setParam(paramName, "%"+value+"%");
+		return this;
+	}
+
+	@Override
+	public ISqlExpression andNotLikeNoEmpty(String column, String value) {
+		if(!StringUtils.isEmpty(value)) {
+			return andNotLike(column,value);
+		}
+		return this;
+	}
+
 	@Override
 	public ISqlExpression andNotEqNoEmpty(String column, String value) {
 		if(!StringUtils.isEmpty(value)) {
@@ -207,11 +255,7 @@ public class SqlExpression implements ISqlExpression{
 			result+=fromBuffer.toString();
 			result+=getWhereString();
 		}
-		
-		if(start>-1&&length>-1){
-			result+=" limit "+start+","+length;
-		}
-		
+
 		return result;
 	}
 
@@ -297,7 +341,12 @@ public class SqlExpression implements ISqlExpression{
 		fromBuffer.append(" on ("+left+"="+right+") ");
 		return this;
 	}
-	
+
+	@Override
+	public ISqlExpression selectAll() {
+		return select("*");
+	}
+
 	@Override
 	public ISqlExpression select(String body){
 		addBody("select "+body);
@@ -432,41 +481,6 @@ public class SqlExpression implements ISqlExpression{
 	}
 
 	@Override
-	public ISqlExpression resolveSearchModel(SearchModel search) {
-		if(search==null){return this;}
-		
-		List<SearchItem> searchItemList=search.getSearchItemList();
-		if(searchItemList==null){return this;}
-		
-		String andWhere="";
-		for (SearchItem searchItem : searchItemList) {
-			if(searchItem.isToSearch()&&!StringUtils.isEmpty(search.getSearchKey())){
-				String tablePrefix="";
-				if(!StringUtils.isEmpty(searchItem.getTablePrefix())){
-					tablePrefix=andWhere=searchItem.getTablePrefix()+"."+andWhere;
-				}
-				if(StringUtils.isEmpty(andWhere)){
-					andWhere=tablePrefix+searchItem.getColumnName()+" like #{searchKey}";
-				}else{
-					andWhere+=" or "+tablePrefix+searchItem.getColumnName()+" like #{searchKey}";
-				}
-			}
-		}
-		if(!StringUtils.isEmpty(andWhere)){
-			this.andWhere(andWhere);
-			this.setParam("searchKey", "%"+search.getSearchKey()+"%");
-		}
-		
-		if(search.getDeleteMark()>-1){
-			this.andWhere(getMainTableAlias()+"deleteMark=#{deleteMark}")
-				.setParam("deleteMark", YesOrNo.NO);
-		}
-		
-		
-		return this;
-	}
-
-	@Override
 	public ISqlExpression andWhereIn(String column, List<Object> values) {
 		if(values==null||values.size()<=0){
 			return this;
@@ -552,13 +566,5 @@ public class SqlExpression implements ISqlExpression{
 	
 	private String resolveColumn(String column){
 		return column.replaceAll("\\.", "_");
-	}
-
-
-	@Override
-	public ISqlExpression limit(int start, int length) {
-		this.start=start;
-		this.length=length;
-		return this;
 	}
 }

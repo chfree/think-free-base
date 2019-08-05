@@ -1,11 +1,10 @@
 package com.tennetcn.free.data.dao.base;
 
-import java.util.List;
-import java.util.Map;
-
 import com.tennetcn.free.data.enums.OrderEnum;
 import com.tennetcn.free.data.message.OrderInfo;
-import com.tennetcn.free.data.message.SearchModel;
+
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -15,103 +14,113 @@ import com.tennetcn.free.data.message.SearchModel;
  */
 public interface ISqlExpression {
 	
-	public ISqlExpression setParam(String param, Object value);
+	ISqlExpression setParam(String param, Object value);
 	
-	public ISqlExpression setParamAll(Map<String,Object> maps);
+	ISqlExpression setParamAll(Map<String,Object> maps);
 	
-	public ISqlExpression getSqlExpression();
+	ISqlExpression getSqlExpression();
 	
-	public ISqlExpression andWhere(String value);
+	ISqlExpression andWhere(String value);
 	
-	public ISqlExpression andEq(String column,String value);
+	ISqlExpression andEq(String column,String value);
+
+	ISqlExpression andLike(String column,String value);
+
+	ISqlExpression andRightLike(String column,String value);
+
+	ISqlExpression andLikeNoEmpty(String column,String value);
+
+	ISqlExpression andRightLikeNoEmpty(String column,String value);
 	
-	public ISqlExpression andEqNoEmpty(String column,String value);
+	ISqlExpression andEqNoEmpty(String column,String value);
 	
-	public ISqlExpression andNotEq(String column,String value);
+	ISqlExpression andNotEq(String column,String value);
+
+	ISqlExpression andNotLike(String column,String value);
+
+	ISqlExpression andNotLikeNoEmpty(String column,String value);
 	
-	public ISqlExpression andNotEqNoEmpty(String column,String value);
+	ISqlExpression andNotEqNoEmpty(String column,String value);
 	
-	public ISqlExpression andEq(String column,int value);
+	ISqlExpression andEq(String column,int value);
 	
-	public ISqlExpression andEqNoEmpty(String column,int value);
+	ISqlExpression andEqNoEmpty(String column,int value);
 	
-	public ISqlExpression andNotEq(String column,int value);
+	ISqlExpression andNotEq(String column,int value);
 	
-	public ISqlExpression andNotEqNoEmpty(String column,int value);
+	ISqlExpression andNotEqNoEmpty(String column,int value);
 	
-	public ISqlExpression andMainTableWhere(String value);
+	ISqlExpression andMainTableWhere(String value);
 	
-	public ISqlExpression andWhereIn(String column,List<Object> values);
+	ISqlExpression andWhereIn(String column,List<Object> values);
 	
-	public ISqlExpression andWhereInString(String column,List<String> values);
+	ISqlExpression andWhereInString(String column,List<String> values);
 	
-	public ISqlExpression andWhereInString(List<String> values,String join,String... columns);
+	ISqlExpression andWhereInString(List<String> values,String join,String... columns);
 	
-	public ISqlExpression orWhere(String value);
+	ISqlExpression orWhere(String value);
 	
-	public ISqlExpression addOrder(String column,OrderEnum order);
+	ISqlExpression addOrder(String column,OrderEnum order);
 	
-	public ISqlExpression addOrderInfoList(List<OrderInfo> orderInfos);
+	ISqlExpression addOrderInfoList(List<OrderInfo> orderInfos);
 	
-	public ISqlExpression addOrders(OrderEnum order,String... columns);
+	ISqlExpression addOrders(OrderEnum order,String... columns);
 	
-	public ISqlExpression addBody(String body);
+	ISqlExpression addBody(String body);
 	
-	public ISqlExpression addBody(String body,Class<?> tClass);
+	ISqlExpression addBody(String body,Class<?> tClass);
 	
-	public ISqlExpression leftJoin(String body);
+	ISqlExpression leftJoin(String body);
 	
-	public ISqlExpression leftJoin(Class<?> tClass,String alias);
+	ISqlExpression leftJoin(Class<?> tClass,String alias);
 	
-	public ISqlExpression rightJoin(String body);
+	ISqlExpression rightJoin(String body);
 	
-	public ISqlExpression rightJoin(Class<?> tClass,String alias);
+	ISqlExpression rightJoin(Class<?> tClass,String alias);
 	
-	public ISqlExpression on(String body);
+	ISqlExpression on(String body);
 	
-	public ISqlExpression on(String left,String right);
+	ISqlExpression on(String left,String right);
+
+	ISqlExpression selectAll();
+
+	ISqlExpression select(String body);
 	
-	public ISqlExpression select(String body);
+	ISqlExpression selectCount();
 	
-	public ISqlExpression selectCount();
+	ISqlExpression selectCount(String column);
 	
-	public ISqlExpression selectCount(String column);
+	ISqlExpression select(String... bodys);
 	
-	public ISqlExpression select(String... bodys);
+	ISqlExpression update(String body);
 	
-	public ISqlExpression update(String body);
+	ISqlExpression update(Class<?> tClass);
 	
-	public ISqlExpression update(Class<?> tClass);
+	ISqlExpression update(Class<?> tClass,String alias);
 	
-	public ISqlExpression update(Class<?> tClass,String alias);
+	ISqlExpression set(String column,String columnKey);
 	
-	public ISqlExpression set(String column,String columnKey);
+	ISqlExpression setColumn(String column,String value);
 	
-	public ISqlExpression setColumn(String column,String value);
+	ISqlExpression set(String... columnKeys);
 	
-	public ISqlExpression set(String... columnKeys);
+	ISqlExpression delete();
 	
-	public ISqlExpression delete();
+	ISqlExpression from(String body);
 	
-	public ISqlExpression from(String body);
+	ISqlExpression from(Class<?> tClass);
 	
-	public ISqlExpression from(Class<?> tClass);
+	ISqlExpression from(Class<?> tClass,String alias);
 	
-	public ISqlExpression from(Class<?> tClass,String alias);
+	ISqlExpression setMainTableAlias(String mainTableAlias);
 	
-	public ISqlExpression setMainTableAlias(String mainTableAlias);
+	String getMainTableAlias();
 	
-	public String getMainTableAlias();
+	ISqlExpression addGroup(String group);
 	
-	public ISqlExpression addGroup(String group);
+	ISqlExpression addGroups(String... groups);
 	
-	public ISqlExpression addGroups(String... groups);
+	String toSql();
 	
-	public String toSql();
-	
-	public Map<String, Object> getParams();
-	
-	public ISqlExpression resolveSearchModel(SearchModel search);
-	
-	public ISqlExpression limit(int start,int length);
+	Map<String, Object> getParams();
 }

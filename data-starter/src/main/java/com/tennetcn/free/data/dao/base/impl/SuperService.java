@@ -96,11 +96,6 @@ public abstract class SuperService<E extends ModelBase> extends DbContext<E> imp
 	}
 
 	@Override
-	public List<E> queryList(SearchModel search) throws DaoBaseRuntimeException {
-		return queryList(search, null);
-	}
-
-	@Override
 	public List<E> queryList(PagerModel pagerModel) throws DaoBaseRuntimeException {
 		return queryList(true, pagerModel);
 	}
@@ -116,19 +111,6 @@ public abstract class SuperService<E extends ModelBase> extends DbContext<E> imp
 		setOrderBy(example);
 
 		return getMapper().selectByExampleAndRowBounds(example, pagerModel.getRowBounds());
-	}
-
-	@Override
-	public List<E> queryList(SearchModel search, PagerModel pagerModel) throws DaoBaseRuntimeException {
-		ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
-		sqlExpression.addBody("select * from " + getTableName());
-
-		sqlExpression.addOrderInfoList(getOrderInfoList());
-
-		if (pagerModel == null) {
-			return queryList(sqlExpression, search);
-		}
-		return queryList(sqlExpression, search, pagerModel);
 	}
 
 	@Override
@@ -256,14 +238,6 @@ public abstract class SuperService<E extends ModelBase> extends DbContext<E> imp
 			sqlExpression.andWhere("deleteMark=#{deleteMark}").setParam("deleteMark", YesOrNo.NO);
 		}
 		return queryCount(sqlExpression);
-	}
-
-	@Override
-	public int queryCount(SearchModel search) throws DaoBaseRuntimeException {
-		ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
-		sqlExpression.addBody("select count(1) from " + getTableName());
-
-		return queryCount(sqlExpression, search);
 	}
 
 	@Override
@@ -630,12 +604,6 @@ public abstract class SuperService<E extends ModelBase> extends DbContext<E> imp
 	}
 
 	@Override
-	public List<E> queryList(ISqlExpression sqlExpression, SearchModel search) {
-		sqlExpression = sqlExpression.resolveSearchModel(search);
-		return queryList(sqlExpression);
-	}
-
-	@Override
 	public <T> List<T> queryList(ISqlExpression sqlExpression, Class<T> resultType) {
 		try {
 			return selectList(sqlExpression.toSql(), sqlExpression.getParams(), resultType);
@@ -643,12 +611,6 @@ public abstract class SuperService<E extends ModelBase> extends DbContext<E> imp
 			e.printStackTrace();
 			throw new DaoBaseRuntimeException(e);
 		}
-	}
-
-	@Override
-	public <T> List<T> queryList(ISqlExpression sqlExpression, SearchModel search, Class<T> resultType) {
-		sqlExpression = sqlExpression.resolveSearchModel(search);
-		return queryList(sqlExpression, resultType);
 	}
 
 	@Override
@@ -667,12 +629,6 @@ public abstract class SuperService<E extends ModelBase> extends DbContext<E> imp
 	}
 
 	@Override
-	public List<E> queryList(ISqlExpression sqlExpression, SearchModel search, PagerModel pagerModel) {
-		sqlExpression = sqlExpression.resolveSearchModel(search);
-		return queryList(sqlExpression, pagerModel);
-	}
-
-	@Override
 	public List<Map<String, Object>> queryListEx(ISqlExpression sqlExpression, PagerModel pagerModel) {
 		try {
 			return selectListEx(sqlExpression.toSql(), sqlExpression.getParams(), pagerModel.getRowBounds());
@@ -680,12 +636,6 @@ public abstract class SuperService<E extends ModelBase> extends DbContext<E> imp
 			e.printStackTrace();
 			throw new DaoBaseRuntimeException(e);
 		}
-	}
-
-	@Override
-	public List<Map<String, Object>> queryListEx(ISqlExpression sqlExpression, SearchModel search, PagerModel pagerModel) {
-		sqlExpression = sqlExpression.resolveSearchModel(search);
-		return queryListEx(sqlExpression, pagerModel);
 	}
 
 	@Override
@@ -699,12 +649,6 @@ public abstract class SuperService<E extends ModelBase> extends DbContext<E> imp
 	}
 
 	@Override
-	public <T> List<T> queryList(ISqlExpression sqlExpression, SearchModel search, PagerModel pagerModel, Class<T> resultType) {
-		sqlExpression = sqlExpression.resolveSearchModel(search);
-		return queryList(sqlExpression, pagerModel, resultType);
-	}
-
-	@Override
 	public int queryCount(ISqlExpression sqlExpression) {
 		try {
 			return queryCount(sqlExpression.toSql(), sqlExpression.getParams());
@@ -712,12 +656,6 @@ public abstract class SuperService<E extends ModelBase> extends DbContext<E> imp
 			e.printStackTrace();
 			throw new DaoBaseRuntimeException(e);
 		}
-	}
-
-	@Override
-	public int queryCount(ISqlExpression sqlExpression, SearchModel search) {
-		sqlExpression = sqlExpression.resolveSearchModel(search);
-		return queryCount(sqlExpression);
 	}
 
 	@Override
@@ -790,14 +728,7 @@ public abstract class SuperService<E extends ModelBase> extends DbContext<E> imp
 		}
 	}
 
-	public List<E> queryListMP(SearchModel search, PagerModel pagerModel) {
-		return mapper.queryListMP(search, pagerModel);
-	}
-
-	public int queryCountMP(SearchModel search) {
-		return mapper.queryCountMP(search);
-	}
-
+	@Override
 	public int insertListEx(List<E> list) {
 		return mapper.insertListEx(list);
 	}
