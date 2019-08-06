@@ -15,7 +15,7 @@ import com.tennetcn.free.data.enums.ModelStatus;
 public class ModelBase {
 	public ModelBase(){
 		this.versionNum=System.currentTimeMillis()+"-"+System.nanoTime();
-		this.modelStatus=ModelStatus.add;
+		this.modelStatus=ModelStatus.none;
 	}
 	
 	@Transient
