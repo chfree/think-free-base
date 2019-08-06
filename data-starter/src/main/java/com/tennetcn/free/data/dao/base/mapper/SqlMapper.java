@@ -1,6 +1,7 @@
 package com.tennetcn.free.data.dao.base.mapper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -11,10 +12,15 @@ import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
+import tk.mybatis.mapper.MapperException;
+import tk.mybatis.mapper.entity.EntityTable;
+import tk.mybatis.mapper.mapperhelper.EntityHelper;
+import tk.mybatis.mapper.util.MetaObjectUtil;
 
 /**
  * @author chenghuan
@@ -326,7 +332,7 @@ public class SqlMapper {
 
 		private MSUtils(Configuration configuration) {
 			this.configuration = configuration;
-			languageDriver = configuration.getDefaultScriptingLanuageInstance();
+			languageDriver = configuration.getDefaultScriptingLanguageInstance();
 		}
 
 		/**
@@ -364,12 +370,16 @@ public class SqlMapper {
 		 * @param resultType
 		 *            返回的结果类型
 		 */
-		private void newSelectMappedStatement(String msId, SqlSource sqlSource,
-				final Class<?> resultType) {
-			List<ResultMap> resultMapList=new ArrayList<ResultMap>();
-			resultMapList.add(new ResultMap.Builder(configuration,"defaultResultMap", resultType,new ArrayList<ResultMapping>(0)).build());
-			
-			MappedStatement ms = new MappedStatement.Builder(configuration,msId, sqlSource, SqlCommandType.SELECT).resultMaps(resultMapList).build();
+		private void newSelectMappedStatement(String msId, SqlSource sqlSource, final Class<?> resultType) {
+			List<ResultMap> resultMaps = new ArrayList();
+			try{
+				EntityTable entityTable = EntityHelper.getEntityTable(resultType);
+				resultMaps.add(entityTable.getResultMap(configuration));
+			}catch (MapperException ex){
+				resultMaps.add(new ResultMap.Builder(configuration,"defaultResultMap", resultType,new ArrayList<ResultMapping>(0)).build());
+			}
+			MappedStatement ms = new MappedStatement.Builder(configuration,msId, sqlSource, SqlCommandType.SELECT).resultMaps(resultMaps).build();
+
 			// 缓存
 			configuration.addMappedStatement(ms);
 		}

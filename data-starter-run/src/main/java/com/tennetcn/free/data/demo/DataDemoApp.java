@@ -1,5 +1,6 @@
 package com.tennetcn.free.data.demo;
 
+import cn.hutool.json.JSONUtil;
 import com.tennetcn.free.data.demo.logical.model.LoginUser;
 import com.tennetcn.free.data.demo.logical.service.ILoginUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,5 +39,14 @@ public class DataDemoApp implements CommandLineRunner {
         usersByIds.forEach(user->{
             System.out.println(user.getId()+":"+user.getName());
         });
+
+        System.out.println("query list test");
+
+        List<LoginUser> testList = loginUserService.queryTest();
+        testList.forEach(test->{
+            System.out.println("markCode:"+test.getMarkCode());
+            System.out.println("code:"+test.getCode());
+        });
+
     }
 }

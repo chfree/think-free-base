@@ -2,10 +2,12 @@ package com.tennetcn.free.data.dao.base.mapper;
 
 import java.util.List;
 
+import com.tennetcn.free.data.dao.base.ISqlExpression;
 import org.apache.ibatis.annotations.Param;
 
 import com.tennetcn.free.data.message.PagerModel;
 import com.tennetcn.free.data.message.SearchModel;
+import org.apache.ibatis.annotations.SelectProvider;
 
 /** 
  * @author      chenghuan
@@ -14,7 +16,7 @@ import com.tennetcn.free.data.message.SearchModel;
  * @comment 
  */
 public interface QueryMapper<T>  {
-	public List<T> queryListMP(@Param("search")SearchModel search,@Param("pager")PagerModel pagerModel);
+	List<T> queryListMP(@Param("search")SearchModel search,@Param("pager")PagerModel pagerModel);
 	
-	public int queryCountMP(@Param("search")SearchModel search);
+	int queryCountMP(@Param("search")SearchModel search);
 }

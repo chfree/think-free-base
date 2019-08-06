@@ -13,6 +13,7 @@ import com.tennetcn.free.core.utils.StringHelper;
 import com.tennetcn.free.data.dao.base.ISqlExpression;
 import com.tennetcn.free.data.enums.OrderEnum;
 import com.tennetcn.free.data.utils.ClassAnnotationUtils;
+import tk.mybatis.mapper.mapperhelper.SqlHelper;
 
 
 /**
@@ -343,8 +344,9 @@ public class SqlExpression implements ISqlExpression{
 	}
 
 	@Override
-	public ISqlExpression selectAll() {
-		return select("*");
+	public ISqlExpression selectAllFrom(Class<?> tClass) {
+		return select(SqlHelper.getAllColumns(tClass)).from(tClass);
+
 	}
 
 	@Override
@@ -440,7 +442,7 @@ public class SqlExpression implements ISqlExpression{
 		fromBuffer.append("from "+body);
 		return this;
 	}
-	
+
 	@Override
 	public ISqlExpression from(Class<?> tClass){
 		fromBuffer.append("from "+ClassAnnotationUtils.getTableName(tClass));

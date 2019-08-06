@@ -21,10 +21,9 @@ public class LoginUser extends ModelBase {
     @Column(name="name")
     private String name;
 
-    @Column(name="code")
     private String code;
 
-    @Column(name="markCode")
+    @Column(name="mark_code")
     private String markCode;
 
     @Column(name="account")

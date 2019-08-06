@@ -82,7 +82,7 @@ public interface ISqlExpression {
 	
 	ISqlExpression on(String left,String right);
 
-	ISqlExpression selectAll();
+	ISqlExpression selectAllFrom(Class<?> tClass);
 
 	ISqlExpression select(String body);
 	

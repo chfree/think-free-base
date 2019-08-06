@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ILoginUserService extends ISuperService<LoginUser> {
     List<LoginUser> queryListMPByIds(List<String> ids);
+
+    List<LoginUser> queryTest();
 }

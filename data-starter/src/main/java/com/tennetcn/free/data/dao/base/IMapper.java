@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
 
+import tk.mybatis.mapper.annotation.RegisterMapper;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.common.MySqlMapper;
 
@@ -23,6 +24,7 @@ import com.tennetcn.free.data.message.ModelBase;
  * @comment
  */
 
+@RegisterMapper
 public interface IMapper<E extends ModelBase> extends Mapper<E>, MySqlMapper<E>,InsertListExMapper<E>,QueryMapper<E> {
 
 	@Select(value = "${sql}")
