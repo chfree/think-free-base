@@ -12,7 +12,7 @@ import com.tennetcn.free.data.enums.ModelStatus;
  * @comment 
  */
 
-public class ModelBase {
+public class ModelBase implements IDbModel{
 	public ModelBase(){
 		this.versionNum=System.currentTimeMillis()+"-"+System.nanoTime();
 		this.modelStatus=ModelStatus.none;

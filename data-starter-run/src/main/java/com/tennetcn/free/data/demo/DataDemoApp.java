@@ -3,10 +3,12 @@ package com.tennetcn.free.data.demo;
 import cn.hutool.json.JSONUtil;
 import com.tennetcn.free.data.demo.logical.model.LoginUser;
 import com.tennetcn.free.data.demo.logical.service.ILoginUserService;
+import com.tennetcn.free.data.demo.logical.viewmodel.TestUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,25 +29,36 @@ public class DataDemoApp implements CommandLineRunner {
 
         System.out.println("count:" + count);
 
-        List<LoginUser> loginUsers = loginUserService.queryList();
+//        List<LoginUser> loginUsers = loginUserService.queryList();
+//
+//        System.out.println("query list");
+//        loginUsers.forEach(user->{
+//            System.out.println(user.getId()+":"+user.getName());
+//        });
+//
+//        System.out.println("query list mp by ids");
+//        List<LoginUser> usersByIds = loginUserService.queryListMPByIds(Arrays.asList("123","1234"));
+//        usersByIds.forEach(user->{
+//            System.out.println(user.getId()+":"+user.getName());
+//        });
+//
+//        System.out.println("query list test");
+//
+//        List<LoginUser> testList = loginUserService.queryTest();
+//        testList.forEach(test->{
+//            System.out.println("markCode:"+test.getMarkCode());
+//        });
 
-        System.out.println("query list");
-        loginUsers.forEach(user->{
-            System.out.println(user.getId()+":"+user.getName());
-        });
+        System.out.println("query list test user");
 
-        System.out.println("query list mp by ids");
-        List<LoginUser> usersByIds = loginUserService.queryListMPByIds(Arrays.asList("123","1234"));
-        usersByIds.forEach(user->{
-            System.out.println(user.getId()+":"+user.getName());
-        });
+        List<TestUser> testUsers = loginUserService.queryTestUsers();
+        System.out.println(JSONUtil.toJsonStr(testUsers));
+        testUsers.forEach(test->{
+            if(!StringUtils.isEmpty(test.getMarkCode())){
+                System.out.println("markCode:"+test.getMarkCode());
+                System.out.println("test:"+test.getTest());
+            }
 
-        System.out.println("query list test");
-
-        List<LoginUser> testList = loginUserService.queryTest();
-        testList.forEach(test->{
-            System.out.println("markCode:"+test.getMarkCode());
-            System.out.println("code:"+test.getCode());
         });
 
     }

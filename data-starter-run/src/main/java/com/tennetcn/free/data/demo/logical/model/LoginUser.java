@@ -11,7 +11,7 @@ import java.util.Date;
 @Data
 @Alias("loginUser")
 @Entity
-@Table(name="base_authority_login_user")
+@Table(name="base_authority_user")
 public class LoginUser extends ModelBase {
 
     @Id
@@ -20,8 +20,6 @@ public class LoginUser extends ModelBase {
 
     @Column(name="name")
     private String name;
-
-    private String code;
 
     @Column(name="mark_code")
     private String markCode;
@@ -44,43 +42,40 @@ public class LoginUser extends ModelBase {
     @Column(name="email")
     private String email;
 
-    @Column(name="deleteMark")
+    @Column(name="delete_mark")
     private Integer deleteMark;
 
     @OrderBy(value= OrderByEnum.DESC)
-    @Column(name="createDate")
+    @Column(name="create_date")
     private Date createDate;
 
-    @Column(name="createUserId")
+    @Column(name="create_user_id")
     private String createUserId;
 
-    @Column(name="createUserName")
+    @Column(name="create_user_name")
     private String createUserName;
 
-    @Column(name="modifyDate")
+    @Column(name="modify_date")
     private Date modifyDate;
 
-    @Column(name="modifyUserId")
+    @Column(name="modify_user_id")
     private String modifyUserId;
 
-    @Column(name="modifyUserName")
+    @Column(name="modify_user_name")
     private String modifyUserName;
 
-    @Column(name="userMark")
+    @Column(name="user_mark")
     private String userMark;
 
-    @Column(name="isLocked")
+    @Column(name="is_locked")
     private Integer isLocked;
 
-    @Column(name="isLogin")
+    @Column(name="is_login")
     private Integer isLogin;
 
-    @Column(name="uniqueMark")
+    @Column(name="unique_mark")
     private String uniqueMark;
 
-    @Column(name="businessId")
-    private String businessId;
-
-    @Column(name="isAppLogin")
-    private Integer isAppLogin;
+    @Column(name="bu_id")
+    private String buId;
 }

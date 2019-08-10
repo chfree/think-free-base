@@ -5,6 +5,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import cn.hutool.core.util.ClassUtil;
+import com.tennetcn.free.data.dao.base.IMapper;
+import com.tennetcn.free.data.message.IDbModel;
+import com.tennetcn.free.data.message.ModelBase;
 import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -373,8 +377,19 @@ public class SqlMapper {
 		private void newSelectMappedStatement(String msId, SqlSource sqlSource, final Class<?> resultType) {
 			List<ResultMap> resultMaps = new ArrayList();
 			try{
-				EntityTable entityTable = EntityHelper.getEntityTable(resultType);
-				resultMaps.add(entityTable.getResultMap(configuration));
+				// 继承了ModelBase就是实现了IDbModel接口
+				if(IDbModel.class.isAssignableFrom(resultType)){
+					// 取出resultType上有Entity类或者是直接父类为ModelBase的type进行resultMap的映射
+					EntityTable entityTable = EntityHelper.getEntityTable(getModelBaseChild(resultType));
+
+					//更改type
+					ResultMap rm = entityTable.getResultMap(configuration);
+					MetaObjectUtil.forObject(rm).setValue("type",resultType);
+
+					resultMaps.add(rm);
+				}else{
+					resultMaps.add(new ResultMap.Builder(configuration,"defaultResultMap", resultType,new ArrayList<ResultMapping>(0)).build());
+				}
 			}catch (MapperException ex){
 				resultMaps.add(new ResultMap.Builder(configuration,"defaultResultMap", resultType,new ArrayList<ResultMapping>(0)).build());
 			}
@@ -382,6 +397,17 @@ public class SqlMapper {
 
 			// 缓存
 			configuration.addMappedStatement(ms);
+		}
+
+		// 获取直接父类是ModelBase的类
+		private Class<?> getModelBaseChild(Class<?> resultType){
+			if(ModelBase.class.equals(resultType.getSuperclass())){
+				return resultType;
+			}
+			if(resultType==null||Object.class.equals(resultType.getSuperclass())){
+				return null;
+			}
+			return getModelBaseChild(resultType.getSuperclass());
 		}
 
 		/**
