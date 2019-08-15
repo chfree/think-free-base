@@ -84,13 +84,19 @@ public interface ISqlExpression {
 
 	ISqlExpression selectAllFrom(Class<?> tClass);
 
+	ISqlExpression selectAllFrom(Class<?> tClass,String alias);
+
 	ISqlExpression select(String body);
+
+	ISqlExpression appendSelect(String body);
 	
 	ISqlExpression selectCount();
 	
 	ISqlExpression selectCount(String column);
 	
 	ISqlExpression select(String... bodys);
+
+	ISqlExpression appendSelect(String... bodys);
 	
 	ISqlExpression update(String body);
 	

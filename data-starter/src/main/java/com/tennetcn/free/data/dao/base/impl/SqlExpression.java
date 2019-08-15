@@ -23,217 +23,218 @@ import tk.mybatis.mapper.mapperhelper.SqlHelper;
  */
 
 @Component
-public class SqlExpression implements ISqlExpression{
+public class SqlExpression implements ISqlExpression {
 
-	private String sqlOperateMode=SqlOperateMode.select;
-	
-	private Map<String,Object> params=null;
-	
-	private String mainTableAlias="";
-	
-	private StringBuffer wheres=new StringBuffer();
-    
-	private StringBuffer bodyBuffer=new StringBuffer();
-    
-    private StringBuffer orderBuffer=new StringBuffer();
-    
-    private StringBuffer groupBuffer=new StringBuffer();
-    
-    private StringBuffer setBuffer=new StringBuffer();
-    
-    private StringBuffer fromBuffer=new StringBuffer();
-    
-    private int start=-1;
-    
-    private int length=-1;
-    
-	public SqlExpression(){
-    	if(params==null){
-    		params=new HashMap<String,Object>();
-    	}
-    }
-    
-   
+	private String sqlOperateMode = SqlOperateMode.select;
+
+	private Map<String, Object> params = null;
+
+	private String mainTableAlias = "";
+
+	private StringBuffer wheres = new StringBuffer();
+
+	private StringBuffer bodyBuffer = new StringBuffer();
+
+	private StringBuffer orderBuffer = new StringBuffer();
+
+	private StringBuffer groupBuffer = new StringBuffer();
+
+	private StringBuffer setBuffer = new StringBuffer();
+
+	private StringBuffer fromBuffer = new StringBuffer();
+
+	private int start = -1;
+
+	private int length = -1;
+
+	public SqlExpression() {
+		if (params == null) {
+			params = new HashMap<String, Object>();
+		}
+	}
+
+
 	/**
 	 * 设置参数。
-	 * 
+	 *
 	 * @param param
 	 * @param value
 	 * @return
 	 */
-    @Override
+	@Override
 	public SqlExpression setParam(String param, Object value) {
 		params.put(param, value);
 		return this;
 	}
-	
-	
+
+
 	public SqlExpression getSqlExpression() {
 		return this;
 	}
 
 	@Override
 	public ISqlExpression andWhere(String value) {
-		wheres.append(" and ("+value+") ");
+		wheres.append(" and (" + value + ") ");
 		return this;
 	}
-	
+
 	@Override
 	public ISqlExpression andEq(String column, String value) {
-		String paramName=resolveColumn(column);
-		this.andWhere(column+"=#{"+paramName+"}")
-			.setParam(paramName, value);
+		String paramName = resolveColumn(column);
+		this.andWhere(column + "=#{" + paramName + "}")
+				.setParam(paramName, value);
 		return this;
 	}
 
 	@Override
 	public ISqlExpression andLike(String column, String value) {
-		String paramName=resolveColumn(column);
-		this.andWhere(column+" like #{"+paramName+"}")
-				.setParam(paramName, "%"+value+"%");
+		String paramName = resolveColumn(column);
+		this.andWhere(column + " like #{" + paramName + "}")
+				.setParam(paramName, "%" + value + "%");
 		return this;
 	}
 
 	@Override
 	public ISqlExpression andRightLike(String column, String value) {
-		String paramName=resolveColumn(column);
-		this.andWhere(column+" like #{"+paramName+"}")
-				.setParam(paramName, value+"%");
+		String paramName = resolveColumn(column);
+		this.andWhere(column + " like #{" + paramName + "}")
+				.setParam(paramName, value + "%");
 		return this;
 	}
 
 	@Override
 	public ISqlExpression andLikeNoEmpty(String column, String value) {
-		if(!StringUtils.isEmpty(value)) {
-			return andLike(column,value);
+		if (!StringUtils.isEmpty(value)) {
+			return andLike(column, value);
 		}
 		return this;
 	}
 
 	@Override
 	public ISqlExpression andRightLikeNoEmpty(String column, String value) {
-		if(!StringUtils.isEmpty(value)) {
-			return andRightLike(column,value);
+		if (!StringUtils.isEmpty(value)) {
+			return andRightLike(column, value);
 		}
 		return this;
 	}
 
 	@Override
 	public ISqlExpression andEqNoEmpty(String column, String value) {
-		if(!StringUtils.isEmpty(value)) {
-			return andEq(column,value);
+		if (!StringUtils.isEmpty(value)) {
+			return andEq(column, value);
 		}
 		return this;
 	}
-	
+
 	@Override
 	public ISqlExpression andNotEq(String column, String value) {
-		String paramName=resolveColumn(column);
-		this.andWhere(column+"!=#{"+paramName+"}")
-			.setParam(paramName, value);
+		String paramName = resolveColumn(column);
+		this.andWhere(column + "!=#{" + paramName + "}")
+				.setParam(paramName, value);
 		return this;
 	}
 
 	@Override
 	public ISqlExpression andNotLike(String column, String value) {
-		String paramName=resolveColumn(column);
-		this.andWhere(column+" not like #{"+paramName+"}")
-				.setParam(paramName, "%"+value+"%");
+		String paramName = resolveColumn(column);
+		this.andWhere(column + " not like #{" + paramName + "}")
+				.setParam(paramName, "%" + value + "%");
 		return this;
 	}
 
 	@Override
 	public ISqlExpression andNotLikeNoEmpty(String column, String value) {
-		if(!StringUtils.isEmpty(value)) {
-			return andNotLike(column,value);
+		if (!StringUtils.isEmpty(value)) {
+			return andNotLike(column, value);
 		}
 		return this;
 	}
 
 	@Override
 	public ISqlExpression andNotEqNoEmpty(String column, String value) {
-		if(!StringUtils.isEmpty(value)) {
-			return andNotEq(column,value);
+		if (!StringUtils.isEmpty(value)) {
+			return andNotEq(column, value);
 		}
 		return this;
 	}
-	
+
 	@Override
 	public ISqlExpression andEq(String column, int value) {
-		return andEq(column,String.valueOf(value));
+		return andEq(column, String.valueOf(value));
 	}
-	
+
 	@Override
 	public ISqlExpression andEqNoEmpty(String column, int value) {
-		if(value>-1) {
-			return andEq(column,value);
+		if (value > -1) {
+			return andEq(column, value);
 		}
 		return this;
 	}
-	
+
 	@Override
 	public ISqlExpression andNotEq(String column, int value) {
-		return andNotEq(column,String.valueOf(value));
+		return andNotEq(column, String.valueOf(value));
 	}
-	
+
 	@Override
 	public ISqlExpression andNotEqNoEmpty(String column, int value) {
-		if(value>-1) {
-			return andNotEq(column,value);
+		if (value > -1) {
+			return andNotEq(column, value);
 		}
 		return this;
 	}
-	
+
 	@Override
 	public ISqlExpression andMainTableWhere(String value) {
-		wheres.append(" and ("+this.getMainTableAlias()+value+") ");
+		wheres.append(" and (" + this.getMainTableAlias() + value + ") ");
 		return this;
 	}
-	
+
 	@Override
-	public ISqlExpression orWhere(String value){
-		wheres.append(" or ("+value+") ");
+	public ISqlExpression orWhere(String value) {
+		wheres.append(" or (" + value + ") ");
 		return this;
 	}
-	
+
 	@Override
-	public ISqlExpression addOrders(OrderEnum order,String... columns) {
+	public ISqlExpression addOrders(OrderEnum order, String... columns) {
 		for (String column : columns) {
-			if(orderBuffer.length()==0){
+			if (orderBuffer.length() == 0) {
 				orderBuffer.append(" order by ");
-				orderBuffer.append(" "+column+" ");	
-			}else{
-				orderBuffer.append(" ,"+column+" ");
+				orderBuffer.append(" " + column + " ");
+			} else {
+				orderBuffer.append(" ," + column + " ");
 			}
-			orderBuffer.append(" "+order.name()+" ");
+			orderBuffer.append(" " + order.name() + " ");
 		}
 		return this;
 	}
-	
+
 	@Override
-	public ISqlExpression addOrder(String column,OrderEnum order) {
-		if(orderBuffer.length()==0){
+	public ISqlExpression addOrder(String column, OrderEnum order) {
+		if (orderBuffer.length() == 0) {
 			orderBuffer.append(" order by ");
-			orderBuffer.append(" "+column+" ");
-		}else{
-			orderBuffer.append(" ,"+column+" ");
+			orderBuffer.append(" " + column + " ");
+		} else {
+			orderBuffer.append(" ," + column + " ");
 		}
-		orderBuffer.append(" "+order.name()+" ");
-		
+		orderBuffer.append(" " + order.name() + " ");
+
 		return this;
 	}
+
 	@Override
-	public ISqlExpression addBody(String body){
-		bodyBuffer.append(" "+body+" ");
+	public ISqlExpression addBody(String body) {
+		bodyBuffer.append(" " + body + " ");
 		return this;
 	}
-	
+
 	@Override
-	public ISqlExpression addBody(String body,Class<?> tClass){
-		bodyBuffer.append(" "+body+" "+ClassAnnotationUtils.getTableName(tClass));
+	public ISqlExpression addBody(String body, Class<?> tClass) {
+		bodyBuffer.append(" " + body + " " + ClassAnnotationUtils.getTableName(tClass));
 		return this;
 	}
-	
+
 	public Map<String, Object> getParams() {
 		return params;
 	}
@@ -241,55 +242,53 @@ public class SqlExpression implements ISqlExpression{
 
 	@Override
 	public String toSql() {
-		String result= bodyBuffer.toString();
-		if(sqlOperateMode==SqlOperateMode.select){
-			result+=fromBuffer.toString();
-			result+=getWhereString();
-			result+=groupBuffer.toString();
-			result+=orderBuffer.toString();
-		}
-		else if(sqlOperateMode==SqlOperateMode.update){
-			result+=fromBuffer.toString();
-			result+=setBuffer.toString();
-			result+=getWhereString();
-		}else if(sqlOperateMode== SqlOperateMode.delete){
-			result+=fromBuffer.toString();
-			result+=getWhereString();
+		String result = bodyBuffer.toString();
+		if (sqlOperateMode == SqlOperateMode.select) {
+			result += fromBuffer.toString();
+			result += getWhereString();
+			result += groupBuffer.toString();
+			result += orderBuffer.toString();
+		} else if (sqlOperateMode == SqlOperateMode.update) {
+			result += fromBuffer.toString();
+			result += setBuffer.toString();
+			result += getWhereString();
+		} else if (sqlOperateMode == SqlOperateMode.delete) {
+			result += fromBuffer.toString();
+			result += getWhereString();
 		}
 
 		return result;
 	}
 
-	private String getWhereString(){
-		if(wheres.length()==0){
+	private String getWhereString() {
+		if (wheres.length() == 0) {
 			return " ";
 		}
-		String defaultWhere=" where 1=1 ";
+		String defaultWhere = " where 1=1 ";
 		//如果在第一个有了defaultWhere就不在添加了
-		if(wheres.indexOf(defaultWhere)!=0){
+		if (wheres.indexOf(defaultWhere) != 0) {
 			wheres.insert(0, defaultWhere);
 		}
-		return  wheres.toString();
+		return wheres.toString();
 	}
-	
-	
+
+
 	@Override
 	public ISqlExpression setParamAll(Map<String, Object> maps) {
-		if(maps!=null&&maps.size()>0){
+		if (maps != null && maps.size() > 0) {
 			params.putAll(maps);
 		}
 		return this;
 	}
 
 
-
 	@Override
 	public ISqlExpression addGroup(String group) {
-		if(groupBuffer.length()==0){
+		if (groupBuffer.length() == 0) {
 			groupBuffer.append(" group by ");
-			groupBuffer.append(" "+group+" ");
-		}else{
-			groupBuffer.append(" ,"+group+" ");
+			groupBuffer.append(" " + group + " ");
+		} else {
+			groupBuffer.append(" ," + group + " ");
 		}
 		return this;
 	}
@@ -297,49 +296,49 @@ public class SqlExpression implements ISqlExpression{
 	@Override
 	public ISqlExpression addGroups(String... groups) {
 		for (String group : groups) {
-			if(groupBuffer.length()==0){
+			if (groupBuffer.length() == 0) {
 				groupBuffer.append(" group by ");
-				groupBuffer.append(" "+group+" ");
-			}else{
-				groupBuffer.append(" ,"+group+" ");
+				groupBuffer.append(" " + group + " ");
+			} else {
+				groupBuffer.append(" ," + group + " ");
 			}
 		}
 		return this;
 	}
-	
+
 	@Override
-	public ISqlExpression leftJoin(String body){
-		fromBuffer.append(" left join "+body+" ");
+	public ISqlExpression leftJoin(String body) {
+		fromBuffer.append(" left join " + body + " ");
 		return this;
 	}
-	
+
 	@Override
-	public ISqlExpression leftJoin(Class<?> tClass,String alias){
-		fromBuffer.append(" left join "+ClassAnnotationUtils.getTableName(tClass)+" "+alias+" ");
+	public ISqlExpression leftJoin(Class<?> tClass, String alias) {
+		fromBuffer.append(" left join " + ClassAnnotationUtils.getTableName(tClass) + " " + alias + " ");
 		return this;
 	}
-	
+
 	@Override
-	public ISqlExpression rightJoin(String body){
-		fromBuffer.append(" right join "+body+" ");
+	public ISqlExpression rightJoin(String body) {
+		fromBuffer.append(" right join " + body + " ");
 		return this;
 	}
-	
+
 	@Override
-	public ISqlExpression rightJoin(Class<?> tClass,String alias){
-		fromBuffer.append(" right join "+ClassAnnotationUtils.getTableName(tClass)+" "+alias+" ");
+	public ISqlExpression rightJoin(Class<?> tClass, String alias) {
+		fromBuffer.append(" right join " + ClassAnnotationUtils.getTableName(tClass) + " " + alias + " ");
 		return this;
 	}
-	
+
 	@Override
-	public ISqlExpression on(String body){
-		fromBuffer.append(" on ("+body+") ");
+	public ISqlExpression on(String body) {
+		fromBuffer.append(" on (" + body + ") ");
 		return this;
 	}
-	
+
 	@Override
-	public ISqlExpression on(String left,String right){
-		fromBuffer.append(" on ("+left+"="+right+") ");
+	public ISqlExpression on(String left, String right) {
+		fromBuffer.append(" on (" + left + "=" + right + ") ");
 		return this;
 	}
 
@@ -350,19 +349,42 @@ public class SqlExpression implements ISqlExpression{
 	}
 
 	@Override
-	public ISqlExpression select(String body){
-		addBody("select "+body);
-		sqlOperateMode=SqlOperateMode.select;
+	public ISqlExpression selectAllFrom(Class<?> tClass, String alias) {
+		// "aa,bb,cc"  replace ,->,xx.  ="aa,xx.bb,xx.cc"
+		// and add start xx.
+		String allColumns = alias+"."+SqlHelper.getAllColumns(tClass).replace(",",","+alias+".");
+
+		return select(allColumns).from(tClass, alias);
+	}
+
+	@Override
+	public ISqlExpression select(String body) {
+		addBody("select " + body);
+		sqlOperateMode = SqlOperateMode.select;
 		return this;
 	}
-	
+
 	@Override
-	public ISqlExpression select(String... bodys){
-		if(bodys!=null&&bodys.length>0){
-			String body=StringHelper.join(bodys, ",");
-			addBody("select "+body);
+	public ISqlExpression appendSelect(String body) {
+		return addBody(","+body);
+	}
+
+	@Override
+	public ISqlExpression select(String... bodys) {
+		if (bodys != null && bodys.length > 0) {
+			String body = StringHelper.join(bodys, ",");
+			addBody("select " + body);
 		}
-		sqlOperateMode=SqlOperateMode.select;
+		sqlOperateMode = SqlOperateMode.select;
+		return this;
+	}
+
+	@Override
+	public ISqlExpression appendSelect(String... bodys){
+		if (bodys != null && bodys.length > 0) {
+			String body = StringHelper.join(bodys, ",");
+			addBody(","+body);
+		}
 		return this;
 	}
 	
