@@ -4,7 +4,9 @@ package com.tennetcn.free.data.message;
 
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tennetcn.free.data.enums.ModelStatus;
+import lombok.Data;
 
 /** 
  * @author      chenghuan
@@ -12,6 +14,7 @@ import com.tennetcn.free.data.enums.ModelStatus;
  * @comment 
  */
 
+@Data
 public class ModelBase implements IDbModel{
 	public ModelBase(){
 		this.versionNum=System.currentTimeMillis()+"-"+System.nanoTime();
@@ -19,25 +22,11 @@ public class ModelBase implements IDbModel{
 	}
 	
 	@Transient
+	@JsonIgnore
 	private ModelStatus modelStatus;
 	
 	@Transient
+	@JsonIgnore
 	private String versionNum;
-
-	public ModelStatus getModelStatus() {
-		return modelStatus;
-	}
-
-	public void setModelStatus(ModelStatus modelStatus) {
-		this.modelStatus = modelStatus;
-	}
-
-	public String getVersionNum() {
-		return versionNum;
-	}
-
-	public void setVersionNum(String versionNum) {
-		this.versionNum = versionNum;
-	}
 
 }
