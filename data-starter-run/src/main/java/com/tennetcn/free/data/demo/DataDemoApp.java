@@ -4,6 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.tennetcn.free.data.demo.logical.model.LoginUser;
 import com.tennetcn.free.data.demo.logical.service.ILoginUserService;
 import com.tennetcn.free.data.demo.logical.viewmodel.TestUser;
+import com.tennetcn.free.data.demo.logical.viewmodel.TestUser1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -25,9 +26,9 @@ public class DataDemoApp implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        int count = loginUserService.queryCount();
-
-        System.out.println("count:" + count);
+//        int count = loginUserService.queryCount();
+//
+//        System.out.println("count:" + count);
 
 //        List<LoginUser> loginUsers = loginUserService.queryList();
 //
@@ -54,6 +55,29 @@ public class DataDemoApp implements CommandLineRunner {
         List<TestUser> testUsers = loginUserService.queryTestUsers();
         System.out.println(JSONUtil.toJsonStr(testUsers));
         testUsers.forEach(test->{
+            if(!StringUtils.isEmpty(test.getMarkCode())){
+                System.out.println("markCode:"+test.getMarkCode());
+                System.out.println("test:"+test.getTest());
+            }
+
+        });
+
+        System.out.println("query list test user1");
+        List<TestUser1> testUsers1 = loginUserService.queryTestUsers1();
+        System.out.println(JSONUtil.toJsonStr(testUsers1));
+        testUsers1.forEach(test->{
+            if(!StringUtils.isEmpty(test.getMarkCode())){
+                System.out.println("markCode:"+test.getMarkCode());
+                System.out.println("test:"+test.getTest());
+            }
+
+        });
+
+        System.out.println("query list test user");
+
+        List<TestUser> testUsers_new = loginUserService.queryTestUsers();
+        System.out.println(JSONUtil.toJsonStr(testUsers_new));
+        testUsers_new.forEach(test->{
             if(!StringUtils.isEmpty(test.getMarkCode())){
                 System.out.println("markCode:"+test.getMarkCode());
                 System.out.println("test:"+test.getTest());

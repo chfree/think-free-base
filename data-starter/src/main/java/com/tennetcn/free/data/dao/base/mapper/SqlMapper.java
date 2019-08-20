@@ -463,12 +463,33 @@ public class SqlMapper {
 			String msId = newMsId(resultType + sql + parameterType,
 					SqlCommandType.SELECT);
 			if (hasMappedStatement(msId)) {
+				reCalcResultMapType(msId,resultType);
 				return msId;
 			}
 			SqlSource sqlSource = languageDriver.createSqlSource(configuration,
 					sql, parameterType);
 			newSelectMappedStatement(msId, sqlSource, resultType);
 			return msId;
+		}
+
+		/*
+		// 此处进行判断，是在处理一种特殊情况
+		// user 为数据库model，有两个子类 user1,user2
+		// 1、进行查询 querylist(sql,user1)
+		// 2、进行查询 querylist(sql,user2)
+		// 3、进行查询 querylist(sql,user1)
+		// 此时在进行第三步查询的时候，会提示说无法将user2转换为user1
+		// 原因就在此，因为在执行第二步的时候，entityTable(user)对应的ResultMap的resultType被改为了user2，
+		// 第3步进行查询的时候，走了hasMappedStatement逻辑，无法在对entityTable(user)设置ResultMap对应的resultType
+		// 所以在此处加入了一个判断，如果ms中的第一个resultMap中的type与传入的resultType不相等就改变一次值
+		 */
+		private void reCalcResultMapType(String msId,Class<?> resultType){
+			MappedStatement ms = configuration.getMappedStatement(msId);
+			List<ResultMap> rms = ms.getResultMaps();
+			ResultMap rm = rms.get(0);
+			if(resultType !=rm.getType()){
+				MetaObjectUtil.forObject(rm).setValue("type",resultType);
+			}
 		}
 
 		private String insert(String sql) {

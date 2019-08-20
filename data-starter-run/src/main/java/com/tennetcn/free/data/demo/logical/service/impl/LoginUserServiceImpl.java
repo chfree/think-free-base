@@ -6,6 +6,7 @@ import com.tennetcn.free.data.demo.logical.mapper.LoginUserMapper;
 import com.tennetcn.free.data.demo.logical.model.LoginUser;
 import com.tennetcn.free.data.demo.logical.service.ILoginUserService;
 import com.tennetcn.free.data.demo.logical.viewmodel.TestUser;
+import com.tennetcn.free.data.demo.logical.viewmodel.TestUser1;
 import com.tennetcn.free.data.utils.SqlExpressionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,5 +36,12 @@ public class LoginUserServiceImpl extends SuperService<LoginUser> implements ILo
         ISqlExpression sqlExpression= SqlExpressionFactory.createExpression();
         sqlExpression.selectAllFrom(LoginUser.class);
         return queryList(sqlExpression,TestUser.class);
+    }
+
+    @Override
+    public List<TestUser1> queryTestUsers1() {
+        ISqlExpression sqlExpression= SqlExpressionFactory.createExpression();
+        sqlExpression.selectAllFrom(LoginUser.class);
+        return queryList(sqlExpression, TestUser1.class);
     }
 }
