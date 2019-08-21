@@ -1,30 +1,24 @@
 package com.tennetcn.free.data.dao.base.mapper;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import cn.hutool.core.util.ClassUtil;
-import com.tennetcn.free.data.dao.base.IMapper;
-import com.tennetcn.free.data.message.IDbModel;
-import com.tennetcn.free.data.message.ModelBase;
 import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.exceptions.TooManyResultsException;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.ResultMap;
-import org.apache.ibatis.mapping.ResultMapping;
-import org.apache.ibatis.mapping.SqlCommandType;
-import org.apache.ibatis.mapping.SqlSource;
-import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.mapping.*;
 import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.MapperException;
+import tk.mybatis.mapper.entity.Config;
 import tk.mybatis.mapper.entity.EntityTable;
-import tk.mybatis.mapper.mapperhelper.EntityHelper;
-import tk.mybatis.mapper.util.MetaObjectUtil;
+import tk.mybatis.mapper.mapperhelper.MapperHelper;
+import tk.mybatis.mapper.mapperhelper.resolve.DefaultEntityResolve;
+import tk.mybatis.mapper.mapperhelper.resolve.EntityResolve;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author chenghuan
@@ -330,6 +324,8 @@ public class SqlMapper {
 		return sqlSession.delete(msId, value);
 	}
 
+	private static final Map<Class<?>, EntityTable> entityTableMap = new ConcurrentHashMap<Class<?>, EntityTable>();
+
 	private class MSUtils {
 		private Configuration configuration;
 		private LanguageDriver languageDriver;
@@ -365,6 +361,11 @@ public class SqlMapper {
 			return configuration.hasStatement(msId, false);
 		}
 
+		final EntityResolve resolve = new DefaultEntityResolve();
+
+		@Autowired
+		MapperHelper mapperHelper;
+
 		/**
 		 * 创建一个查询的MS
 		 *
@@ -377,19 +378,8 @@ public class SqlMapper {
 		private void newSelectMappedStatement(String msId, SqlSource sqlSource, final Class<?> resultType) {
 			List<ResultMap> resultMaps = new ArrayList();
 			try{
-				// 继承了ModelBase就是实现了IDbModel接口
-				if(IDbModel.class.isAssignableFrom(resultType)){
-					// 取出resultType上有Entity类或者是直接父类为ModelBase的type进行resultMap的映射
-					EntityTable entityTable = EntityHelper.getEntityTable(getModelBaseChild(resultType));
-
-					//更改type
-					ResultMap rm = entityTable.getResultMap(configuration);
-					MetaObjectUtil.forObject(rm).setValue("type",resultType);
-
-					resultMaps.add(rm);
-				}else{
-					resultMaps.add(new ResultMap.Builder(configuration,"defaultResultMap", resultType,new ArrayList<ResultMapping>(0)).build());
-				}
+				ResultMap rm = getEneityTable(resultType).getResultMap(configuration);
+				resultMaps.add(rm);
 			}catch (MapperException ex){
 				resultMaps.add(new ResultMap.Builder(configuration,"defaultResultMap", resultType,new ArrayList<ResultMapping>(0)).build());
 			}
@@ -399,15 +389,45 @@ public class SqlMapper {
 			configuration.addMappedStatement(ms);
 		}
 
-		// 获取直接父类是ModelBase的类
-		private Class<?> getModelBaseChild(Class<?> resultType){
-			if(ModelBase.class.equals(resultType.getSuperclass())){
-				return resultType;
+		private EntityTable getEneityTable(Class<?> resultType){
+			EntityTable entityTable = entityTableMap.get(resultType);
+			if(entityTable==null){
+				entityTable = resolve.resolveEntity(resultType,getConfig());
+				entityTableMap.put(resultType,entityTable);
 			}
-			if(resultType==null||Object.class.equals(resultType.getSuperclass())){
-				return null;
-			}
-			return getModelBaseChild(resultType.getSuperclass());
+			return entityTable;
+		}
+
+		private Config getConfig(){
+			//特殊配置
+			Config config = new Config();
+			// 主键自增回写方法,默认值MYSQL,详细说明请看文档
+			config.setIDENTITY("HSQLDB");
+			// 支持方法上的注解
+			// 3.3.1版本增加
+			config.setEnableMethodAnnotation(true);
+			config.setNotEmpty(true);
+			//校验Example中的类型是否一致
+			config.setCheckExampleEntityClass(true);
+			//启用简单类型
+			config.setUseSimpleType(true);
+			config.setEnumAsSimpleType(true);
+			// 序列的获取规则,使用{num}格式化参数，默认值为{0}.nextval，针对Oracle
+			// 可选参数一共3个，对应0,1,2,分别为SequenceName，ColumnName, PropertyName
+			//config.setSeqFormat("NEXT VALUE FOR {0}");
+			// 设置全局的catalog,默认为空，如果设置了值，操作表时的sql会是catalog.tablename
+			//config.setCatalog("");
+			// 设置全局的schema,默认为空，如果设置了值，操作表时的sql会是schema.tablename
+			// 如果同时设置了catalog,优先使用catalog.tablename
+			//config.setSchema("");
+			// 主键自增回写方法执行顺序,默认AFTER,可选值为(BEFORE|AFTER)
+			//config.setOrder("AFTER");
+			//自动关键字 - mysql
+			//config.setWrapKeyword("`{0}`");
+			//使用 javaType
+			config.setUseJavaType(true);
+
+			return config;
 		}
 
 		/**
@@ -463,33 +483,12 @@ public class SqlMapper {
 			String msId = newMsId(resultType + sql + parameterType,
 					SqlCommandType.SELECT);
 			if (hasMappedStatement(msId)) {
-				reCalcResultMapType(msId,resultType);
 				return msId;
 			}
 			SqlSource sqlSource = languageDriver.createSqlSource(configuration,
 					sql, parameterType);
 			newSelectMappedStatement(msId, sqlSource, resultType);
 			return msId;
-		}
-
-		/*
-		// 此处进行判断，是在处理一种特殊情况
-		// user 为数据库model，有两个子类 user1,user2
-		// 1、进行查询 querylist(sql,user1)
-		// 2、进行查询 querylist(sql,user2)
-		// 3、进行查询 querylist(sql,user1)
-		// 此时在进行第三步查询的时候，会提示说无法将user2转换为user1
-		// 原因就在此，因为在执行第二步的时候，entityTable(user)对应的ResultMap的resultType被改为了user2，
-		// 第3步进行查询的时候，走了hasMappedStatement逻辑，无法在对entityTable(user)设置ResultMap对应的resultType
-		// 所以在此处加入了一个判断，如果ms中的第一个resultMap中的type与传入的resultType不相等就改变一次值
-		 */
-		private void reCalcResultMapType(String msId,Class<?> resultType){
-			MappedStatement ms = configuration.getMappedStatement(msId);
-			List<ResultMap> rms = ms.getResultMaps();
-			ResultMap rm = rms.get(0);
-			if(resultType !=rm.getType()){
-				MetaObjectUtil.forObject(rm).setValue("type",resultType);
-			}
 		}
 
 		private String insert(String sql) {
