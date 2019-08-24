@@ -26,29 +26,29 @@ public class DataDemoApp implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-//        int count = loginUserService.queryCount();
-//
-//        System.out.println("count:" + count);
+        int count = loginUserService.queryCount();
 
-//        List<LoginUser> loginUsers = loginUserService.queryList();
-//
-//        System.out.println("query list");
-//        loginUsers.forEach(user->{
-//            System.out.println(user.getId()+":"+user.getName());
-//        });
-//
-//        System.out.println("query list mp by ids");
-//        List<LoginUser> usersByIds = loginUserService.queryListMPByIds(Arrays.asList("123","1234"));
-//        usersByIds.forEach(user->{
-//            System.out.println(user.getId()+":"+user.getName());
-//        });
-//
-//        System.out.println("query list test");
-//
-//        List<LoginUser> testList = loginUserService.queryTest();
-//        testList.forEach(test->{
-//            System.out.println("markCode:"+test.getMarkCode());
-//        });
+        System.out.println("count:" + count);
+
+        List<LoginUser> loginUsers = loginUserService.queryList();
+
+        System.out.println("query list");
+        loginUsers.forEach(user->{
+            System.out.println(user.getId()+":"+user.getName());
+        });
+
+        System.out.println("query list mp by ids");
+        List<LoginUser> usersByIds = loginUserService.queryListMPByIds(Arrays.asList("123","1234"));
+        usersByIds.forEach(user->{
+            System.out.println(user.getId()+":"+user.getName());
+        });
+
+        System.out.println("query list test");
+
+        List<LoginUser> testList = loginUserService.queryTest();
+        testList.forEach(test->{
+            System.out.println("markCode:"+test.getMarkCode());
+        });
 
         System.out.println("query list test user");
 

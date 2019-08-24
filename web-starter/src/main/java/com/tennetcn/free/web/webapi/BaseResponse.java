@@ -1,12 +1,13 @@
 package com.tennetcn.free.web.webapi;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.tennetcn.free.web.message.WebResponseStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,5 +60,10 @@ public class BaseResponse {
 
     public Object get(String key){
         return arguments.get(key);
+    }
+
+    @JsonAnyGetter
+    public Map<String,Object> getArguments(){
+        return this.arguments;
     }
 }

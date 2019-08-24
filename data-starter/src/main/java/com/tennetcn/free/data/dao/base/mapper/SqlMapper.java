@@ -379,7 +379,11 @@ public class SqlMapper {
 			List<ResultMap> resultMaps = new ArrayList();
 			try{
 				ResultMap rm = getEneityTable(resultType).getResultMap(configuration);
-				resultMaps.add(rm);
+				if(rm==null){
+                    resultMaps.add(new ResultMap.Builder(configuration,"defaultResultMap", resultType,new ArrayList<ResultMapping>(0)).build());
+                }else{
+                    resultMaps.add(rm);
+                }
 			}catch (MapperException ex){
 				resultMaps.add(new ResultMap.Builder(configuration,"defaultResultMap", resultType,new ArrayList<ResultMapping>(0)).build());
 			}
