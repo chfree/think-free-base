@@ -25,13 +25,11 @@ import java.util.Map;
 
 @Data
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class BaseResponse {
     /**
      * 状态
      */
-    @NonNull
-    private String status;
+    private int status;
 
     /**
      * 消息，给用户查看
@@ -52,6 +50,10 @@ public class BaseResponse {
 
     public BaseResponse(){
         this.status = WebResponseStatus.SUCCESS;
+    }
+
+    public BaseResponse(int status){
+        this.status = status;
     }
 
     public void put(String key,Object value){

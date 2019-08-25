@@ -8,30 +8,30 @@ package com.tennetcn.free.core.exception;
  */
 
 public class BizException extends RuntimeException {
-    public BizException(String code, Object... params) {
+    public BizException(int code, Object... params) {
         this.code = code;
         this.params = params;
     }
 
 
-    public BizException(String code, String msg) {
+    public BizException(int code, String msg) {
         super(msg);
         this.code = code;
     }
 
 
-    public BizException(String code) {
+    public BizException(int code) {
         this(code, new Object[0]);
     }
 
-    private String code;
+    private int code;
     private Object[] params;
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(int code) {
         this.code = code;
     }
 

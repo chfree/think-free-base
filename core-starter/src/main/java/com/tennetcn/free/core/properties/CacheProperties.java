@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CacheProperties {
 	
-	public static final String CACHE_NAME = "nfamp";
+	public static final String CACHE_NAME = "free";
 	
 	/**
 	 * 缓存仓库
