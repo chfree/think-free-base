@@ -1,5 +1,6 @@
 package com.tennetcn.free.web.webapi;
 
+import com.tennetcn.free.core.cache.ICached;
 import com.tennetcn.free.web.base.*;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public abstract class FirstApi {
 
     @Autowired
     protected HttpSession session;
+
+    @Autowired
+    protected ICached cached;
 
     @InitBinder
     private void initBinder(WebDataBinder binder) {
