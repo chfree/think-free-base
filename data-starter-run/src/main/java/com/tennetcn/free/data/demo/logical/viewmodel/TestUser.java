@@ -13,4 +13,6 @@ import lombok.Data;
 @Data
 public class TestUser extends LoginUser {
     private String test;
+
+    private String testName;
 }

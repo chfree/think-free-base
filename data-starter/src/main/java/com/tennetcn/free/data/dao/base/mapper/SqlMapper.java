@@ -9,6 +9,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.MapperException;
+import tk.mybatis.mapper.code.Style;
 import tk.mybatis.mapper.entity.Config;
 import tk.mybatis.mapper.entity.EntityTable;
 import tk.mybatis.mapper.mapperhelper.MapperHelper;
@@ -405,6 +406,7 @@ public class SqlMapper {
 		private Config getConfig(){
 			//特殊配置
 			Config config = new Config();
+			config.setStyle(Style.normal);
 			// 主键自增回写方法,默认值MYSQL,详细说明请看文档
 			config.setIDENTITY("HSQLDB");
 			// 支持方法上的注解
@@ -430,7 +432,6 @@ public class SqlMapper {
 			//config.setWrapKeyword("`{0}`");
 			//使用 javaType
 			config.setUseJavaType(true);
-
 			return config;
 		}
 

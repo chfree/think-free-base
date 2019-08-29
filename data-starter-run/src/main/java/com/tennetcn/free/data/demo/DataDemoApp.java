@@ -62,6 +62,19 @@ public class DataDemoApp implements CommandLineRunner {
 
         });
 
+        System.out.println("query list test usersx");
+
+        List<TestUser> testUsersx = loginUserService.queryTestUserxs();
+        System.out.println(JSONUtil.toJsonStr(testUsersx));
+        testUsersx.forEach(test->{
+            if(!StringUtils.isEmpty(test.getMarkCode())){
+                System.out.println("markCode:"+test.getMarkCode());
+                System.out.println("test:"+test.getTest());
+                System.out.println("testName:"+test.getTestName());
+            }
+
+        });
+
         System.out.println("query list test user1");
         List<TestUser1> testUsers1 = loginUserService.queryTestUsers1();
         System.out.println(JSONUtil.toJsonStr(testUsers1));

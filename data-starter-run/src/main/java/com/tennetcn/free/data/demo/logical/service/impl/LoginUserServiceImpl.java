@@ -39,6 +39,13 @@ public class LoginUserServiceImpl extends SuperService<LoginUser> implements ILo
     }
 
     @Override
+    public List<TestUser> queryTestUserxs() {
+        ISqlExpression sqlExpression= SqlExpressionFactory.createExpression();
+        sqlExpression.selectAllFrom(LoginUser.class).appendSelect("'aaa' as test,'bb' as testName");
+        return queryList(sqlExpression,TestUser.class);
+    }
+
+    @Override
     public List<TestUser1> queryTestUsers1() {
         ISqlExpression sqlExpression= SqlExpressionFactory.createExpression();
         sqlExpression.selectAllFrom(LoginUser.class);

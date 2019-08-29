@@ -14,5 +14,7 @@ public interface ILoginUserService extends ISuperService<LoginUser> {
 
     List<TestUser> queryTestUsers();
 
+    List<TestUser> queryTestUserxs();
+
     List<TestUser1> queryTestUsers1();
 }
