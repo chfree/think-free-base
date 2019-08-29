@@ -51,7 +51,9 @@ public interface ISqlExpression {
 	ISqlExpression andNotEqNoEmpty(String column,int value);
 	
 	ISqlExpression andMainTableWhere(String value);
-	
+
+	ISqlExpression andWhereIn(String column,ISqlExpression sqlExpression);
+
 	ISqlExpression andWhereIn(String column,List<Object> values);
 	
 	ISqlExpression andWhereInString(String column,List<String> values);

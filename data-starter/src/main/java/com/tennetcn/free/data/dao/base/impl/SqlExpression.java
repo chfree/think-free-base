@@ -1,19 +1,19 @@
 package com.tennetcn.free.data.dao.base.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.tennetcn.free.data.enums.YesOrNo;
-import com.tennetcn.free.data.message.*;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-
 import com.tennetcn.free.core.utils.StringHelper;
 import com.tennetcn.free.data.dao.base.ISqlExpression;
 import com.tennetcn.free.data.enums.OrderEnum;
+import com.tennetcn.free.data.message.OrderByEnum;
+import com.tennetcn.free.data.message.OrderInfo;
+import com.tennetcn.free.data.message.SqlOperateMode;
 import com.tennetcn.free.data.utils.ClassAnnotationUtils;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.mapperhelper.SqlHelper;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -505,22 +505,38 @@ public class SqlExpression implements ISqlExpression {
 	}
 
 	@Override
+	public ISqlExpression andWhereIn(String column,ISqlExpression sqlExpression){
+		StringBuilder builder=new StringBuilder();
+		builder.append(column+" in (");
+		builder.append(sqlExpression.toSql());
+		builder.append(")");
+
+		this.setParamAll(sqlExpression.getParams());
+
+		andWhere(builder.toString());
+		return this;
+	}
+
+	@Override
 	public ISqlExpression andWhereIn(String column, List<Object> values) {
 		if(values==null||values.size()<=0){
 			return this;
 		}
-		String wheres=column+" in (";
+		StringBuffer builder=new StringBuffer();
+		builder.append(column+" in (");
+		String columnName = "";
 		for (int i = 0; i < values.size(); i++) {
+			columnName = resolveColumn(column)+i;
 			if(i==values.size()-1){
-				wheres+="#{"+resolveColumn(column)+i+"}";
+				builder.append("#{"+columnName+"}");
 			}else{
-				wheres+="#{"+resolveColumn(column)+i+"},";
+				builder.append("#{"+columnName+"},");
 			}
-			this.setParam(resolveColumn(column)+i, values.get(i));
+			this.setParam(columnName, values.get(i));
 		}
-		wheres+=")";
+		builder.append(")");
 		
-		andWhere(wheres);
+		andWhere(builder.toString());
 		
 		return this;
 	}
@@ -531,18 +547,21 @@ public class SqlExpression implements ISqlExpression {
 		if(values==null||values.size()<=0){
 			return this;
 		}
-		String wheres=column+" in (";
+		StringBuffer builder=new StringBuffer();
+		builder.append(column+" in (");
+		String columnName = "";
 		for (int i = 0; i < values.size(); i++) {
+			columnName = resolveColumn(column)+i;
 			if(i==values.size()-1){
-				wheres+="#{"+resolveColumn(column)+i+"}";
+				builder.append("#{"+columnName+"}");
 			}else{
-				wheres+="#{"+resolveColumn(column)+i+"},";
+				builder.append("#{"+columnName+"},");
 			}
-			this.setParam(resolveColumn(column)+i, values.get(i));
+			this.setParam(columnName, values.get(i));
 		}
-		wheres+=")";
+		builder.append(")");
 		
-		andWhere(wheres);
+		andWhere(builder.toString());
 		
 		return this;
 	}
