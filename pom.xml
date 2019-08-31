@@ -17,6 +17,21 @@
         <module>swagger-starter</module>
     </modules>
 
+    <repositories>
+        <repository>
+            <id>tennetcn_nexus</id>
+            <name>tennetcn nexus repository</name>
+            <url>http://nexus.tennetcn.com/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
+    <distributionManagement>
+        <repository>
+            <id>tennetcn_nexus_release</id>
+            <name>tennetcn nexus release</name>
+            <url>http://nexus.tennetcn.com/nexus/content/repositories/tennetcn</url>
+        </repository>
+    </distributionManagement>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
