@@ -1,5 +1,6 @@
 package com.tennetcn.free.data.dao.base.impl;
 
+import com.tennetcn.free.core.message.PagerModel;
 import com.tennetcn.free.data.dao.base.IMapper;
 import com.tennetcn.free.data.dao.base.ISqlExpression;
 import com.tennetcn.free.data.dao.base.ISuperDao;
@@ -9,6 +10,7 @@ import com.tennetcn.free.data.enums.YesOrNo;
 import com.tennetcn.free.data.enums.YesOrNoInteger;
 import com.tennetcn.free.data.message.*;
 import com.tennetcn.free.data.utils.ClassAnnotationUtils;
+import com.tennetcn.free.data.utils.Pager2RowBounds;
 import com.tennetcn.free.data.utils.SqlExpressionFactory;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.RowBounds;
@@ -110,7 +112,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
 		setOrderBy(example);
 
-		return getMapper().selectByExampleAndRowBounds(example, pagerModel.getRowBounds());
+		return getMapper().selectByExampleAndRowBounds(example, Pager2RowBounds.getRowBounds(pagerModel));
 	}
 
 	@Override
@@ -184,7 +186,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 	@Override
 	public List<E> queryList(Object example, PagerModel pagerModel) throws DaoBaseRuntimeException {
 		setOrderBy(example);
-		return getMapper().selectByExampleAndRowBounds(example, pagerModel.getRowBounds());
+		return getMapper().selectByExampleAndRowBounds(example, Pager2RowBounds.getRowBounds(pagerModel));
 	}
 
 	@Override
@@ -617,7 +619,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 	public List<E> queryList(ISqlExpression sqlExpression, PagerModel pagerModel) {
 		try {
 			if (pagerModel != null) {
-				return selectList(sqlExpression.toSql(), sqlExpression.getParams(), pagerModel.getRowBounds(), entityClass);
+				return selectList(sqlExpression.toSql(), sqlExpression.getParams(), Pager2RowBounds.getRowBounds(pagerModel), entityClass);
 			} else {
 				return queryList(sqlExpression);
 			}
@@ -631,7 +633,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 	@Override
 	public List<Map<String, Object>> queryListEx(ISqlExpression sqlExpression, PagerModel pagerModel) {
 		try {
-			return selectListEx(sqlExpression.toSql(), sqlExpression.getParams(), pagerModel.getRowBounds());
+			return selectListEx(sqlExpression.toSql(), sqlExpression.getParams(), Pager2RowBounds.getRowBounds(pagerModel));
 		} catch (DaoBaseRuntimeException e) {
 			e.printStackTrace();
 			throw new DaoBaseRuntimeException(e);
@@ -641,7 +643,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 	@Override
 	public <T> List<T> queryList(ISqlExpression sqlExpression, PagerModel pagerModel, Class<T> resultType) {
 		try {
-			return selectList(sqlExpression.toSql(), sqlExpression.getParams(), pagerModel.getRowBounds(), resultType);
+			return selectList(sqlExpression.toSql(), sqlExpression.getParams(), Pager2RowBounds.getRowBounds(pagerModel), resultType);
 		} catch (DaoBaseRuntimeException e) {
 			e.printStackTrace();
 			throw new DaoBaseRuntimeException(e);

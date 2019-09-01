@@ -1,9 +1,9 @@
 package com.tennetcn.free.data.dao.base;
 
+import com.tennetcn.free.core.message.PagerModel;
 import com.tennetcn.free.data.message.DaoBaseRuntimeException;
 import com.tennetcn.free.data.message.ModelBase;
 import com.tennetcn.free.data.message.OrderInfo;
-import com.tennetcn.free.data.message.PagerModel;
 import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
@@ -70,7 +70,7 @@ public interface ISuperDao<E extends ModelBase> {
 	
 	List<E> queryListByExample(Object example) throws DaoBaseRuntimeException;
 	
-	List<E> queryList(Object example,PagerModel pagerModel) throws DaoBaseRuntimeException;
+	List<E> queryList(Object example, PagerModel pagerModel) throws DaoBaseRuntimeException;
 	
 	List<E> queryListByExampleAndRowBounds(Object example,RowBounds rowBounds) throws DaoBaseRuntimeException;
 	

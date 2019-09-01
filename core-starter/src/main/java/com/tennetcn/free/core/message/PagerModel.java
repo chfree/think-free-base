@@ -1,12 +1,8 @@
-package com.tennetcn.free.data.message;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+package com.tennetcn.free.core.message;
 
 import lombok.Data;
-import org.apache.ibatis.session.RowBounds;
+
+import java.io.Serializable;
 
 
 /** 
@@ -37,7 +33,7 @@ public class PagerModel implements Serializable {
 		this.pageSize=pageSize;
 	}
 	
-	public PagerModel(int pageSize,int pagerIndex){
+	public PagerModel(int pageSize, int pagerIndex){
 		setDefault();
 		this.pageSize=pageSize;
 		this.pageIndex=pagerIndex;
@@ -47,10 +43,4 @@ public class PagerModel implements Serializable {
 		this.pageSize=15;
 		this.pageIndex=1;
 	}
-	
-	
-	public RowBounds getRowBounds(){
-		return new RowBounds((this.pageIndex-1)*this.pageSize,this.pageSize);
-	}
-
 }
