@@ -7,6 +7,7 @@ import com.tennetcn.free.data.message.OrderByEnum;
 import com.tennetcn.free.data.message.OrderInfo;
 import com.tennetcn.free.data.message.SqlOperateMode;
 import com.tennetcn.free.data.utils.ClassAnnotationUtils;
+import org.junit.Test;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.mapperhelper.SqlHelper;
@@ -43,10 +44,6 @@ public class SqlExpression implements ISqlExpression {
 
 	private StringBuffer fromBuffer = new StringBuffer();
 
-	private int start = -1;
-
-	private int length = -1;
-
 	public SqlExpression() {
 		if (params == null) {
 			params = new HashMap<String, Object>();
@@ -80,7 +77,9 @@ public class SqlExpression implements ISqlExpression {
 
 	@Override
 	public ISqlExpression andEq(String column, String value) {
+		column = resolveColumnMainTable(column);
 		String paramName = resolveColumn(column);
+
 		this.andWhere(column + "=#{" + paramName + "}")
 				.setParam(paramName, value);
 		return this;
@@ -88,7 +87,9 @@ public class SqlExpression implements ISqlExpression {
 
 	@Override
 	public ISqlExpression andLike(String column, String value) {
+		column = resolveColumnMainTable(column);
 		String paramName = resolveColumn(column);
+
 		this.andWhere(column + " like #{" + paramName + "}")
 				.setParam(paramName, "%" + value + "%");
 		return this;
@@ -96,7 +97,9 @@ public class SqlExpression implements ISqlExpression {
 
 	@Override
 	public ISqlExpression andRightLike(String column, String value) {
+		column = resolveColumnMainTable(column);
 		String paramName = resolveColumn(column);
+
 		this.andWhere(column + " like #{" + paramName + "}")
 				.setParam(paramName, value + "%");
 		return this;
@@ -128,7 +131,9 @@ public class SqlExpression implements ISqlExpression {
 
 	@Override
 	public ISqlExpression andNotEq(String column, String value) {
+		column = resolveColumnMainTable(column);
 		String paramName = resolveColumn(column);
+
 		this.andWhere(column + "!=#{" + paramName + "}")
 				.setParam(paramName, value);
 		return this;
@@ -136,7 +141,9 @@ public class SqlExpression implements ISqlExpression {
 
 	@Override
 	public ISqlExpression andNotLike(String column, String value) {
+		column = resolveColumnMainTable(column);
 		String paramName = resolveColumn(column);
+
 		this.andWhere(column + " not like #{" + paramName + "}")
 				.setParam(paramName, "%" + value + "%");
 		return this;
@@ -522,6 +529,8 @@ public class SqlExpression implements ISqlExpression {
 		if(values==null||values.size()<=0){
 			return this;
 		}
+		column = resolveColumnMainTable(column);
+
 		StringBuffer builder=new StringBuffer();
 		builder.append(column+" in (");
 		String columnName = "";
@@ -547,10 +556,12 @@ public class SqlExpression implements ISqlExpression {
 		if(values==null||values.size()<=0){
 			return this;
 		}
+		column = resolveColumnMainTable(column);
 		StringBuffer builder=new StringBuffer();
 		builder.append(column+" in (");
 		String columnName = "";
 		for (int i = 0; i < values.size(); i++) {
+
 			columnName = resolveColumn(column)+i;
 			if(i==values.size()-1){
 				builder.append("#{"+columnName+"}");
@@ -579,10 +590,12 @@ public class SqlExpression implements ISqlExpression {
 		String inWhereId="";
 		Map<String,Object> inWhereMap=new HashMap<String, Object>();
 		for (String column : columns) {
+			column = resolveColumnMainTable(column);
 			if(sbWheres.length()>0){
 				sbWheres.append(" "+join+" ");
 			}
 			if(StringUtils.isEmpty(inWhereId)){
+
 				inWhereId=resolveColumn(column);
 			}
 			sbWheres.append(column+" in (");
@@ -608,6 +621,15 @@ public class SqlExpression implements ISqlExpression {
 	}
 	
 	private String resolveColumn(String column){
+
 		return column.replaceAll("\\.", "_");
+	}
+
+	// 如果有maintable的别名设置，并且列没有指定表别名，则默认为主表别名
+	private String resolveColumnMainTable(String column){
+		if(!StringUtils.isEmpty(mainTableAlias)&&column.indexOf(".")<0){
+			column = mainTableAlias+"."+column;
+		}
+		return column;
 	}
 }
