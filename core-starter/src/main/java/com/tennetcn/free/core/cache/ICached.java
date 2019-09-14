@@ -12,5 +12,7 @@ public interface ICached {
 
     Object get(String key);
 
+    <T> T get(String key,Class<T> tClass);
+
     void remove(String key);
 }

@@ -33,6 +33,15 @@ public class CachedImpl implements ICached {
 	}
 
 	@Override
+	public <T> T get(String key, Class<T> tClass) {
+		Object object = get(key);
+		if(object==null){
+			return null;
+		}
+		return (T)object;
+	}
+
+	@Override
 	public void remove(String key) {
 		cacheManager.getCache(CacheProperties.CACHE_NAME).evict(key);
 	}
