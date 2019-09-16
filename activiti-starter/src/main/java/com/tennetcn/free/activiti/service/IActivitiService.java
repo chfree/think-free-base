@@ -4,6 +4,8 @@ import com.tennetcn.free.activiti.message.DeployModel;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
 
+import java.io.InputStream;
+
 /**
  * @author chfree
  * @email chfree001@gmail.com
@@ -36,4 +38,18 @@ public interface IActivitiService {
      * @param userId
      */
     void claimProcess(String taskId,String userId);
+
+    /**
+     * 查看流程图
+     * @param deploymentId
+     * @return
+     */
+    InputStream getProcessDefinitionImage(String deploymentId);
+
+    /**
+     * 查看流程图，根据任务id
+     * @param taskId
+     * @return
+     */
+    InputStream getProcessInstanceImage(String taskId);
 }
