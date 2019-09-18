@@ -1,6 +1,7 @@
 package com.tennetcn.free.activiti.service;
 
 import com.tennetcn.free.activiti.message.DeployModel;
+import com.tennetcn.free.activiti.message.StartProcessModel;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
 
@@ -24,7 +25,7 @@ public interface IActivitiService {
      * 开启一个流程
      * @return
      */
-    ProcessInstance startProcess();
+    ProcessInstance startProcess(StartProcessModel startProcessModel);
 
     /**
      * 完成一个流程

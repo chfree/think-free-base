@@ -17,6 +17,11 @@
             <artifactId>activiti-spring</artifactId>
             <version>6.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.tennetcn.free</groupId>
+            <artifactId>core-starter</artifactId>
+            <version>0.0.1</version>
+        </dependency>
     </dependencies>
 
 </project>

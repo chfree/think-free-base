@@ -1,8 +1,10 @@
 package com.tennetcn.free.activiti.service.impl;
 
+import com.tennetcn.free.activiti.enums.FlowVariableKey;
 import com.tennetcn.free.activiti.exception.DeployRuntimeExcetion;
 import com.tennetcn.free.activiti.message.DeployModel;
 import com.tennetcn.free.activiti.message.DeployResource;
+import com.tennetcn.free.activiti.message.StartProcessModel;
 import com.tennetcn.free.activiti.service.IActivitiService;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.RepositoryService;
@@ -19,9 +21,9 @@ import org.springframework.util.StringUtils;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import static org.activiti.engine.impl.util.ProcessDefinitionUtil.getBpmnModel;
+import java.util.Map;
 
 /**
  * @author chfree
@@ -70,8 +72,14 @@ public class ActivitiService implements IActivitiService {
     }
 
     @Override
-    public ProcessInstance startProcess() {
-        return null;
+    public ProcessInstance startProcess(StartProcessModel startProcessModel) {
+
+        Map<String,Object> var= new HashMap<>();
+        var.put(FlowVariableKey.ASSIGNEE,startProcessModel.getAssignee());
+        var.put(FlowVariableKey.CAN_USERS,startProcessModel.getCanUsers());
+        var.put(FlowVariableKey.CAN_GROUPS,startProcessModel.getCanGroups());
+
+        return runtimeService.startProcessInstanceByKey(startProcessModel.getKey(),startProcessModel.getBusinessId(),var);
     }
 
     @Override
