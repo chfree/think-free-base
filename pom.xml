@@ -95,6 +95,66 @@
                 <artifactId>guava</artifactId>
                 <version>28.0-jre</version>
             </dependency>
+            <dependency>
+                <groupId>com.tennetcn.free</groupId>
+                <artifactId>core-starter</artifactId>
+                <version>0.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tennetcn.free</groupId>
+                <artifactId>data-starter</artifactId>
+                <version>0.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tennetcn.free</groupId>
+                <artifactId>swagger-starter</artifactId>
+                <version>0.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tennetcn.free</groupId>
+                <artifactId>web-starter</artifactId>
+                <version>0.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tennetcn.free</groupId>
+                <artifactId>activiti-starter</artifactId>
+                <version>0.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tennetcn.free.authority</groupId>
+                <artifactId>authority-data-starter</artifactId>
+                <version>0.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tennetcn.free.authority</groupId>
+                <artifactId>authority-security-starter</artifactId>
+                <version>0.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tennetcn.free.authority</groupId>
+                <artifactId>authority-login-starter</artifactId>
+                <version>0.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tennetcn.free.authority</groupId>
+                <artifactId>authority-web-starter</artifactId>
+                <version>0.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tennetcn.free.authority</groupId>
+                <artifactId>develop-data-starter</artifactId>
+                <version>0.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tennetcn.free.authority</groupId>
+                <artifactId>develop-web-starter</artifactId>
+                <version>0.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>think-free-activiti</groupId>
+                <artifactId>activiti-web-starter</artifactId>
+                <version>0.0.1</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
