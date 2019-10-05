@@ -17,6 +17,7 @@
         <module>swagger-starter</module>
         <module>activiti-starter</module>
         <module>activiti-starter-run</module>
+        <module>think-swagger-ui-starter</module>
     </modules>
 
     <repositories>
