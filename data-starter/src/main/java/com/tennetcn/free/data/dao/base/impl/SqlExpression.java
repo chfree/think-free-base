@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.mapperhelper.SqlHelper;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -577,6 +578,11 @@ public class SqlExpression implements ISqlExpression {
 		return this;
 	}
 
+	@Override
+	public ISqlExpression andWhereInString(String column, String ...values) {
+		this.andWhereInString(column, Arrays.asList(values));
+		return this;
+	}
 
 	@Override
 	public ISqlExpression andWhereInString(List<String> values, String join,String... columns) {

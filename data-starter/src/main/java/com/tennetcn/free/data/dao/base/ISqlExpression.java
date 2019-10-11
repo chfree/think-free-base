@@ -57,6 +57,8 @@ public interface ISqlExpression {
 	ISqlExpression andWhereIn(String column,List<Object> values);
 	
 	ISqlExpression andWhereInString(String column,List<String> values);
+
+	ISqlExpression andWhereInString(String column,String ...values);
 	
 	ISqlExpression andWhereInString(List<String> values,String join,String... columns);
 	
