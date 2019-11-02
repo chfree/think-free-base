@@ -2,8 +2,8 @@ package com.tennetcn.free.web.exception;
 
 import cn.hutool.json.JSONUtil;
 import com.tennetcn.free.core.exception.BizException;
+import com.tennetcn.free.core.message.web.BaseResponse;
 import com.tennetcn.free.web.message.WebResponseStatus;
-import com.tennetcn.free.web.webapi.BaseResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

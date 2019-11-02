@@ -1,4 +1,4 @@
-package com.tennetcn.free.data.enums;
+package com.tennetcn.free.core.enums;
 
 public enum ModelStatus {
 	add,

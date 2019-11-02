@@ -1,6 +1,6 @@
 package com.tennetcn.free.data.dao.base;
 
-import com.tennetcn.free.data.enums.OrderEnum;
+import com.tennetcn.free.core.enums.OrderEnum;
 import com.tennetcn.free.data.message.OrderInfo;
 
 import java.util.List;

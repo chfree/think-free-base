@@ -3,12 +3,10 @@ package com.tennetcn.free.data.dao.base.impl;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import javax.annotation.Resource;
-
 import lombok.Data;
 import org.apache.ibatis.session.SqlSessionFactory;
 
-import com.tennetcn.free.data.message.ModelBase;
+import com.tennetcn.free.core.message.ModelBase;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /** 

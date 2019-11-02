@@ -1,6 +1,8 @@
 package com.tennetcn.free.web.message;
 
-public class WebResponseStatus {
+import com.tennetcn.free.core.message.web.ResponseStatus;
+
+public class WebResponseStatus extends ResponseStatus {
     public static final String STATUS_KEY="status";
 
     //请求成功

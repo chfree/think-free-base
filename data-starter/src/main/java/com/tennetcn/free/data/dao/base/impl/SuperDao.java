@@ -1,13 +1,15 @@
 package com.tennetcn.free.data.dao.base.impl;
 
+import com.tennetcn.free.core.message.ModelBase;
+import com.tennetcn.free.core.message.OrderByEnum;
 import com.tennetcn.free.core.message.PagerModel;
 import com.tennetcn.free.data.dao.base.IMapper;
 import com.tennetcn.free.data.dao.base.ISqlExpression;
 import com.tennetcn.free.data.dao.base.ISuperDao;
 import com.tennetcn.free.data.dao.base.mapper.SqlMapper;
-import com.tennetcn.free.data.enums.ModelStatus;
-import com.tennetcn.free.data.enums.YesOrNo;
-import com.tennetcn.free.data.enums.YesOrNoInteger;
+import com.tennetcn.free.core.enums.ModelStatus;
+import com.tennetcn.free.core.enums.YesOrNo;
+import com.tennetcn.free.core.enums.YesOrNoInteger;
 import com.tennetcn.free.data.message.*;
 import com.tennetcn.free.data.utils.ClassAnnotationUtils;
 import com.tennetcn.free.data.utils.Pager2RowBounds;

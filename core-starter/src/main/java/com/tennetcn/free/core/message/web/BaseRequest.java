@@ -1,4 +1,4 @@
-package com.tennetcn.free.web.webapi;
+package com.tennetcn.free.core.message.web;
 
 /**
  * @author chfree

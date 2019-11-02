@@ -1,6 +1,8 @@
 package com.tennetcn.free.data.message;
 
-/** 
+import com.tennetcn.free.core.message.OrderByEnum;
+
+/**
  * @author      chenghuan
  * @email       79763939@qq.com
  * @createtime  2016年5月6日 下午2:36:28
@@ -31,7 +33,7 @@ public class OrderInfo {
 	
 	public OrderInfo(String property){
 		this.property=property;
-		this.orderBy=OrderByEnum.ASC;
+		this.orderBy= OrderByEnum.ASC;
 	}
 	
 	public OrderInfo(String property,String orderBy){

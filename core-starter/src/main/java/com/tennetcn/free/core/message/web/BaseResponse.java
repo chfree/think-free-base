@@ -1,8 +1,6 @@
-package com.tennetcn.free.web.webapi;
+package com.tennetcn.free.core.message.web;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.tennetcn.free.web.message.WebResponseStatus;
 import lombok.*;
 
 import java.util.HashMap;
@@ -47,7 +45,7 @@ public class BaseResponse {
     private Map<String,Object> arguments=new HashMap<String, Object>();
 
     public BaseResponse(){
-        this.status = WebResponseStatus.SUCCESS;
+        this.status = ResponseStatus.SUCCESS;
     }
 
     public BaseResponse(int status){

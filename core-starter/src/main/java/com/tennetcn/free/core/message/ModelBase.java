@@ -1,11 +1,11 @@
-package com.tennetcn.free.data.message;
+package com.tennetcn.free.core.message;
 
 
 
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.tennetcn.free.data.enums.ModelStatus;
+import com.tennetcn.free.core.enums.ModelStatus;
 import lombok.Data;
 
 /** 

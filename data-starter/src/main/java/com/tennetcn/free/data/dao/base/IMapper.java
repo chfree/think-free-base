@@ -16,7 +16,7 @@ import tk.mybatis.mapper.common.MySqlMapper;
 import com.tennetcn.free.data.dao.base.mapper.CommonProvider;
 import com.tennetcn.free.data.dao.base.mapper.InsertListExMapper;
 import com.tennetcn.free.data.dao.base.mapper.QueryMapper;
-import com.tennetcn.free.data.message.ModelBase;
+import com.tennetcn.free.core.message.ModelBase;
 
 /**
  * @author chenghuan

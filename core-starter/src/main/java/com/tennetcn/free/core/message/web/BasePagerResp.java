@@ -1,6 +1,5 @@
-package com.tennetcn.free.web.message;
+package com.tennetcn.free.core.message.web;
 
-import com.tennetcn.free.web.webapi.BaseResponse;
 import lombok.Data;
 
 /**

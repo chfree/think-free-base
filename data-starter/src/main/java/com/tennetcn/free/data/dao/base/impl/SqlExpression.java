@@ -2,12 +2,11 @@ package com.tennetcn.free.data.dao.base.impl;
 
 import com.tennetcn.free.core.utils.StringHelper;
 import com.tennetcn.free.data.dao.base.ISqlExpression;
-import com.tennetcn.free.data.enums.OrderEnum;
-import com.tennetcn.free.data.message.OrderByEnum;
+import com.tennetcn.free.core.enums.OrderEnum;
+import com.tennetcn.free.core.message.OrderByEnum;
 import com.tennetcn.free.data.message.OrderInfo;
 import com.tennetcn.free.data.message.SqlOperateMode;
 import com.tennetcn.free.data.utils.ClassAnnotationUtils;
-import org.junit.Test;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.mapperhelper.SqlHelper;
