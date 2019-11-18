@@ -1,7 +1,9 @@
 package com.tennetcn.free.core.utils;
 
+import com.tennetcn.free.core.exception.BizException;
 import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,5 +38,17 @@ public class StringHelper {
             return "";
         }
         return fileName.substring(fileName.lastIndexOf(".")+1).toLowerCase();
+    }
+
+    public static int getStringLength(String str,String encoding) {
+        if(StringUtils.isEmpty(str)) {
+            return 0;
+        } else {
+            try {
+                return str.getBytes(encoding).length;
+            }catch (UnsupportedEncodingException ex){
+                throw new BizException("根据编码"+encoding+"获取字符长度异常");
+            }
+        }
     }
 }

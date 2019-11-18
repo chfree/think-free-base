@@ -8,6 +8,15 @@ package com.tennetcn.free.core.exception;
  */
 
 public class BizException extends RuntimeException {
+    protected static int defaultErrorCode = 1998;
+    public BizException(Object... params) {
+        this(defaultErrorCode,params);
+    }
+
+    public BizException(String msg) {
+        this(defaultErrorCode,msg);
+    }
+
     public BizException(int code, Object... params) {
         this.code = code;
         this.params = params;
