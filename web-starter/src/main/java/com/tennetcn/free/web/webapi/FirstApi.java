@@ -40,7 +40,7 @@ public abstract class FirstApi {
 
     private void tryRegisterCustomEditor(WebDataBinder binder){
         try {
-            Class<?> modelStatusClass= Class.forName("com.tennetcn.free.data.enums.ModelStatus");
+            Class<?> modelStatusClass= Class.forName("com.tennetcn.free.core.enums.ModelStatus");
             if(modelStatusClass!=null){
                 binder.registerCustomEditor(modelStatusClass,new ModelStatusEditor());
             }

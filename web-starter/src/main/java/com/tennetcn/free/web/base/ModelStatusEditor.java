@@ -18,7 +18,7 @@ public class ModelStatusEditor extends PropertyEditorSupport {
             setValue(null);
         } else {
             try {
-                Class clazz=Class.forName("com.tennetcn.free.data.enums.ModelStatus");
+                Class clazz=Class.forName("com.tennetcn.free.core.enums.ModelStatus");
                 setValue(Enum.valueOf(clazz,text));
             } catch (ClassNotFoundException ex) {
                 throw new IllegalArgumentException("Could not parse modelstatus:" + ex.getMessage(), ex);
