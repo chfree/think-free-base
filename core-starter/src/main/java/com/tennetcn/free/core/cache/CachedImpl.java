@@ -1,6 +1,7 @@
 package com.tennetcn.free.core.cache;
 
 import com.tennetcn.free.core.properties.CacheProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.cache.CacheManager;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
  * 缓存实现
  *
  */
+@Slf4j
 @Component
 public class CachedImpl implements ICached {
 
@@ -19,6 +21,7 @@ public class CachedImpl implements ICached {
 
 	@Override
 	public void put(String key, Object value) {
+		log.info("cacheManager is {}",cacheManager.getClass().getName());
 		cacheManager.getCache(CacheProperties.CACHE_NAME).put(key, value);
 	}
 
