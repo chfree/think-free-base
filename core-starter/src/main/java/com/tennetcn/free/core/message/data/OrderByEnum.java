@@ -1,4 +1,4 @@
-package com.tennetcn.free.core.message;
+package com.tennetcn.free.core.message.data;
 
 
 /** 

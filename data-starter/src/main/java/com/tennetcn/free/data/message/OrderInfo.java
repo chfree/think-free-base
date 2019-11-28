@@ -1,6 +1,6 @@
 package com.tennetcn.free.data.message;
 
-import com.tennetcn.free.core.message.OrderByEnum;
+import com.tennetcn.free.core.message.data.OrderByEnum;
 
 /**
  * @author      chenghuan

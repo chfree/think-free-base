@@ -1,6 +1,6 @@
 package com.tennetcn.free.core.message.web;
 
-import com.tennetcn.free.core.message.PagerModel;
+import com.tennetcn.free.core.message.data.PagerModel;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;

@@ -6,7 +6,7 @@ import java.lang.reflect.Type;
 import lombok.Data;
 import org.apache.ibatis.session.SqlSessionFactory;
 
-import com.tennetcn.free.core.message.ModelBase;
+import com.tennetcn.free.core.message.data.ModelBase;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /** 

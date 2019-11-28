@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import com.tennetcn.free.core.message.ModelBase;
-import com.tennetcn.free.core.message.OrderByEnum;
+import com.tennetcn.free.core.message.data.ModelBase;
+import com.tennetcn.free.core.message.data.OrderByEnum;
 import lombok.Data;
 import org.apache.ibatis.type.Alias;
 

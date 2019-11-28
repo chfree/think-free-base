@@ -1,8 +1,8 @@
 package com.tennetcn.free.data.dao.base;
 
-import com.tennetcn.free.core.message.PagerModel;
+import com.tennetcn.free.core.message.data.PagerModel;
 import com.tennetcn.free.data.message.DaoBaseRuntimeException;
-import com.tennetcn.free.core.message.ModelBase;
+import com.tennetcn.free.core.message.data.ModelBase;
 import com.tennetcn.free.data.message.OrderInfo;
 import org.apache.ibatis.session.RowBounds;
 

@@ -1,7 +1,7 @@
 package com.tennetcn.free.data.dao.base.impl;
 
-import com.tennetcn.free.core.message.ModelBase;
-import com.tennetcn.free.core.message.PagerModel;
+import com.tennetcn.free.core.message.data.ModelBase;
+import com.tennetcn.free.core.message.data.PagerModel;
 import com.tennetcn.free.data.dao.base.ISuperDao;
 import com.tennetcn.free.data.dao.base.ISuperService;
 import lombok.extern.slf4j.Slf4j;

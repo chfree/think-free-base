@@ -1,8 +1,8 @@
 package com.tennetcn.free.data.dao.base.impl;
 
-import com.tennetcn.free.core.message.ModelBase;
-import com.tennetcn.free.core.message.OrderByEnum;
-import com.tennetcn.free.core.message.PagerModel;
+import com.tennetcn.free.core.message.data.ModelBase;
+import com.tennetcn.free.core.message.data.OrderByEnum;
+import com.tennetcn.free.core.message.data.PagerModel;
 import com.tennetcn.free.data.dao.base.IMapper;
 import com.tennetcn.free.data.dao.base.ISqlExpression;
 import com.tennetcn.free.data.dao.base.ISuperDao;

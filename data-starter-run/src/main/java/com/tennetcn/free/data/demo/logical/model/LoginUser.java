@@ -1,7 +1,7 @@
 package com.tennetcn.free.data.demo.logical.model;
 
-import com.tennetcn.free.core.message.ModelBase;
-import com.tennetcn.free.core.message.OrderByEnum;
+import com.tennetcn.free.core.message.data.ModelBase;
+import com.tennetcn.free.core.message.data.OrderByEnum;
 import lombok.Data;
 import org.apache.ibatis.type.Alias;
 

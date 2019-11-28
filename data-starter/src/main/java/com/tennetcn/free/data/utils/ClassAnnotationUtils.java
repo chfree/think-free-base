@@ -14,7 +14,7 @@ import javax.persistence.Table;
 
 import org.springframework.util.StringUtils;
 
-import com.tennetcn.free.core.message.OrderByEnum;
+import com.tennetcn.free.core.message.data.OrderByEnum;
 import com.tennetcn.free.data.message.OrderInfo;
 
 /**

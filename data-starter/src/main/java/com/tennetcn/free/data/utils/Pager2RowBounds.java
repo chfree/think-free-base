@@ -1,6 +1,6 @@
 package com.tennetcn.free.data.utils;
 
-import com.tennetcn.free.core.message.PagerModel;
+import com.tennetcn.free.core.message.data.PagerModel;
 import org.apache.ibatis.session.RowBounds;
 
 /**
