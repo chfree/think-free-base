@@ -22,6 +22,9 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 public class BaseResponse {
+
+    public static String defaultResultKey = "result";
+
     /**
      * 状态
      */
@@ -54,6 +57,15 @@ public class BaseResponse {
 
     public void put(String key,Object value){
         arguments.put(key, value);
+    }
+
+    public void putResult(Object value){
+        arguments.put(defaultResultKey, value);
+    }
+
+    public void putErrorMessage(String message){
+        this.status = ResponseStatus.SERVER_ERROR;
+        setMessage(message);
     }
 
     public Object get(String key){
