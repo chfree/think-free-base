@@ -55,6 +55,11 @@ public class BaseResponse {
         this.status = status;
     }
 
+    public BaseResponse(int status,String message){
+        this.message = message;
+        this.status = status;
+    }
+
     public void put(String key,Object value){
         arguments.put(key, value);
     }

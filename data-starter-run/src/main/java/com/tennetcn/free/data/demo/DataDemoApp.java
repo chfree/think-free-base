@@ -30,12 +30,18 @@ public class DataDemoApp implements CommandLineRunner {
 
         System.out.println("count:" + count);
 
+
+
         List<LoginUser> loginUsers = loginUserService.queryList();
 
         System.out.println("query list");
         loginUsers.forEach(user->{
             System.out.println(user.getId()+":"+user.getName());
         });
+
+        LoginUser loginUser = loginUserService.queryModel("123");
+        System.out.println("loginuser model");
+        System.out.println("loginUser:"+loginUser.getName());
 
         System.out.println("query list mp by ids");
         List<LoginUser> usersByIds = loginUserService.queryListMPByIds(Arrays.asList("123","1234"));
