@@ -1,13 +1,10 @@
 package com.tennetcn.free.core.validator.check;
 
-import cn.hutool.core.util.StrUtil;
 import com.tennetcn.free.core.utils.StringHelper;
 import com.tennetcn.free.core.validator.annotation.MaxBytesLength;
-import org.springframework.util.StringUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.io.UnsupportedEncodingException;
 
 /**
  * @author chfree

@@ -3,12 +3,16 @@ package com.tennetcn.free.web.exception;
 import cn.hutool.json.JSONUtil;
 import com.tennetcn.free.core.exception.BizException;
 import com.tennetcn.free.core.message.web.BaseResponse;
+import com.tennetcn.free.core.utils.StringHelper;
+import com.tennetcn.free.core.validator.annotation.AtLeastOneNotEmpty;
 import com.tennetcn.free.web.message.WebResponseStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Test;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -83,16 +87,36 @@ public class GlobalExceptionHandler {
 
         StringBuffer message=new StringBuffer();
         List<BindErrorMessage> allMessage=new ArrayList<BindErrorMessage>();
-        List<FieldError> fieldErrors =  bindException.getFieldErrors();
-        for (FieldError fieldError: fieldErrors) {
-            message.append(fieldError.getDefaultMessage()).append(".");
-            allMessage.add(new BindErrorMessage(fieldError.getField(),fieldError.getObjectName(),fieldError.getDefaultMessage()));
+        List<ObjectError> objectErrors = bindException.getAllErrors();
+        for (ObjectError objectError: objectErrors) {
+            message.append(objectError.getDefaultMessage()).append(".");
+            if(objectError instanceof FieldError){
+                FieldError fieldError = (FieldError)objectError;
+                allMessage.add(new BindErrorMessage(fieldError.getField(),fieldError.getObjectName(),fieldError.getDefaultMessage()));
+            }else{
+                String field = getFieldNames(objectError);
+                allMessage.add(new BindErrorMessage(field,objectError.getObjectName(),objectError.getDefaultMessage()));
+            }
         }
         response.setMessage(message.toString());
         response.setAllMessage(JSONUtil.toJsonStr(allMessage));
         response.setStatus(WebResponseStatus.DATA_NULL_ERROR);
 
         return response;
+    }
+
+    private String getFieldNames(ObjectError objectError){
+        Object[] objects = objectError.getArguments();
+
+        String atLeastOneNotEmpty= AtLeastOneNotEmpty.class.getSimpleName();
+        if(atLeastOneNotEmpty.equals(objectError.getCode())){
+            if(objects.length==2){
+                String[] fields = (String[])objects[1];
+                return StringHelper.join(fields);
+            }
+        }
+
+        return "";
     }
 }
 
