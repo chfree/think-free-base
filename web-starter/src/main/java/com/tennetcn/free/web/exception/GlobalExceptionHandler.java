@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,20 +35,47 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public BaseResponse exceptionHandler(HttpServletRequest request, Exception e) throws Exception {
-        String traceId = request.getAttribute("traceId").toString();
-        log.error("exceptionHandler:【"+traceId+"】"+e.getMessage(), e);
+//        String traceId = request.getAttribute("traceId").toString();
+//        log.error("exceptionHandler:【"+traceId+"】"+e.getMessage(), e);
 
 
         BaseResponse response = new BaseResponse();
-        if (e instanceof BizException) {
-            BizException bizException= (BizException)e;
-            response.setStatus(bizException.getCode());
-        }else {
-            response.setStatus(WebResponseStatus.DATA_ERROR);
-        }
+        response.setStatus(WebResponseStatus.DATA_ERROR);
 
-        response.setTraceId(traceId);
+
+        // response.setTraceId(traceId);
         response.setMessage(e.getMessage());
+
+        return response;
+    }
+
+    @ExceptionHandler(BizException.class)
+    @ResponseBody
+    public BaseResponse bizExceptionHandler(HttpServletRequest request, Exception e) throws Exception {
+        BaseResponse response = new BaseResponse();
+
+        BizException bizException= (BizException)e;
+        response.setStatus(bizException.getCode());
+        response.setMessage(bizException.getMessage());
+
+        return response;
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    @ResponseBody
+    public BaseResponse validationExceptionHandler(HttpServletRequest request, Exception e) throws Exception {
+        BaseResponse response = new BaseResponse();
+
+        ValidationException validationException= (ValidationException)e;
+
+        if(validationException.getCause() instanceof BizException){
+            BizException bizException = (BizException)validationException.getCause();
+            response.setStatus(bizException.getCode());
+            response.setMessage(bizException.getMessage());
+        }else{
+            response.setStatus(WebResponseStatus.DATA_ERROR);
+            response.setMessage(validationException.getMessage());
+        }
 
         return response;
     }
