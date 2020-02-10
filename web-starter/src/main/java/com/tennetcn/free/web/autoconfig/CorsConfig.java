@@ -2,6 +2,7 @@ package com.tennetcn.free.web.autoconfig;
 
 import com.tennetcn.free.web.configuration.ThinkWebConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -45,5 +46,17 @@ public class CorsConfig implements WebMvcConfigurer {
             source.registerCorsConfiguration("/**", buildConfig());
         }
         return new CorsFilter(source);
+    }
+
+    @Bean
+    public FilterRegistrationBean filterRegistrationBean(){
+        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+        DomainFilter domainFilter = new DomainFilter();
+        registrationBean.setFilter(domainFilter);
+
+        List<String> urlPatterns = new ArrayList<String>();
+        urlPatterns.add("/*");
+        registrationBean.setUrlPatterns(urlPatterns);
+        return registrationBean;
     }
 }
