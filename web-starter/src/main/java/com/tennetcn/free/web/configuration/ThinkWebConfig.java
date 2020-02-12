@@ -16,4 +16,10 @@ import org.springframework.beans.factory.annotation.Value;
 public class ThinkWebConfig {
     @Value("${think.cors.enable:true}")
     private boolean corsEnable;
+
+    @Value("${server.port:8080}")
+    private int port;
+
+    @Value("${server.servlet.context-path:}")
+    private String contextPath;
 }
