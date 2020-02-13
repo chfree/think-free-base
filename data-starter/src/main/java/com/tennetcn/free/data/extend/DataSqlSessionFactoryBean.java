@@ -220,7 +220,6 @@ public class DataSqlSessionFactoryBean extends SqlSessionFactoryBean {
 	@Override
 	protected SqlSessionFactory buildSqlSessionFactory() throws IOException {
 		Configuration configuration_;
-		System.out.println("buildSqlSessionFactory");
 		XMLConfigBuilder xmlConfigBuilder = null;
 		if (this.localConfiguration != null) {
 			configuration_ = this.localConfiguration;

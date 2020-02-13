@@ -68,7 +68,6 @@ public class MapperAutoConfiguration implements InitializingBean, ApplicationCon
 	private final List<ConfigurationCustomizer> configurationCustomizers;
 
 	public MapperAutoConfiguration(MybatisProperties properties, ObjectProvider<Interceptor[]> interceptorsProvider, ResourceLoader resourceLoader, ObjectProvider<DatabaseIdProvider> databaseIdProvider, ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider) {
-		System.out.println("MapperAutoConfiguration");
 		this.properties = properties;
 		this.interceptors = interceptorsProvider.getIfAvailable();
 		this.resourceLoader = resourceLoader;
