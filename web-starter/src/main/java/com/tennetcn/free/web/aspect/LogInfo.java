@@ -1,6 +1,7 @@
 package com.tennetcn.free.web.aspect;
 
 import cn.hutool.json.JSONUtil;
+import com.tennetcn.free.web.configuration.ThinkWebConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -9,6 +10,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -31,6 +33,10 @@ public class LogInfo {
     public LogInfo() {
         log.info("logInfo is init");
     }
+
+    @Autowired
+    ThinkWebConfig webConfig;
+
     @Pointcut("execution( public * com.tennetcn..*.apis..*.* (..)) && @within(org.springframework.web.bind.annotation.RequestMapping)")
     public void weblog() {};
 
@@ -44,18 +50,20 @@ public class LogInfo {
 
     @Before("weblog() && annotationCheck()")
     public void doBefore(JoinPoint joinPoint) throws Throwable {
-        log.info("weblog dobefore start");
-        try {
-            Object[] args = fitlerArgs(joinPoint.getArgs());
-            StringBuffer buf = new StringBuffer();
-            buf.append("请求入参\r\n");
+        if(webConfig.isLogRequest()) {
+            log.info("weblog dobefore start");
+            try {
+                Object[] args = fitlerArgs(joinPoint.getArgs());
+                StringBuffer buf = new StringBuffer();
+                buf.append("请求入参\r\n");
 
-            String argsJson = JSONUtil.toJsonStr(args);
+                String argsJson = JSONUtil.toJsonStr(args);
 
-            buf.append(argsJson);
-            log.info(buf.toString());
-        }catch(Throwable e) {
-
+                buf.append(argsJson);
+                log.info(buf.toString());
+            } catch (Throwable e) {
+                log.error("log info request log error",e);
+            }
         }
     }
 
@@ -69,12 +77,15 @@ public class LogInfo {
 
     @AfterReturning(returning="ret",pointcut = "weblog() && annotationCheck()")
     public void doAfterReturning(Object ret) throws Throwable {
-        try {
-            StringBuffer buf = new StringBuffer();
-            buf.append("返回数据\r\n");
-            buf.append(JSONUtil.toJsonStr(ret));
-            log.info(buf.toString());
-        } catch (Throwable e) {
+        if(webConfig.isLogResponse()) {
+            try {
+                StringBuffer buf = new StringBuffer();
+                buf.append("返回数据\r\n");
+                buf.append(JSONUtil.toJsonStr(ret));
+                log.info(buf.toString());
+            } catch (Throwable e) {
+                log.error("log info response log error", e);
+            }
         }
     }
 

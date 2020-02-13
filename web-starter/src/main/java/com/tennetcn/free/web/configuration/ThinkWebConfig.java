@@ -17,6 +17,12 @@ public class ThinkWebConfig {
     @Value("${think.cors.enable:true}")
     private boolean corsEnable;
 
+    @Value("${think.log.request:true}")
+    private boolean logRequest;
+
+    @Value("${think.log.response:true}")
+    private boolean logResponse;
+
     @Value("${server.port:8080}")
     private int port;
 
