@@ -54,6 +54,10 @@ public class MethodCheckValidator implements ConstraintValidator<MethodCheck,Obj
         return false;
     }
 
+    /**
+     * 强制通过反射修改后，valid的context还是无法拿到修改的值，所以还是放弃了，直接通过异常将message的值传出去
+     * @param message
+     */
     private void setMessage(String message) {
         try {
             //获取 methodCheck 这个代理实例所持有的 InvocationHandler
