@@ -32,6 +32,8 @@ public class SqlExpression implements ISqlExpression {
 
 	private String mainTableAlias = "";
 
+	private String fromMainTableAlias = "";
+
 	private StringBuffer wheres = new StringBuffer();
 
 	private StringBuffer bodyBuffer = new StringBuffer();
@@ -480,6 +482,7 @@ public class SqlExpression implements ISqlExpression {
 	
 	@Override
 	public ISqlExpression from(Class<?> tClass,String alias){
+		this.fromMainTableAlias = alias;
 		fromBuffer.append("from "+ClassAnnotationUtils.getTableName(tClass)+" "+alias);
 		return this;
 	}
@@ -491,6 +494,10 @@ public class SqlExpression implements ISqlExpression {
 	}
 	
 	public String getMainTableAlias(){
+		// 如果设置的mainTableAlias为空，则取一次from的时候设置的mainTableAlias
+		if(StringUtils.isEmpty(mainTableAlias)){
+			mainTableAlias = this.fromMainTableAlias;
+		}
 		if(!StringUtils.isEmpty(mainTableAlias)){
 			return mainTableAlias+".";
 		}
