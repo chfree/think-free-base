@@ -1,6 +1,7 @@
 package com.tennetcn.free.data.demo;
 
 import cn.hutool.json.JSONUtil;
+import com.tennetcn.free.core.utils.SnowFlakeIdUtils;
 import com.tennetcn.free.data.demo.logical.model.LoginUser;
 import com.tennetcn.free.data.demo.logical.service.ILoginUserService;
 import com.tennetcn.free.data.demo.logical.viewmodel.TestUser;
@@ -26,6 +27,12 @@ public class DataDemoApp implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        System.out.println("is run success!!!");
+        for (int i = 0; i < 10; i++) {
+            //10进制
+            System.out.println(SnowFlakeIdUtils.nextId());
+        }
+
         int count = loginUserService.queryCount();
 
         System.out.println("count:" + count);
