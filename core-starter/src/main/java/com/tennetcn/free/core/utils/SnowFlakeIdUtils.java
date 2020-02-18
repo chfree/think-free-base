@@ -1,9 +1,6 @@
 package com.tennetcn.free.core.utils;
 
 import com.tennetcn.free.core.boot.autoconfig.CoreBootConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
 
 /**
  * @author chfree
@@ -19,7 +16,7 @@ public class SnowFlakeIdUtils {
 
     public static Long nextId(){
         if(snowFlakeId == null){
-            coreBootConfig = CommonApplicationContextUtil.getCurrentContext().getBean(CoreBootConfig.class);
+            coreBootConfig = SpringContextUtil.getCurrentContext().getBean(CoreBootConfig.class);
             snowFlakeId = new SnowFlakeId(coreBootConfig.getDataCenterId(),coreBootConfig.getMachineId());
         }
         return snowFlakeId.nextId();

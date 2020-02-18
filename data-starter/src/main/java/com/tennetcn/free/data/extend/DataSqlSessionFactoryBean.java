@@ -1,7 +1,7 @@
 package com.tennetcn.free.data.extend;
 
 import cn.hutool.core.util.ArrayUtil;
-import com.tennetcn.free.core.utils.CommonApplicationContextUtil;
+import com.tennetcn.free.core.utils.SpringContextUtil;
 import com.tennetcn.free.data.extend.config.InterceptorPluginBean;
 import com.tennetcn.free.data.extend.config.MapperLocationBean;
 import com.tennetcn.free.data.extend.config.TypeAliasBean;
@@ -43,7 +43,7 @@ import static org.springframework.util.StringUtils.tokenizeToStringArray;
 @Slf4j
 public class DataSqlSessionFactoryBean extends SqlSessionFactoryBean {
 	private List<String> getTypeAliasPackagesByBean() {
-		Map<String, TypeAliasBean> typeAliasBeanMaps = CommonApplicationContextUtil.getCurrentContext().getBeansOfType(TypeAliasBean.class);
+		Map<String, TypeAliasBean> typeAliasBeanMaps = SpringContextUtil.getCurrentContext().getBeansOfType(TypeAliasBean.class);
 
 		if (typeAliasBeanMaps == null) {
 			return null;
@@ -56,7 +56,7 @@ public class DataSqlSessionFactoryBean extends SqlSessionFactoryBean {
 	}
 
 	private Resource[] getMapperLocationByBean() {
-		Map<String, MapperLocationBean> mapperLocationBeanMaps = CommonApplicationContextUtil.getCurrentContext().getBeansOfType(MapperLocationBean.class);
+		Map<String, MapperLocationBean> mapperLocationBeanMaps = SpringContextUtil.getCurrentContext().getBeansOfType(MapperLocationBean.class);
 
 		if (mapperLocationBeanMaps == null) {
 			return null;
@@ -70,7 +70,7 @@ public class DataSqlSessionFactoryBean extends SqlSessionFactoryBean {
 	}
 
 	private Interceptor[] getInterceptorPluginByBean() {
-		Map<String, InterceptorPluginBean> interceptorPluginBeanMaps = CommonApplicationContextUtil.getCurrentContext().getBeansOfType(InterceptorPluginBean.class);
+		Map<String, InterceptorPluginBean> interceptorPluginBeanMaps = SpringContextUtil.getCurrentContext().getBeansOfType(InterceptorPluginBean.class);
 
 		if (interceptorPluginBeanMaps == null) {
 			return null;

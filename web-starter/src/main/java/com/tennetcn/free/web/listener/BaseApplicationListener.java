@@ -1,11 +1,10 @@
 package com.tennetcn.free.web.listener;
 
-import com.tennetcn.free.core.utils.CommonApplicationContextUtil;
+import com.tennetcn.free.core.utils.SpringContextUtil;
 import com.tennetcn.free.web.configuration.ThinkWebConfig;
 import com.tennetcn.free.web.intceptor.IApplicationStartedIntceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.embedded.tomcat.TomcatWebServer;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -22,9 +21,9 @@ public class BaseApplicationListener implements ApplicationListener<ContextRefre
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         log.info("application listener run onApplicationEvent");
-        CommonApplicationContextUtil.setCurrentContext(contextRefreshedEvent.getApplicationContext());
+        SpringContextUtil.setCurrentContext(contextRefreshedEvent.getApplicationContext());
         //执行applicationstart的intceptor
-        Map<String, IApplicationStartedIntceptor> applicationStartedMap= CommonApplicationContextUtil.getCurrentContext().getBeansOfType(IApplicationStartedIntceptor.class);
+        Map<String, IApplicationStartedIntceptor> applicationStartedMap= SpringContextUtil.getCurrentContext().getBeansOfType(IApplicationStartedIntceptor.class);
         if(applicationStartedMap!=null) {
             for (IApplicationStartedIntceptor applicationStarted : applicationStartedMap.values()) {
                 applicationStarted.started(contextRefreshedEvent);

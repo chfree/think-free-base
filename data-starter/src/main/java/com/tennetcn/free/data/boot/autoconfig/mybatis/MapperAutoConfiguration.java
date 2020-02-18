@@ -1,6 +1,6 @@
 package com.tennetcn.free.data.boot.autoconfig.mybatis;
 
-import com.tennetcn.free.core.utils.CommonApplicationContextUtil;
+import com.tennetcn.free.core.utils.SpringContextUtil;
 import com.tennetcn.free.data.extend.DataSqlSessionFactoryBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Mapper;
@@ -154,7 +154,7 @@ public class MapperAutoConfiguration implements InitializingBean, ApplicationCon
 
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		CommonApplicationContextUtil.setCurrentContext(applicationContext);
+		SpringContextUtil.setCurrentContext(applicationContext);
 	}
 
 	@Configuration
