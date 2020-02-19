@@ -2,7 +2,7 @@ package com.tennetcn.free.core.validator.check;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.tennetcn.free.core.message.common.ClassMetadata;
-import com.tennetcn.free.core.utils.ReflectUtils;
+import com.tennetcn.free.core.util.ReflectUtils;
 import com.tennetcn.free.core.validator.annotation.AtLeastOneNotEmpty;
 
 import javax.validation.ConstraintValidator;

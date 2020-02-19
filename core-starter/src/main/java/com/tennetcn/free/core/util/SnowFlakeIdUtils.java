@@ -1,4 +1,4 @@
-package com.tennetcn.free.core.utils;
+package com.tennetcn.free.core.util;
 
 import com.tennetcn.free.core.boot.autoconfig.CoreBootConfig;
 

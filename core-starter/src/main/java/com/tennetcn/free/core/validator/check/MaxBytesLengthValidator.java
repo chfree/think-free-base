@@ -1,6 +1,6 @@
 package com.tennetcn.free.core.validator.check;
 
-import com.tennetcn.free.core.utils.StringHelper;
+import com.tennetcn.free.core.util.StringHelper;
 import com.tennetcn.free.core.validator.annotation.MaxBytesLength;
 
 import javax.validation.ConstraintValidator;

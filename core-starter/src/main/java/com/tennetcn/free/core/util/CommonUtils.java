@@ -1,8 +1,7 @@
-package com.tennetcn.free.core.utils;
+package com.tennetcn.free.core.util;
 
 import org.springframework.util.StringUtils;
 
-import java.util.Dictionary;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

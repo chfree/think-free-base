@@ -1,7 +1,7 @@
 package com.tennetcn.free.core.validator.check;
 
 import com.tennetcn.free.core.exception.BizException;
-import com.tennetcn.free.core.utils.SpringContextUtils;
+import com.tennetcn.free.core.util.SpringContextUtils;
 import com.tennetcn.free.core.validator.annotation.MethodCheck;
 import com.tennetcn.free.core.validator.back.MethodCheckResult;
 import lombok.var;

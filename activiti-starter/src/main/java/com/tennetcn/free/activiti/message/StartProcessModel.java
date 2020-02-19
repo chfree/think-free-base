@@ -1,9 +1,8 @@
 package com.tennetcn.free.activiti.message;
 
-import com.tennetcn.free.core.utils.StringHelper;
+import com.tennetcn.free.core.util.StringHelper;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

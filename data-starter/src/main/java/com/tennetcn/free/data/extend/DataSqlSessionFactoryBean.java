@@ -1,7 +1,7 @@
 package com.tennetcn.free.data.extend;
 
 import cn.hutool.core.util.ArrayUtil;
-import com.tennetcn.free.core.utils.SpringContextUtils;
+import com.tennetcn.free.core.util.SpringContextUtils;
 import com.tennetcn.free.data.extend.config.InterceptorPluginBean;
 import com.tennetcn.free.data.extend.config.MapperLocationBean;
 import com.tennetcn.free.data.extend.config.TypeAliasBean;

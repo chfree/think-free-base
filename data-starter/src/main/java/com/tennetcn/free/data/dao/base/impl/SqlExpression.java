@@ -1,6 +1,6 @@
 package com.tennetcn.free.data.dao.base.impl;
 
-import com.tennetcn.free.core.utils.StringHelper;
+import com.tennetcn.free.core.util.StringHelper;
 import com.tennetcn.free.data.dao.base.ISqlExpression;
 import com.tennetcn.free.core.enums.OrderEnum;
 import com.tennetcn.free.core.message.data.OrderByEnum;

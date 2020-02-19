@@ -18,7 +18,7 @@ import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.session.Configuration;
 
-import com.tennetcn.free.core.utils.VersionUtils;
+import com.tennetcn.free.core.util.VersionUtils;
 import com.tennetcn.free.data.message.DaoBaseRuntimeException;
 
 /** 

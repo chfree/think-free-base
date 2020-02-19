@@ -1,4 +1,4 @@
-package com.tennetcn.free.core.utils;
+package com.tennetcn.free.core.util;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

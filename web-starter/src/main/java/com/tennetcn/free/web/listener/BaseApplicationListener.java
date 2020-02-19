@@ -1,6 +1,6 @@
 package com.tennetcn.free.web.listener;
 
-import com.tennetcn.free.core.utils.SpringContextUtils;
+import com.tennetcn.free.core.util.SpringContextUtils;
 import com.tennetcn.free.web.configuration.ThinkWebConfig;
 import com.tennetcn.free.web.intceptor.IApplicationStartedIntceptor;
 import lombok.extern.slf4j.Slf4j;

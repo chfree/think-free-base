@@ -1,6 +1,6 @@
 package com.tennetcn.free.data.boot.autoconfig.mybatis;
 
-import com.tennetcn.free.core.utils.SpringContextUtils;
+import com.tennetcn.free.core.util.SpringContextUtils;
 import com.tennetcn.free.data.extend.DataSqlSessionFactoryBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Mapper;

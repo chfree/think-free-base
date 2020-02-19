@@ -1,7 +1,7 @@
 package com.tennetcn.free.data.demo;
 
 import cn.hutool.json.JSONUtil;
-import com.tennetcn.free.core.utils.SnowFlakeIdUtils;
+import com.tennetcn.free.core.util.SnowFlakeIdUtils;
 import com.tennetcn.free.data.demo.logical.model.LoginUser;
 import com.tennetcn.free.data.demo.logical.service.ILoginUserService;
 import com.tennetcn.free.data.demo.logical.viewmodel.TestUser;

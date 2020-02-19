@@ -3,7 +3,7 @@ package com.tennetcn.free.data.dao.base.interceptor.tools;
 import java.text.DateFormat;
 import java.util.*;
 
-import com.tennetcn.free.core.utils.SpringContextUtils;
+import com.tennetcn.free.core.util.SpringContextUtils;
 import com.tennetcn.free.data.boot.autoconfig.DataBootConfig;
 import com.tennetcn.free.data.dao.base.interceptor.annotation.MyBatisPluginRegister;
 import com.tennetcn.free.data.dao.base.interceptor.handler.ISqlExecInterceptor;
@@ -25,7 +25,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
-import com.tennetcn.free.core.utils.SystemClockUtils;
+import com.tennetcn.free.core.util.SystemClockUtils;
 
 /** 
  * @author      chenghuan

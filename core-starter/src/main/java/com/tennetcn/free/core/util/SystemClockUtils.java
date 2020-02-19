@@ -1,4 +1,4 @@
-package com.tennetcn.free.core.utils;
+package com.tennetcn.free.core.util;
 
 import java.sql.Timestamp;
 import java.util.concurrent.Executors;
