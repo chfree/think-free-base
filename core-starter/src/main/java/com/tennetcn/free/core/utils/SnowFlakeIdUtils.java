@@ -16,7 +16,7 @@ public class SnowFlakeIdUtils {
 
     public static Long nextId(){
         if(snowFlakeId == null){
-            coreBootConfig = SpringContextUtil.getCurrentContext().getBean(CoreBootConfig.class);
+            coreBootConfig = SpringContextUtils.getCurrentContext().getBean(CoreBootConfig.class);
             snowFlakeId = new SnowFlakeId(coreBootConfig.getDataCenterId(),coreBootConfig.getMachineId());
         }
         return snowFlakeId.nextId();

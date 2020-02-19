@@ -1,11 +1,13 @@
 package com.tennetcn.free.data.dao.base.interceptor.tools;
 
 import java.text.DateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
+import java.util.*;
 
+import com.tennetcn.free.core.utils.SpringContextUtils;
+import com.tennetcn.free.data.boot.autoconfig.DataBootConfig;
+import com.tennetcn.free.data.dao.base.interceptor.annotation.MyBatisPluginRegister;
+import com.tennetcn.free.data.dao.base.interceptor.handler.ISqlExecInterceptor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -20,6 +22,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import com.tennetcn.free.core.utils.SystemClockUtils;
@@ -30,20 +33,27 @@ import com.tennetcn.free.core.utils.SystemClockUtils;
  * @createtime  2017年2月27日 下午7:19:57
  * @comment 
  */
+
+@Slf4j
+@MyBatisPluginRegister
 @Intercepts({
 	@Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class,
 			RowBounds.class, ResultHandler.class }),
 	@Signature(type = Executor.class, method = "update", args = { MappedStatement.class, Object.class }) })
 public class PerformanceInterceptor implements Interceptor {
 
+	@Autowired
+	DataBootConfig dataBootConfig;
+
 	/**
-
-	 * SQL 执行最大时长，超过自动停止运行，有助于发现问题。
-
+	 * SQL 执行最大时长，超过指定时间则进行error输出，有助于发现问题。
 	 */
 	private long maxTime = 0;
 
 	public Object intercept(Invocation invocation) throws Throwable {
+		if(!dataBootConfig.isPrintSql()){
+			return invocation.proceed();
+		}
 		MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
 		Object parameterObject = invocation.getArgs()[1];
 		
@@ -58,12 +68,41 @@ public class PerformanceInterceptor implements Interceptor {
 		long end = SystemClockUtils.now();
 		long timing = end - start;
 		
-		
-		if (maxTime >= 1 && timing > maxTime) {
-			System.err.println(" Time：" + timing + " ms" + " - ID：" + statementId + "\n Execute SQL：" + sql + "\n");
-			//throw new DaoBaseRuntimeException(" The SQL execution time is too large, please optimize ! ");
+
+		StringBuilder builder = new StringBuilder();
+		builder.append("\n\n");
+		builder.append("Time：" + timing +" ms");
+		builder.append("\n");
+		builder.append("ID：" + statementId);
+		builder.append("\n");
+		builder.append("Execute SQL：" + sql);
+		builder.append("\n");
+
+		String info = builder.toString();
+		if (getMaxTime() >= 1 && timing > getMaxTime()) {
+			log.error(info);
+		}else{
+			log.info(info);
+		}
+
+		try {
+			execCall(statementId, timing, sql);
+		}catch (Exception ex){
+			log.error("回调ISqlExecInterceptor的实例出错",ex);
 		}
 		return result;
+	}
+
+	private void execCall(String statementId,long timing,String sql){
+		Map<String,ISqlExecInterceptor> maps = SpringContextUtils.getCurrentContext().getBeansOfType(ISqlExecInterceptor.class);
+		if(maps==null||maps.isEmpty()){
+			return;
+		}
+		for (String key: maps.keySet()) {
+			ISqlExecInterceptor sqlExecInterceptor = maps.get(key);
+
+			sqlExecInterceptor.execCall(timing,statementId,sql);
+		}
 	}
 
 	public static String getSql(Configuration configuration, BoundSql boundSql, String sql) {
@@ -124,7 +163,7 @@ public class PerformanceInterceptor implements Interceptor {
 	}
 
 	public long getMaxTime() {
-		return maxTime;
+		return maxTime == 0 ? dataBootConfig.getSqlExecMaxTime() : maxTime;
 	}
 
 	public void setMaxTime(long maxTime) {

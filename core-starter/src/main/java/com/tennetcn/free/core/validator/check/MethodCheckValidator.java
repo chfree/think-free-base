@@ -1,7 +1,7 @@
 package com.tennetcn.free.core.validator.check;
 
 import com.tennetcn.free.core.exception.BizException;
-import com.tennetcn.free.core.utils.SpringContextUtil;
+import com.tennetcn.free.core.utils.SpringContextUtils;
 import com.tennetcn.free.core.validator.annotation.MethodCheck;
 import com.tennetcn.free.core.validator.back.MethodCheckResult;
 import lombok.var;
@@ -29,7 +29,7 @@ public class MethodCheckValidator implements ConstraintValidator<MethodCheck,Obj
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext constraintValidatorContext) {
-        var instance= SpringContextUtil.getCurrentContext().getBean(methodCheck.clazz());
+        var instance= SpringContextUtils.getCurrentContext().getBean(methodCheck.clazz());
         try{
             Method method =instance.getClass().getMethod(methodCheck.method(),methodCheck.parameterTypes());
 
