@@ -19,6 +19,7 @@
         <module>activiti-starter-run</module>
         <module>think-swagger-ui-starter</module>
         <module>rate-limiter-starter</module>
+        <module>standby-data-starter</module>
     </modules>
 
     <repositories>

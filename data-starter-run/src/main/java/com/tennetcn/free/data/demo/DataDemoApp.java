@@ -12,6 +12,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.util.StringUtils;
+import tk.mybatis.spring.annotation.MapperScan;
 
 import java.util.Arrays;
 import java.util.List;
