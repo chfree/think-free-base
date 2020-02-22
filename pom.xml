@@ -20,6 +20,8 @@
         <module>think-swagger-ui-starter</module>
         <module>rate-limiter-starter</module>
         <module>standby-data-starter</module>
+        <module>quartz-starter</module>
+        <module>quartz-demo-run</module>
     </modules>
 
     <repositories>
