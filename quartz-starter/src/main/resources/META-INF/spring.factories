@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.ccbft.nfamp.batch.autoconfig.BatchAutoConfiguration
+com.tennetcn.free.quartz.autoconfig.QuartzAutoConfiguration

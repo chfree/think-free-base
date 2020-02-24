@@ -1,6 +1,5 @@
 package com.tennetcn.free.quartz.config;
 
-import com.tennetcn.free.quartz.listener.ThinkQuartzInitializerListener;
 import org.quartz.Scheduler;
 import org.quartz.ee.servlet.QuartzInitializerListener;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
@@ -39,7 +38,7 @@ public class SchedulerConfig {
      */
     @Bean
     public QuartzInitializerListener executorListener() {
-       return new ThinkQuartzInitializerListener();
+       return new QuartzInitializerListener();
     }
     
     /*
