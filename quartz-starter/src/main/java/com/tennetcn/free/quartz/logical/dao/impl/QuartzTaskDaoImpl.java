@@ -55,7 +55,7 @@ public class QuartzTaskDaoImpl extends SuperDao<QuartzTask> implements IQuartzTa
 
         sqlExpression.andEqNoEmpty("parameter",search.getParameter());
 
-        sqlExpression.andEqNoEmpty("desc",search.getDesc());
+        sqlExpression.andEqNoEmpty("description",search.getDescription());
 
         sqlExpression.andEqNoEmpty("status",search.getStatus());
 

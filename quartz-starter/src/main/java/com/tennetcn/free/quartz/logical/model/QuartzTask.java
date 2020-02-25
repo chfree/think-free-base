@@ -58,8 +58,8 @@ public class QuartzTask extends ModelBase{
     /**
      * 描述
      */
-    @Column(name="desc")
-    private String desc;
+    @Column(name="description")
+    private String description;
 
     /**
      * 状态
