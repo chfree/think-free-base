@@ -22,10 +22,10 @@
             <artifactId>quartz-jobs</artifactId>
             <version>2.3.2</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.springframework</groupId>-->
+<!--            <artifactId>spring-context-support</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.tennetcn.free</groupId>
             <artifactId>data-starter</artifactId>
