@@ -18,4 +18,6 @@ public interface IQuartzTaskService extends ISuperService<QuartzTask>{
     int queryCountBySearch(QuartzTaskSearch search);
 
     List<QuartzTask> queryListBySearch(QuartzTaskSearch search, PagerModel pagerModel);
+
+    QuartzTask queryModelByName(String name);
 }

@@ -33,4 +33,11 @@ public class QuartzTaskServiceImpl extends SuperService<QuartzTask> implements I
         return quartzTaskDao.queryListBySearch(search,pagerModel);
     }
 
+    @Override
+    public QuartzTask queryModelByName(String name){
+        QuartzTask search = new QuartzTask();
+        search.setName(name);
+
+        return quartzTaskDao.queryModel(search);
+    }
 }
