@@ -36,4 +36,5 @@ public interface IQuartzService {
     boolean refreshTask(String taskName);
 
 
+    void registerListener();
 }

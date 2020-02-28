@@ -21,5 +21,7 @@ public class QuartzInitializingBean implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         quartzService.initAllTaks();
+
+        quartzService.registerListener();
     }
 }

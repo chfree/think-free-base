@@ -15,7 +15,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
 @SpringBootApplication
-@ComponentScan(value = "com.tennetcn.free.quartz.demo")
 public class QuartzDemoApp {
     public static void main(String[] args) {
         SpringApplication.run(QuartzDemoApp.class,args);

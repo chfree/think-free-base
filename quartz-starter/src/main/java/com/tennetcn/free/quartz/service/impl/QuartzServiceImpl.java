@@ -6,11 +6,15 @@ import com.tennetcn.free.quartz.exception.QuartzBizException;
 import com.tennetcn.free.quartz.job.commJob.BatchCommonJob;
 import com.tennetcn.free.quartz.job.commJob.BatchConcurrentJob;
 import com.tennetcn.free.quartz.job.commJob.BatchDisallowConcurrentJob;
+import com.tennetcn.free.quartz.listener.ThinkJobListener;
+import com.tennetcn.free.quartz.listener.ThinkSchedulerListener;
+import com.tennetcn.free.quartz.listener.ThinkTriggerListener;
 import com.tennetcn.free.quartz.logical.model.QuartzTask;
 import com.tennetcn.free.quartz.logical.service.IQuartzTaskService;
 import com.tennetcn.free.quartz.service.IQuartzService;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
+import org.quartz.impl.matchers.EverythingMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Component;
@@ -66,6 +70,7 @@ public class QuartzServiceImpl implements IQuartzService {
             JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(jobKey).withDescription(task.getDescription())
                     .setJobData(map).storeDurably().build();
 
+
             scheduler.scheduleJob(jobDetail, trigger);
         }catch (Exception ex){
             log.error("init quartz task for job fail",ex);
@@ -103,12 +108,28 @@ public class QuartzServiceImpl implements IQuartzService {
         return initTask(taskName);
     }
 
+    @Override
+    public void registerListener() {
+        Scheduler scheduler = schedulerFactoryBean.getScheduler();
+        try {
+            ListenerManager listenerManager = scheduler.getListenerManager();
+
+            listenerManager.addJobListener(new ThinkJobListener(), EverythingMatcher.allJobs());
+            listenerManager.addTriggerListener(new ThinkTriggerListener(),EverythingMatcher.allTriggers());
+            listenerManager.addSchedulerListener(new ThinkSchedulerListener());
+        }catch (Exception ex){
+            log.error("注册listener失败",ex);
+            throw new QuartzBizException("注册listener失败",ex);
+        }
+    }
+
 
     private JobDataMap initJobDataMap(QuartzTask entity) {
         JobDataMap map = new JobDataMap();
         map.put(BatchCommonJob.EXEC_SERVICE, entity.getBeanName());
         map.put(BatchCommonJob.EXEC_METHOD, entity.getMethodName());
-        map.put(BatchCommonJob.EXEC_PARAMETER_, entity.getParameter());
+        map.put(BatchCommonJob.EXEC_PARAMETER, entity.getParameter());
+        map.put(BatchCommonJob.TASK_NAME,entity.getName());
         return map;
     }
 }

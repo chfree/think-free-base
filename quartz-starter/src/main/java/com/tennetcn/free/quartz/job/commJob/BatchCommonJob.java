@@ -14,7 +14,8 @@ import java.util.Map;
 public abstract class BatchCommonJob implements BaseJob {
 	public static final String EXEC_SERVICE = "EXEC_SERVICE";
 	public static final String EXEC_METHOD = "EXEC_METHOD";
-	public static final String EXEC_PARAMETER_ = "EXEC_PARAMETER";
+	public static final String EXEC_PARAMETER = "EXEC_PARAMETER";
+	public static final String TASK_NAME = "TASK_NAME";
 
 	public boolean invoke(JobDataMap map) {
 		String json = null;
