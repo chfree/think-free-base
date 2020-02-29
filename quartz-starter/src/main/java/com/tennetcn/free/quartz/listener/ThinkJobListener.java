@@ -1,7 +1,9 @@
 package com.tennetcn.free.quartz.listener;
 
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.tennetcn.free.core.util.PkIdUtils;
 import com.tennetcn.free.quartz.enums.ExecPhaseEnum;
 import com.tennetcn.free.quartz.job.commJob.BatchCommonJob;
@@ -9,8 +11,11 @@ import com.tennetcn.free.quartz.logical.mapper.IQuartzTaskLogMapper;
 import com.tennetcn.free.quartz.logical.model.QuartzTaskLog;
 import com.tennetcn.free.quartz.logical.service.IQuartzTaskLogService;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Test;
 import org.quartz.*;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 /**
  * @author chfree
@@ -44,13 +49,8 @@ public class ThinkJobListener implements JobListener {
     }
 
     private void saveJobToBeExecutedLog(JobExecutionContext jobExecutionContext){
-        QuartzTaskLog taskLog = getTaskLog(jobExecutionContext);
-        taskLog.setExecId(IdUtil.randomUUID());
-        taskLog.setExecPhase(ExecPhaseEnum.JOBTOBEEXECUTED.getKey());
-
-        jobExecutionContext.put("execId",taskLog.getExecId());
-
-        quartzTaskLogService.addModel(taskLog);
+        jobExecutionContext.put("execId",IdUtil.randomUUID());
+        jobExecutionContext.put("startTime",DateUtil.date());
     }
 
     /**
@@ -75,6 +75,11 @@ public class ThinkJobListener implements JobListener {
         QuartzTaskLog taskLog = getTaskLog(jobExecutionContext);
         taskLog.setExecPhase(ExecPhaseEnum.JOBWASEXECUTED.getKey());
         taskLog.setExecId(jobExecutionContext.get("execId").toString());
+        taskLog.setStartTime((DateTime) jobExecutionContext.get("startTime"));
+        taskLog.setEndTime(DateUtil.date());
+        long msDiff=DateUtil.betweenMs(taskLog.getEndTime(),taskLog.getStartTime());
+        taskLog.setMsDiff(msDiff);
+
         if(e!=null){
             taskLog.setResult("error");
             taskLog.setErrorMessage(e.getMessage());

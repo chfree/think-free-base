@@ -69,6 +69,24 @@ public class QuartzTaskLog extends ModelBase{
     private String execId;
 
     /**
+     * 开始时间
+     */
+    @Column(name="start_time")
+    private Date startTime;
+
+    /**
+     * 结束时间
+     */
+    @Column(name="end_time")
+    private Date endTime;
+
+    /**
+     * 毫秒差
+     */
+    @Column(name="ms_diff")
+    private long msDiff;
+
+    /**
      * 结果
      */
     @Column(name="result")
