@@ -1,9 +1,15 @@
 package com.tennetcn.free.quartz.listener;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.IdUtil;
+import com.tennetcn.free.core.util.PkIdUtils;
+import com.tennetcn.free.quartz.enums.ExecPhaseEnum;
+import com.tennetcn.free.quartz.job.commJob.BatchCommonJob;
+import com.tennetcn.free.quartz.logical.mapper.IQuartzTaskLogMapper;
+import com.tennetcn.free.quartz.logical.model.QuartzTaskLog;
+import com.tennetcn.free.quartz.logical.service.IQuartzTaskLogService;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.JobListener;
+import org.quartz.*;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,6 +21,14 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 public class ThinkJobListener implements JobListener {
+
+    private IQuartzTaskLogService quartzTaskLogService;
+
+
+    public void setQuartzTaskLogService(IQuartzTaskLogService quartzTaskLogService){
+        this.quartzTaskLogService = quartzTaskLogService;
+    }
+
     @Override
     public String getName() {
         return "thinkJobListerner";
@@ -26,6 +40,17 @@ public class ThinkJobListener implements JobListener {
     @Override
     public void jobToBeExecuted(JobExecutionContext jobExecutionContext) {
         log.info("jobToBeExecuted");
+        saveJobToBeExecutedLog(jobExecutionContext);
+    }
+
+    private void saveJobToBeExecutedLog(JobExecutionContext jobExecutionContext){
+        QuartzTaskLog taskLog = getTaskLog(jobExecutionContext);
+        taskLog.setExecId(IdUtil.randomUUID());
+        taskLog.setExecPhase(ExecPhaseEnum.JOBTOBEEXECUTED.getKey());
+
+        jobExecutionContext.put("execId",taskLog.getExecId());
+
+        quartzTaskLogService.addModel(taskLog);
     }
 
     /**
@@ -43,5 +68,35 @@ public class ThinkJobListener implements JobListener {
     @Override
     public void jobWasExecuted(JobExecutionContext jobExecutionContext, JobExecutionException e) {
         log.info("jobWasExecuted;e is null {}",e==null);
+        saveJobWasExecutedLog(jobExecutionContext,e);
+    }
+
+    private void saveJobWasExecutedLog(JobExecutionContext jobExecutionContext,JobExecutionException e){
+        QuartzTaskLog taskLog = getTaskLog(jobExecutionContext);
+        taskLog.setExecPhase(ExecPhaseEnum.JOBWASEXECUTED.getKey());
+        taskLog.setExecId(jobExecutionContext.get("execId").toString());
+        if(e!=null){
+            taskLog.setResult("error");
+            taskLog.setErrorMessage(e.getMessage());
+        }
+
+        quartzTaskLogService.addModel(taskLog);
+    }
+
+    private QuartzTaskLog getTaskLog(JobExecutionContext jobExecutionContext){
+        JobDetail jobDetail = jobExecutionContext.getJobDetail();
+        JobDataMap map =jobDetail.getJobDataMap();
+
+
+        QuartzTaskLog taskLog = new QuartzTaskLog();
+        taskLog.setId(PkIdUtils.getId());
+        taskLog.setRecordTime(DateUtil.date());
+        taskLog.setResult("success");
+        taskLog.setBeanName(map.getString(BatchCommonJob.EXEC_SERVICE));
+        taskLog.setMethodName(map.getString(BatchCommonJob.EXEC_METHOD));
+        taskLog.setParameter(map.getString(BatchCommonJob.EXEC_PARAMETER));
+        taskLog.setTaskName(map.getString(BatchCommonJob.TASK_NAME));
+
+        return taskLog;
     }
 }

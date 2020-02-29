@@ -55,6 +55,8 @@ public class QuartzTaskLogDaoImpl extends SuperDao<QuartzTaskLog> implements IQu
 
         sqlExpression.andEqNoEmpty("exec_phase",search.getExecPhase());
 
+        sqlExpression.andEqNoEmpty("exec_id",search.getExecId());
+
         sqlExpression.andEqNoEmpty("result",search.getResult());
 
         sqlExpression.andEqNoEmpty("error_message",search.getErrorMessage());

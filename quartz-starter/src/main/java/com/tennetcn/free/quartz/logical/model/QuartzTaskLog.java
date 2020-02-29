@@ -63,6 +63,12 @@ public class QuartzTaskLog extends ModelBase{
     private String execPhase;
 
     /**
+     * 执行id
+     */
+    @Column(name="exec_id")
+    private String execId;
+
+    /**
      * 结果
      */
     @Column(name="result")

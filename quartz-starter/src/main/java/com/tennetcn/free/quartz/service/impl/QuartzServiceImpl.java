@@ -10,6 +10,7 @@ import com.tennetcn.free.quartz.listener.ThinkJobListener;
 import com.tennetcn.free.quartz.listener.ThinkSchedulerListener;
 import com.tennetcn.free.quartz.listener.ThinkTriggerListener;
 import com.tennetcn.free.quartz.logical.model.QuartzTask;
+import com.tennetcn.free.quartz.logical.service.IQuartzTaskLogService;
 import com.tennetcn.free.quartz.logical.service.IQuartzTaskService;
 import com.tennetcn.free.quartz.service.IQuartzService;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +38,9 @@ public class QuartzServiceImpl implements IQuartzService {
 
     @Autowired
     SchedulerFactoryBean schedulerFactoryBean;
+
+    @Autowired
+    IQuartzTaskLogService quartzTaskLogService;
 
     @Override
     public boolean initTask(QuartzTask task) {
@@ -114,7 +118,11 @@ public class QuartzServiceImpl implements IQuartzService {
         try {
             ListenerManager listenerManager = scheduler.getListenerManager();
 
-            listenerManager.addJobListener(new ThinkJobListener(), EverythingMatcher.allJobs());
+
+            ThinkJobListener jobListener = new ThinkJobListener();
+            jobListener.setQuartzTaskLogService(quartzTaskLogService);
+
+            listenerManager.addJobListener(jobListener, EverythingMatcher.allJobs());
             listenerManager.addTriggerListener(new ThinkTriggerListener(),EverythingMatcher.allTriggers());
             listenerManager.addSchedulerListener(new ThinkSchedulerListener());
         }catch (Exception ex){

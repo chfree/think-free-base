@@ -6,6 +6,7 @@ create table base_quartz_task_log (
     method_name varchar(100) NULL COMMENT '方法名称',
     parameter varchar(1000) NULL COMMENT '参数',
     exec_phase varchar(300) NULL COMMENT '执行阶段',
+    exec_id varchar(50) NULL COMMENT '执行id',
     result varchar(50) NULL COMMENT '结果',
     error_message varchar(3000) NULL COMMENT '异常消息',
     PRIMARY KEY (id)

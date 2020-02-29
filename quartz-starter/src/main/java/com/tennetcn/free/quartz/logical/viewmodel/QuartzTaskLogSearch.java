@@ -53,6 +53,11 @@ public class QuartzTaskLogSearch{
     private String execPhase;
 
     /**
+     * 执行id
+     */
+    private String execId;
+
+    /**
      * 结果
      */
     private String result;
