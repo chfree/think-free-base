@@ -27,9 +27,19 @@ public class QuartzTaskSearch{
     private String name;
 
     /**
+     * 任务名称模糊搜索
+     */
+    private String likeName;
+
+    /**
      * 方法名称
      */
     private String methodName;
+
+    /**
+     * 方法名称模糊搜索
+     */
+    private String likeMethodName;
 
     /**
      * 对象名称

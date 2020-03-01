@@ -63,5 +63,9 @@ public class QuartzTaskDaoImpl extends SuperDao<QuartzTask> implements IQuartzTa
 
         sqlExpression.andEqNoEmpty("concurrent",search.getConcurrent());
 
+        sqlExpression.andLikeNoEmpty("name",search.getLikeName());
+
+        sqlExpression.andLikeNoEmpty("method_name",search.getLikeMethodName());
+
     }
 }

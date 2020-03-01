@@ -63,5 +63,22 @@ public class QuartzTaskLogDaoImpl extends SuperDao<QuartzTaskLog> implements IQu
 
         sqlExpression.andEqNoEmpty("error_message",search.getErrorMessage());
 
+        sqlExpression.andLikeNoEmpty("task_name",search.getLikeTaskName());
+
+        sqlExpression.andLikeNoEmpty("method_name",search.getLikeMethodName());
+
+        if(search.getMsDiffMin()!=null&&search.getMsDiffMin()>=0){
+            sqlExpression.andWhere("ms_diff>=#{msDiffMin}").setParam("msDiffMin",search.getMsDiffMin());
+        }
+        if(search.getMsDiffMax()!=null&&search.getMsDiffMax()>0){
+            sqlExpression.andWhere("ms_diff<=#{msDiffMax}").setParam("msDiffMax",search.getMsDiffMax());
+        }
+
+        if(search.getRecordTimeStart()!=null){
+            sqlExpression.andWhere("record_time>=#{recordTimeStart}").setParam("recordTimeStart",search.getRecordTimeStart());
+        }
+        if(search.getRecordTimeEnd()!=null){
+            sqlExpression.andWhere("record_time>=#{recordTimeEnd}").setParam("recordTimeEnd",search.getRecordTimeEnd());
+        }
     }
 }

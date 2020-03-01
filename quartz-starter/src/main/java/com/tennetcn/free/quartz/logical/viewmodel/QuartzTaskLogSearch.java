@@ -2,6 +2,7 @@ package com.tennetcn.free.quartz.logical.viewmodel;
 
 import java.util.Date;
 import lombok.Data;
+import org.junit.Test;
 
 /**
  * @author      auto build code by think
@@ -28,9 +29,24 @@ public class QuartzTaskLogSearch{
     private Date recordTime;
 
     /**
+     * 记录时间-开始
+     */
+    private Date recordTimeStart;
+
+    /**
+     * 记录时间-结束
+     */
+    private Date recordTimeEnd;
+
+    /**
      * 任务名称
      */
     private String taskName;
+
+    /**
+     * 任务名称模糊搜索
+     */
+    private String likeTaskName;
 
     /**
      * 对象名称
@@ -41,6 +57,11 @@ public class QuartzTaskLogSearch{
      * 方法名称
      */
     private String methodName;
+
+    /**
+     * 方法名称-模糊搜索
+     */
+    private String likeMethodName;
 
     /**
      * 参数
@@ -67,4 +88,13 @@ public class QuartzTaskLogSearch{
      */
     private String errorMessage;
 
+    /**
+     * 毫秒差-最小值
+     */
+    private Long msDiffMin;
+
+    /**
+     * 毫秒差-最大值
+     */
+    private Long msDiffMax;
 }
