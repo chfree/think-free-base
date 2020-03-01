@@ -1,5 +1,6 @@
 package com.tennetcn.free.quartz.logical.dao.impl;
 
+import com.tennetcn.free.core.enums.OrderEnum;
 import com.tennetcn.free.data.dao.base.ISqlExpression;
 import com.tennetcn.free.core.message.data.PagerModel;
 import com.tennetcn.free.data.utils.SqlExpressionFactory;
@@ -33,7 +34,8 @@ public class QuartzTaskDaoImpl extends SuperDao<QuartzTask> implements IQuartzTa
     @Override
     public List<QuartzTask> queryListBySearch(QuartzTaskSearch search, PagerModel pagerModel) {
         ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
-        sqlExpression.selectAllFrom(QuartzTask.class);
+        sqlExpression.selectAllFrom(QuartzTask.class)
+                     .addOrder("name", OrderEnum.asc);
 
         appendExpression(sqlExpression,search);
 

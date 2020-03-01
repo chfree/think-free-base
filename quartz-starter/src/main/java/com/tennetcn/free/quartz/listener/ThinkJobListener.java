@@ -3,19 +3,13 @@ package com.tennetcn.free.quartz.listener;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.RandomUtil;
 import com.tennetcn.free.core.util.PkIdUtils;
 import com.tennetcn.free.quartz.enums.ExecPhaseEnum;
 import com.tennetcn.free.quartz.job.commJob.BatchCommonJob;
-import com.tennetcn.free.quartz.logical.mapper.IQuartzTaskLogMapper;
 import com.tennetcn.free.quartz.logical.model.QuartzTaskLog;
 import com.tennetcn.free.quartz.logical.service.IQuartzTaskLogService;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
 import org.quartz.*;
-import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 /**
  * @author chfree
