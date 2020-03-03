@@ -1,6 +1,8 @@
 package com.tennetcn.free.quartz.logical.viewmodel;
 
 import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.junit.Test;
 
@@ -31,11 +33,13 @@ public class QuartzTaskLogSearch{
     /**
      * 记录时间-开始
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date recordTimeStart;
 
     /**
      * 记录时间-结束
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date recordTimeEnd;
 
     /**

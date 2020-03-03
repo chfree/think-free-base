@@ -28,7 +28,7 @@ public abstract class FirstApi {
     protected ICached cached;
 
     @InitBinder
-    private void initBinder(WebDataBinder binder) {
+    public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(Date.class, new DateEditor());
         binder.registerCustomEditor(Integer.class,new IntegerEditor());
         binder.registerCustomEditor(Double.class,new DoubleEditor());

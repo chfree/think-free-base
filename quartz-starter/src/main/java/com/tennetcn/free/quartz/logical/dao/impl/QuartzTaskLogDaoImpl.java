@@ -78,7 +78,7 @@ public class QuartzTaskLogDaoImpl extends SuperDao<QuartzTaskLog> implements IQu
             sqlExpression.andWhere("record_time>=#{recordTimeStart}").setParam("recordTimeStart",search.getRecordTimeStart());
         }
         if(search.getRecordTimeEnd()!=null){
-            sqlExpression.andWhere("record_time>=#{recordTimeEnd}").setParam("recordTimeEnd",search.getRecordTimeEnd());
+            sqlExpression.andWhere("record_time<=#{recordTimeEnd}").setParam("recordTimeEnd",search.getRecordTimeEnd());
         }
     }
 }

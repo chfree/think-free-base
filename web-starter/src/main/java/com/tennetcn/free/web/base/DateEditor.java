@@ -55,7 +55,7 @@ public class DateEditor extends PropertyEditorSupport {
                         setValue(DATEFORMAT.parse(text));
                 }
             } catch (ParseException ex) {
-                throw new IllegalArgumentException("Could not parse date:" + ex.getMessage(), ex);
+                throw new IllegalArgumentException("XX Could not parse date:" + ex.getMessage(), ex);
             }
         }
     }
@@ -66,6 +66,8 @@ public class DateEditor extends PropertyEditorSupport {
     @Override
     public String getAsText() {
         Date value = (Date) getValue();
+        System.out.println("getAsText");
+        System.out.println(value);
         DateFormat dateFormat = this.dateFormat;
         if(dateFormat == null)
             dateFormat = TIMEFORMAT;
