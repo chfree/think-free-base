@@ -27,148 +27,156 @@ import org.springframework.util.StringUtils;
 
 import com.tennetcn.free.core.util.SystemClockUtils;
 
-/** 
- * @author      chenghuan
- * @email       79763939@qq.com
- * @createtime  2017年2月27日 下午7:19:57
- * @comment 
+/**
+ * @author chenghuan
+ * @email 79763939@qq.com
+ * @createtime 2017年2月27日 下午7:19:57
+ * @comment
  */
 
 @Slf4j
 @MyBatisPluginRegister
 @Intercepts({
-	@Signature(type = Executor.class, method = "query", args = { MappedStatement.class, Object.class,
-			RowBounds.class, ResultHandler.class }),
-	@Signature(type = Executor.class, method = "update", args = { MappedStatement.class, Object.class }) })
+        @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class,
+                RowBounds.class, ResultHandler.class}),
+        @Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class})})
 public class PerformanceInterceptor implements Interceptor {
 
-	@Autowired
-	DataBootConfig dataBootConfig;
+    @Autowired
+    DataBootConfig dataBootConfig;
 
-	/**
-	 * SQL 执行最大时长，超过指定时间则进行error输出，有助于发现问题。
-	 */
-	private long maxTime = 0;
+    /**
+     * SQL 执行最大时长，超过指定时间则进行error输出，有助于发现问题。
+     */
+    private long maxTime = 0;
 
-	public Object intercept(Invocation invocation) throws Throwable {
-		if(!dataBootConfig.isPrintSql()){
-			return invocation.proceed();
-		}
-		MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
-		Object parameterObject = invocation.getArgs()[1];
-		
-		BoundSql boundSql = mappedStatement.getBoundSql(parameterObject);
-		Configuration configuration = mappedStatement.getConfiguration();
-		
-		String sql=getSql(configuration, boundSql, boundSql.getSql());
-		
-		String statementId = mappedStatement.getId();
-		long start = SystemClockUtils.now();
-		Object result = invocation.proceed();
-		long end = SystemClockUtils.now();
-		long timing = end - start;
-		
+    public Object intercept(Invocation invocation) throws Throwable {
+        Object result = invocation.proceed();
+        if (dataBootConfig.isPrintSql()) {
+            try {
+                printSql(invocation);
+            } catch (Exception ex) {
+                log.error("PerformanceInterceptor printSql is error", ex);
+            }
+        }
+        return result;
+    }
 
-		StringBuilder builder = new StringBuilder();
-		builder.append("\n\n");
-		builder.append("Time：" + timing +" ms");
-		builder.append("\n");
-		builder.append("ID：" + statementId);
-		builder.append("\n");
-		builder.append("Execute SQL：" + sql);
-		builder.append("\n");
+    private void printSql(Invocation invocation) throws Throwable {
+        MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
+        Object parameterObject = invocation.getArgs()[1];
 
-		String info = builder.toString();
-		if (getMaxTime() >= 1 && timing > getMaxTime()) {
-			log.error(info);
-		}else{
-			log.info(info);
-		}
+        BoundSql boundSql = mappedStatement.getBoundSql(parameterObject);
+        Configuration configuration = mappedStatement.getConfiguration();
 
-		try {
-			execCall(statementId, timing, sql);
-		}catch (Exception ex){
-			log.error("回调ISqlExecInterceptor的实例出错",ex);
-		}
-		return result;
-	}
+        String sql = getSql(configuration, boundSql, boundSql.getSql());
 
-	private void execCall(String statementId,long timing,String sql){
-		Map<String,ISqlExecInterceptor> maps = SpringContextUtils.getCurrentContext().getBeansOfType(ISqlExecInterceptor.class);
-		if(maps==null||maps.isEmpty()){
-			return;
-		}
-		for (String key: maps.keySet()) {
-			ISqlExecInterceptor sqlExecInterceptor = maps.get(key);
+        String statementId = mappedStatement.getId();
+        long start = SystemClockUtils.now();
 
-			sqlExecInterceptor.execCall(timing,statementId,sql);
-		}
-	}
+        long end = SystemClockUtils.now();
+        long timing = end - start;
 
-	public static String getSql(Configuration configuration, BoundSql boundSql, String sql) {
-		Object parameterObject = boundSql.getParameterObject();
-		List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
-		sql = sql.replaceAll("[\\s]+", " ");
-		if (parameterMappings != null && parameterMappings.size() > 0 && parameterObject != null) {
-			TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
-			if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
-				sql = sql.replaceFirst("\\?", getParameterValue(parameterObject));
-			} else {
-				MetaObject metaObject = configuration.newMetaObject(parameterObject);
-				for (ParameterMapping parameterMapping : parameterMappings) {
-					String propertyName = parameterMapping.getProperty();
-					if (metaObject.hasGetter(propertyName)) {
-						Object obj = metaObject.getValue(propertyName);
-						sql = sql.replaceFirst("\\?", getParameterValue(obj));
-					} else if (boundSql.hasAdditionalParameter(propertyName)) {
-						Object obj = boundSql.getAdditionalParameter(propertyName);
-						sql = sql.replaceFirst("\\?", getParameterValue(obj));
-					}
-				}
-			}
-		}
-		return sql;
-	}
 
-	private static String getParameterValue(Object obj) {
-		String value;
-		if (obj instanceof String) {
-			value = obj != null ? "'" + obj.toString() + "'" : "''";
-		} else if (obj instanceof Date) {
-			if (obj instanceof java.sql.Date) {
-				value = obj != null ? "'" + obj.toString() + "'" : "''";
-			} else {
-				DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT,
-						Locale.CHINA);
-				value = obj != null ? "'" + formatter.format(obj) + "'" : "''";
-			}
-		} else {
-			value = obj != null ? obj.toString() : "";
-		}
-		return value;
-	}
+        StringBuilder builder = new StringBuilder();
+        builder.append("\n\n");
+        builder.append("Time：" + timing + " ms");
+        builder.append("\n");
+        builder.append("ID：" + statementId);
+        builder.append("\n");
+        builder.append("Execute SQL：" + sql);
+        builder.append("\n");
 
-	public Object plugin(Object target) {
-		if (target instanceof Executor) {
-			return Plugin.wrap(target, this);
-		}
-		return target;
-	}
+        String info = builder.toString();
+        if (getMaxTime() >= 1 && timing > getMaxTime()) {
+            log.error(info);
+        } else {
+            log.info(info);
+        }
 
-	public void setProperties(Properties prop) {
-		String maxTime = prop.getProperty("maxTime");
-		if (!StringUtils.isEmpty(maxTime)) {
-			this.maxTime = Long.parseLong(maxTime);
-		}
-	}
+        try {
+            execCall(statementId, timing, sql);
+        } catch (Exception ex) {
+            log.error("回调ISqlExecInterceptor的实例出错", ex);
+        }
+    }
 
-	public long getMaxTime() {
-		return maxTime == 0 ? dataBootConfig.getSqlExecMaxTime() : maxTime;
-	}
+    private void execCall(String statementId, long timing, String sql) {
+        Map<String, ISqlExecInterceptor> maps = SpringContextUtils.getCurrentContext().getBeansOfType(ISqlExecInterceptor.class);
+        if (maps == null || maps.isEmpty()) {
+            return;
+        }
+        for (String key : maps.keySet()) {
+            ISqlExecInterceptor sqlExecInterceptor = maps.get(key);
 
-	public void setMaxTime(long maxTime) {
-		this.maxTime = maxTime;
-	}
+            sqlExecInterceptor.execCall(timing, statementId, sql);
+        }
+    }
+
+    public static String getSql(Configuration configuration, BoundSql boundSql, String sql) {
+        Object parameterObject = boundSql.getParameterObject();
+        List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
+        sql = sql.replaceAll("[\\s]+", " ");
+        if (parameterMappings != null && parameterMappings.size() > 0 && parameterObject != null) {
+            TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
+            if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
+                sql = sql.replaceFirst("\\?", getParameterValue(parameterObject));
+            } else {
+                MetaObject metaObject = configuration.newMetaObject(parameterObject);
+                for (ParameterMapping parameterMapping : parameterMappings) {
+                    String propertyName = parameterMapping.getProperty();
+                    if (metaObject.hasGetter(propertyName)) {
+                        Object obj = metaObject.getValue(propertyName);
+                        sql = sql.replaceFirst("\\?", getParameterValue(obj));
+                    } else if (boundSql.hasAdditionalParameter(propertyName)) {
+                        Object obj = boundSql.getAdditionalParameter(propertyName);
+                        sql = sql.replaceFirst("\\?", getParameterValue(obj));
+                    }
+                }
+            }
+        }
+        return sql;
+    }
+
+    private static String getParameterValue(Object obj) {
+        String value;
+        if (obj instanceof String) {
+            value = obj != null ? "'" + obj.toString() + "'" : "''";
+        } else if (obj instanceof Date) {
+            if (obj instanceof java.sql.Date) {
+                value = obj != null ? "'" + obj.toString() + "'" : "''";
+            } else {
+                DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT,
+                        Locale.CHINA);
+                value = obj != null ? "'" + formatter.format(obj) + "'" : "''";
+            }
+        } else {
+            value = obj != null ? obj.toString() : "";
+        }
+        return value;
+    }
+
+    public Object plugin(Object target) {
+        if (target instanceof Executor) {
+            return Plugin.wrap(target, this);
+        }
+        return target;
+    }
+
+    public void setProperties(Properties prop) {
+        String maxTime = prop.getProperty("maxTime");
+        if (!StringUtils.isEmpty(maxTime)) {
+            this.maxTime = Long.parseLong(maxTime);
+        }
+    }
+
+    public long getMaxTime() {
+        return maxTime == 0 ? dataBootConfig.getSqlExecMaxTime() : maxTime;
+    }
+
+    public void setMaxTime(long maxTime) {
+        this.maxTime = maxTime;
+    }
 
 
 }
