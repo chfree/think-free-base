@@ -16,14 +16,29 @@ public interface IQuartzService {
     boolean initTask(QuartzTask task);
 
     /**
+     * 停止task
+     */
+    boolean stopTask(QuartzTask task);
+
+    /**
      * 根据name初始化task
      */
     boolean initTask(String taskName);
 
     /**
+     * 根据name停止task
+     */
+    boolean stopTask(String taskName);
+
+    /**
      * 初始化所有task
      */
-    boolean initAllTaks();
+    boolean initAllTask();
+
+    /**
+     * 停止所有task
+     */
+    boolean stopAllTask();
 
     /**
      * 刷新所有task

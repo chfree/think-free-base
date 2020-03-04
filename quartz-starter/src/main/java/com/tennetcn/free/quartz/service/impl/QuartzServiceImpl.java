@@ -12,6 +12,7 @@ import com.tennetcn.free.quartz.listener.ThinkTriggerListener;
 import com.tennetcn.free.quartz.logical.model.QuartzTask;
 import com.tennetcn.free.quartz.logical.service.IQuartzTaskLogService;
 import com.tennetcn.free.quartz.logical.service.IQuartzTaskService;
+import com.tennetcn.free.quartz.logical.viewmodel.QuartzTaskSearch;
 import com.tennetcn.free.quartz.service.IQuartzService;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
@@ -47,20 +48,21 @@ public class QuartzServiceImpl implements IQuartzService {
         if(task==null){
             throw new QuartzBizException("quartz task is null");
         }
+        if (!QuartzTaskStatus.OPEN.getKey().equals(task.getStatus())) {
+            return false;
+        }
         try {
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
 
-            JobKey jobKey = new JobKey(task.getMethodName(), task.getBeanName());
-            TriggerKey triggerKey = new TriggerKey(task.getMethodName(), task.getBeanName());
+            JobKey jobKey = new JobKey(task.getName(),task.getBeanName());
+            TriggerKey triggerKey = new TriggerKey(task.getName(),task.getBeanName());
 
-            Trigger trigger = TriggerBuilder.newTrigger().withIdentity(jobKey.getName(), jobKey.getGroup())
+            Trigger trigger = TriggerBuilder.newTrigger().withIdentity(triggerKey)
                     .withSchedule(CronScheduleBuilder.cronSchedule(task.getCron())).build();
 
-            scheduler.unscheduleJob(triggerKey);
-            scheduler.deleteJob(jobKey);
-
-            if (!QuartzTaskStatus.OPEN.getKey().equals(task.getStatus())) {
-                return false;
+            if(scheduler.checkExists(jobKey)) {
+                scheduler.unscheduleJob(triggerKey);
+                scheduler.deleteJob(jobKey);
             }
 
             JobDataMap map = initJobDataMap(task);
@@ -74,11 +76,31 @@ public class QuartzServiceImpl implements IQuartzService {
             JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(jobKey).withDescription(task.getDescription())
                     .setJobData(map).storeDurably().build();
 
-
             scheduler.scheduleJob(jobDetail, trigger);
         }catch (Exception ex){
             log.error("init quartz task for job fail",ex);
-            throw new QuartzBizException(ex);
+            throw new QuartzBizException("init quartz task for job fail",ex);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean stopTask(QuartzTask task) {
+        if(task==null){
+            throw new QuartzBizException("quartz task is null");
+        }
+        try {
+            Scheduler scheduler = schedulerFactoryBean.getScheduler();
+
+            JobKey jobKey = new JobKey(task.getName(), task.getBeanName());
+            TriggerKey triggerKey = new TriggerKey(task.getName(), task.getBeanName());
+            if(scheduler.checkExists(jobKey)){
+                scheduler.unscheduleJob(triggerKey);
+                scheduler.deleteJob(jobKey);
+            }
+        }catch (Exception ex){
+            log.error("stop quartz task for job fail",ex);
+            throw new QuartzBizException("stop quartz task for job fail",ex);
         }
         return true;
     }
@@ -91,8 +113,18 @@ public class QuartzServiceImpl implements IQuartzService {
     }
 
     @Override
-    public boolean initAllTaks() {
-        List<QuartzTask> list = quartzTaskService.queryList();
+    public boolean stopTask(String taskName) {
+        QuartzTask task = quartzTaskService.queryModelByName(taskName);
+
+        return stopTask(task);
+    }
+
+    @Override
+    public boolean initAllTask() {
+        QuartzTaskSearch search = new QuartzTaskSearch();
+        search.setStatus(QuartzTaskStatus.OPEN.getKey());
+        List<QuartzTask> list = quartzTaskService.queryListBySearch(search,null);
+
         if (list == null) {
             return true;
         }
@@ -103,8 +135,25 @@ public class QuartzServiceImpl implements IQuartzService {
     }
 
     @Override
+    public boolean stopAllTask() {
+        return schedulerClear();
+    }
+
+    private boolean schedulerClear(){
+        try {
+            Scheduler scheduler = schedulerFactoryBean.getScheduler();
+            scheduler.clear();
+        }catch (Exception ex){
+            log.error("stop all quartz task for job fail",ex);
+            throw new QuartzBizException("stop all quartz task for job fail",ex);
+        }
+        return true;
+    }
+
+    @Override
     public boolean refreshAllTask() {
-        return initAllTaks();
+        schedulerClear();
+        return initAllTask();
     }
 
     @Override

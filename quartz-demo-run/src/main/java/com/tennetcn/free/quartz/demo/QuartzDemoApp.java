@@ -13,7 +13,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  */
 
 
-@EnableScheduling
 @SpringBootApplication
 public class QuartzDemoApp {
     public static void main(String[] args) {
