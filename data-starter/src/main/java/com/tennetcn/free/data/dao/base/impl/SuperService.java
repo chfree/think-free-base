@@ -71,27 +71,6 @@ public abstract class SuperService<E extends ModelBase> implements ISuperService
     }
 
     @Override
-    public List<E> queryList(boolean deleteMark, PagerModel pagerModel) {
-        return getSuperDao().queryList(deleteMark, pagerModel);
-    }
-
-    @Override
-    public List<E> queryList(boolean deleteMark) {
-        return getSuperDao().queryList(deleteMark);
-    }
-
-    @Override
-    public List<E> queryList(int deleteMark, PagerModel pagerModel) {
-        return getSuperDao().queryList(deleteMark);
-    }
-
-    @Override
-    public List<E> queryList(int deleteMark) {
-        return getSuperDao().queryList(deleteMark);
-    }
-
-
-    @Override
     public List<E> queryList(E e) {
         return getSuperDao().queryList(e);
     }
@@ -102,8 +81,8 @@ public abstract class SuperService<E extends ModelBase> implements ISuperService
     }
 
     @Override
-    public List<E> queryListByExampleAndRowBounds(Object example, RowBounds rowBounds) {
-        return getSuperDao().queryListByExampleAndRowBounds(example, rowBounds);
+    public List<E> queryList(Object example, RowBounds rowBounds) {
+        return getSuperDao().queryList(example, rowBounds);
     }
 
     @Override

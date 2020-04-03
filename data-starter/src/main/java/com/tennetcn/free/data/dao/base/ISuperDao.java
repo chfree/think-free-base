@@ -58,21 +58,13 @@ public interface ISuperDao<E extends ModelBase> {
 	
 	List<E> queryList(PagerModel pagerModel) throws DaoBaseRuntimeException;
 	
-	List<E> queryList(boolean deleteMark,PagerModel pagerModel) throws DaoBaseRuntimeException;
-	
-	List<E> queryList(boolean deleteMark) throws DaoBaseRuntimeException;
-	
-	List<E> queryList(int deleteMark,PagerModel pagerModel) throws DaoBaseRuntimeException;
-	
-	List<E> queryList(int deleteMark) throws DaoBaseRuntimeException;
-	
 	List<E> queryList(E e) throws DaoBaseRuntimeException;
 	
 	List<E> queryListByExample(Object example) throws DaoBaseRuntimeException;
 	
 	List<E> queryList(Object example, PagerModel pagerModel) throws DaoBaseRuntimeException;
 	
-	List<E> queryListByExampleAndRowBounds(Object example,RowBounds rowBounds) throws DaoBaseRuntimeException;
+	List<E> queryList(Object example,RowBounds rowBounds) throws DaoBaseRuntimeException;
 	
 	int queryCount() throws DaoBaseRuntimeException;
 	

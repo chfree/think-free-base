@@ -104,50 +104,6 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 		return queryList(true, pagerModel);
 	}
 
-	@Override
-	public List<E> queryList(boolean deleteMark, PagerModel pagerModel) throws DaoBaseRuntimeException {
-		Example example = new Example(entityClass);
-		if (deleteMark) {
-			Criteria criteria = example.createCriteria();
-			criteria.andEqualTo("deleteMark", YesOrNo.NO);
-		}
-
-		setOrderBy(example);
-
-		return getMapper().selectByExampleAndRowBounds(example, Pager2RowBounds.getRowBounds(pagerModel));
-	}
-
-	@Override
-	public List<E> queryList(boolean deleteMark) throws DaoBaseRuntimeException {
-		Example example = new Example(entityClass);
-		if (deleteMark) {
-			Criteria criteria = example.createCriteria();
-			criteria.andEqualTo("deleteMark", YesOrNo.NO);
-		}
-
-		setOrderBy(example);
-
-		return getMapper().selectByExample(example);
-	}
-
-	@Override
-	public List<E> queryList(int deleteMark, PagerModel pagerModel) throws DaoBaseRuntimeException {
-		if (YesOrNoInteger.NO == deleteMark) {
-			return this.queryList(true, pagerModel);
-		} else {
-			return this.queryList(false, pagerModel);
-		}
-	}
-
-	@Override
-	public List<E> queryList(int deleteMark) throws DaoBaseRuntimeException {
-		if (YesOrNoInteger.NO == deleteMark) {
-			return this.queryList(true);
-		} else {
-			return this.queryList(false);
-		}
-	}
-
 	private void setOrderBy(Object exampleObj) {
 		List<OrderInfo> orderInfoList = getOrderInfoList();
 		if (orderInfoList == null) {
@@ -192,7 +148,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 	}
 
 	@Override
-	public List<E> queryListByExampleAndRowBounds(Object example, RowBounds rowBounds) throws DaoBaseRuntimeException {
+	public List<E> queryList(Object example, RowBounds rowBounds) throws DaoBaseRuntimeException {
 		setOrderBy(example);
 		return getMapper().selectByExampleAndRowBounds(example, rowBounds);
 	}

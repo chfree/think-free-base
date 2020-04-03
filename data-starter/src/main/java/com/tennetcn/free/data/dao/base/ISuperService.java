@@ -33,17 +33,9 @@ public interface ISuperService<E extends ModelBase> {
 
     List<E> queryList(PagerModel pagerModel);
 
-    List<E> queryList(boolean deleteMark, PagerModel pagerModel);
-
-    List<E> queryList(boolean deleteMark);
-
-    List<E> queryList(int deleteMark, PagerModel pagerModel);
-
-    List<E> queryList(int deleteMark);
-
     List<E> queryListByExample(Object example);
 
-    List<E> queryListByExampleAndRowBounds(Object example, RowBounds rowBounds);
+    List<E> queryList(Object example, RowBounds rowBounds);
 
     List<E> queryList(Object example, PagerModel pagerModel);
 
