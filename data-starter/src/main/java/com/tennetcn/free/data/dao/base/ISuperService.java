@@ -45,8 +45,6 @@ public interface ISuperService<E extends ModelBase> {
 
     int queryCount();
 
-    int queryCount(boolean deleteMark);
-
     E queryModel(String key);
 
     E queryModel(E e);

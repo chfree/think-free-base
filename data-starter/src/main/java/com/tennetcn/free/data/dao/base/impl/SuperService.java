@@ -105,12 +105,6 @@ public abstract class SuperService<E extends ModelBase> implements ISuperService
         return getSuperDao().queryCount();
     }
 
-
-    @Override
-    public int queryCount(boolean deleteMark) {
-        return getSuperDao().queryCount(deleteMark);
-    }
-
     @Override
     public E queryModel(String key) {
         return getSuperDao().queryModel(key);

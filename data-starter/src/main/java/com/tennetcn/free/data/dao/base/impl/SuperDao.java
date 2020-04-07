@@ -187,16 +187,9 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
 	@Override
 	public int queryCount() throws DaoBaseRuntimeException {
-		return queryCount(false);
-	}
-
-	@Override
-	public int queryCount(boolean deleteMark) throws DaoBaseRuntimeException {
 		ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
 		sqlExpression.addBody("select count(1) from " + getTableName());
-		if (deleteMark) {
-			sqlExpression.andWhere("deleteMark=#{deleteMark}").setParam("deleteMark", YesOrNo.NO);
-		}
+
 		return queryCount(sqlExpression);
 	}
 

@@ -68,8 +68,6 @@ public interface ISuperDao<E extends ModelBase> {
 	
 	int queryCount() throws DaoBaseRuntimeException;
 	
-	int queryCount(boolean deleteMark) throws DaoBaseRuntimeException;
-	
 	int queryCount(E e) throws DaoBaseRuntimeException;
 	
 	int queryCountByExample(Object example) throws DaoBaseRuntimeException;
