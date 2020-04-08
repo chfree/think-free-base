@@ -239,13 +239,6 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 	}
 
 	@Override
-	public boolean deleteFakeByKey(String key) throws DaoBaseRuntimeException {
-		ISqlExpression deleteSqlExpression = SqlExpressionFactory.createExpression();
-		deleteSqlExpression.addBody("update " + getTableName() + " set deleteMark=" + YesOrNo.YES).andWhere(getPrimaryKey() + "=#{key}").setParam("key", key);
-		return update(deleteSqlExpression) > 0;
-	}
-
-	@Override
 	public boolean applyChange(E e) throws DaoBaseRuntimeException {
 		if (ModelStatus.add.equals(e.getModelStatus())) {
 			return addModelSelective(e);

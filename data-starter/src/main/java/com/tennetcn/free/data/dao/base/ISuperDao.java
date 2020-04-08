@@ -96,8 +96,6 @@ public interface ISuperDao<E extends ModelBase> {
 	
 	int deleteModelByExample(Object example) throws DaoBaseRuntimeException;
 	
-	boolean deleteFakeByKey(String key) throws DaoBaseRuntimeException;
-	
 	boolean applyChange(E e) throws DaoBaseRuntimeException;
 	
 	boolean applyChanges(List<E> list) throws DaoBaseRuntimeException;

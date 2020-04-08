@@ -69,8 +69,6 @@ public interface ISuperService<E extends ModelBase> {
 
     int deleteModelByExample(Object example);
 
-    boolean deleteFakeByKey(String key);
-
     boolean applyChange(E e);
 
     boolean applyChanges(List<E> list);

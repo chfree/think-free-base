@@ -165,11 +165,6 @@ public abstract class SuperService<E extends ModelBase> implements ISuperService
         return getSuperDao().deleteModelByExample(example);
     }
 
-    @Override
-    public boolean deleteFakeByKey(String key) {
-        return getSuperDao().deleteFakeByKey(key);
-    }
-
     public boolean applyChange(E e) {
         return getSuperDao().applyChange(e);
     }
