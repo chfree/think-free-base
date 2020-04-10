@@ -162,9 +162,9 @@ public interface ISuperDao<E extends ModelBase> {
 	
 	int insert(ISqlExpression sqlExpression);
 	
-	double querySum(ISqlExpression sqlExpression);
-	
-	double queryAggreg(ISqlExpression sqlExpression);
+	double queryScalarDouble(ISqlExpression sqlExpression);
+
+	int queryScalarInt(ISqlExpression sqlExpression);
 	
 	String queryScalar(ISqlExpression sqlExpression);
 	

@@ -635,24 +635,21 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 	}
 
 	@Override
-	public double querySum(ISqlExpression sqlExpression) {
-		List<Map<String, Object>> list;
-		try {
-			list = selectList(sqlExpression.toSql(), sqlExpression.getParams());
-			if (list == null || list.size() == 0) {
-				return 0.0;
-			}
-			Map<String, Object> map = list.get(0);
-			return Double.parseDouble(map.get(map.keySet().toArray()[0]).toString());
-		} catch (DaoBaseRuntimeException e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
+	public double queryScalarDouble(ISqlExpression sqlExpression) {
+		String scalar = queryScalar(sqlExpression);
+		if(StringUtils.isEmpty(scalar)){
+			return Double.NaN;
 		}
+		return Double.parseDouble(scalar);
 	}
 
 	@Override
-	public double queryAggreg(ISqlExpression sqlExpression) {
-		return querySum(sqlExpression);
+	public int queryScalarInt(ISqlExpression sqlExpression) {
+		String scalar = queryScalar(sqlExpression);
+		if(StringUtils.isEmpty(scalar)){
+			return 0;
+		}
+		return Integer.parseInt(scalar);
 	}
 
 	@Override
@@ -668,7 +665,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 				return null;
 			}
 			return map.get(map.keySet().toArray()[0]).toString();
-		} catch (DaoBaseRuntimeException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw new DaoBaseRuntimeException(e);
 		}
