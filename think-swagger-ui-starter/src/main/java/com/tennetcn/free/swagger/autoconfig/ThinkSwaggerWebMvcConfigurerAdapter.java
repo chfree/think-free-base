@@ -6,9 +6,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author chfree
- * @email chfree001@gmail.com
- * @create 2019-10-05 22:21
- * @comment
  */
 
 @Component
