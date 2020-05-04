@@ -77,6 +77,10 @@ public interface ISqlExpression {
 	ISqlExpression leftJoin(String body);
 	
 	ISqlExpression leftJoin(Class<?> tClass,String alias);
+
+	ISqlExpression innerJoin(String body);
+
+	ISqlExpression innerJoin(Class<?> tClass,String alias);
 	
 	ISqlExpression rightJoin(String body);
 	

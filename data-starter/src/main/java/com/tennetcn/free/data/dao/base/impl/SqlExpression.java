@@ -328,6 +328,18 @@ public class SqlExpression implements ISqlExpression {
 	}
 
 	@Override
+	public ISqlExpression innerJoin(String body) {
+		fromBuffer.append(" inner join " + body + " ");
+		return this;
+	}
+
+	@Override
+	public ISqlExpression innerJoin(Class<?> tClass, String alias) {
+		fromBuffer.append(" inner join " + ClassAnnotationUtils.getTableName(tClass) + " " + alias + " ");
+		return this;
+	}
+
+	@Override
 	public ISqlExpression rightJoin(String body) {
 		fromBuffer.append(" right join " + body + " ");
 		return this;
