@@ -2,6 +2,8 @@ package com.tennetcn.free.core.cache;
 
 import com.tennetcn.free.core.properties.CacheProperties;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.ehcache.Ehcache;
+import net.sf.ehcache.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.cache.CacheManager;
@@ -49,6 +51,33 @@ public class CachedImpl implements ICached {
 		cacheManager.getCache(CacheProperties.CACHE_NAME).evict(key);
 	}
 
+	public void put(Element element){
+		Object nativeCache = cacheManager.getCache(CacheProperties.CACHE_NAME).getNativeCache();
+		if(nativeCache instanceof Ehcache){ // 如果是ehcache则支持element
+			Ehcache ehcache = (Ehcache)nativeCache;
+			ehcache.put(element);
+		}else{
+			this.put(element.getObjectKey().toString(),element.getObjectValue());
+		}
 
+	}
+
+	@Override
+	public void put(String key, String value, int timeToLive, int timeToIdle) {
+		Element element = new Element(key,value);
+		element.setTimeToIdle(timeToIdle);
+		element.setTimeToLive(timeToLive);
+
+		put(element);
+	}
+
+	@Override
+	public void put(String key, String value, int timeToIdle) {
+		Element element = new Element(key,value);
+		element.setTimeToIdle(timeToIdle);
+		element.setTimeToLive(120);
+
+		put(element);
+	}
 
 }

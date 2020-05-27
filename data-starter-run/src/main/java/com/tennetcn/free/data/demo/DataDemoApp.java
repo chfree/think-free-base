@@ -1,6 +1,7 @@
 package com.tennetcn.free.data.demo;
 
 import cn.hutool.json.JSONUtil;
+import com.tennetcn.free.core.cache.ICached;
 import com.tennetcn.free.core.util.PkIdUtils;
 import com.tennetcn.free.core.util.SnowFlakeIdUtils;
 import com.tennetcn.free.data.demo.logical.model.LoginUser;
@@ -26,6 +27,9 @@ public class DataDemoApp implements CommandLineRunner {
 
     @Autowired
     private ILoginUserService loginUserService;
+
+    @Autowired
+    ICached cached;
 
     @Override
     public void run(String... args) throws Exception {
