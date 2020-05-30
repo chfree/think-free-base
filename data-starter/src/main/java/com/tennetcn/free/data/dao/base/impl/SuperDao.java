@@ -1,5 +1,6 @@
 package com.tennetcn.free.data.dao.base.impl;
 
+import com.tennetcn.free.core.enums.ModelStatus;
 import com.tennetcn.free.core.message.data.ModelBase;
 import com.tennetcn.free.core.message.data.OrderByEnum;
 import com.tennetcn.free.core.message.data.PagerModel;
@@ -7,20 +8,18 @@ import com.tennetcn.free.data.dao.base.IMapper;
 import com.tennetcn.free.data.dao.base.ISqlExpression;
 import com.tennetcn.free.data.dao.base.ISuperDao;
 import com.tennetcn.free.data.dao.base.mapper.SqlMapper;
-import com.tennetcn.free.core.enums.ModelStatus;
-import com.tennetcn.free.core.enums.YesOrNo;
-import com.tennetcn.free.core.enums.YesOrNoInteger;
-import com.tennetcn.free.data.message.*;
+import com.tennetcn.free.data.message.DaoBaseRuntimeException;
+import com.tennetcn.free.data.message.OrderInfo;
 import com.tennetcn.free.data.utils.ClassAnnotationUtils;
 import com.tennetcn.free.data.utils.Pager2RowBounds;
 import com.tennetcn.free.data.utils.SqlExpressionFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
-import tk.mybatis.mapper.entity.Example.Criteria;
 import tk.mybatis.mapper.entity.Example.OrderBy;
 
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ import java.util.Map;
  * @email 79763939@qq.com
  * @comment
  */
-
+@Slf4j
 public abstract class SuperDao<E extends ModelBase> extends DbContext<E> implements ISuperDao<E> {
 
 	@Autowired
@@ -279,7 +278,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.update(sql);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -292,7 +292,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.update(sql, params);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -305,7 +306,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.delete(sql);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -318,7 +320,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.delete(sql, params);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -331,7 +334,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.insert(sql);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -344,7 +348,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.insert(sql, params);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -357,7 +362,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.selectList(sql);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -370,7 +376,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.selectList(sql, resultType);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -383,7 +390,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.selectList(sql, value);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -396,7 +404,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.selectListEx(sql, value, rowBounds);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -409,7 +418,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.selectList(sql, value, resultType);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -422,7 +432,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.selectOne(sql);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -435,7 +446,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.selectOne(sql, resultType);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -448,7 +460,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.selectOne(sql, value);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -461,7 +474,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.selectOne(sql, value, resultType);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -474,7 +488,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.selectList(sql, value, rowBounds);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -487,7 +502,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.selectList(sql, rowBounds, resultType);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -500,7 +516,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.selectList(sql, value, rowBounds, resultType);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -513,7 +530,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			SqlMapper mapper = new SqlMapper(session);
 			return mapper.queryCount(sql, value);
 		} catch (Exception e) {
-			throw new DaoBaseRuntimeException(e.getMessage());
+			e.printStackTrace();
+			throw new DaoBaseRuntimeException(e);
 		} finally {
 			session.close();
 		}
@@ -535,6 +553,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 		try {
 			return selectOne(sqlExpression.toSql(), sqlExpression.getParams(), resultType);
 		} catch (DaoBaseRuntimeException e) {
+			e.printStackTrace();
 			throw new DaoBaseRuntimeException(e);
 		}
 	}

@@ -377,6 +377,11 @@ public class SqlMapper {
 		 *            返回的结果类型
 		 */
 		private void newSelectMappedStatement(String msId, SqlSource sqlSource, final Class<?> resultType) {
+			boolean hasMs = configuration.hasStatement(msId);
+			if(hasMs) { // 为null才进行缓存
+				return;
+			}
+
 			List<ResultMap> resultMaps = new ArrayList();
 			try{
 				ResultMap rm = getEneityTable(resultType).getResultMap(configuration);
@@ -388,8 +393,8 @@ public class SqlMapper {
 			}catch (MapperException ex){
 				resultMaps.add(new ResultMap.Builder(configuration,"defaultResultMap", resultType,new ArrayList<ResultMapping>(0)).build());
 			}
-			MappedStatement ms = new MappedStatement.Builder(configuration,msId, sqlSource, SqlCommandType.SELECT).resultMaps(resultMaps).build();
 
+			MappedStatement ms = new MappedStatement.Builder(configuration,msId, sqlSource, SqlCommandType.SELECT).resultMaps(resultMaps).build();
 			// 缓存
 			configuration.addMappedStatement(ms);
 		}
