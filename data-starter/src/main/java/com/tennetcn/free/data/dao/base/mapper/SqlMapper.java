@@ -1,5 +1,6 @@
 package com.tennetcn.free.data.dao.base.mapper;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.ibatis.mapping.*;
@@ -8,6 +9,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.MapperException;
 import tk.mybatis.mapper.code.Style;
 import tk.mybatis.mapper.entity.Config;
@@ -27,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @createtime 2016年5月10日 下午10:29:04
  * @comment
  */
+@Slf4j
 public class SqlMapper {
 
 	private final MSUtils msUtils;
@@ -377,10 +380,7 @@ public class SqlMapper {
 		 *            返回的结果类型
 		 */
 		private void newSelectMappedStatement(String msId, SqlSource sqlSource, final Class<?> resultType) {
-			boolean hasMs = configuration.hasStatement(msId);
-			if(hasMs) { // 为null才进行缓存
-				return;
-			}
+
 
 			List<ResultMap> resultMaps = new ArrayList();
 			try{
@@ -395,8 +395,23 @@ public class SqlMapper {
 			}
 
 			MappedStatement ms = new MappedStatement.Builder(configuration,msId, sqlSource, SqlCommandType.SELECT).resultMaps(resultMaps).build();
+
+			boolean hasMs = configuration.hasStatement(msId);
+			if(hasMs) {
+				return;
+			}
 			// 缓存
-			configuration.addMappedStatement(ms);
+			try {
+				configuration.addMappedStatement(ms);
+			}catch (IllegalArgumentException ex){
+				if(!StringUtils.isEmpty(ex.getMessage())){
+					if(ex.getMessage().lastIndexOf("please check null and null")>0){
+						log.error("configuration addMappedStatement is error",ex);
+						return;
+					}
+				}
+				throw ex;
+			}
 		}
 
 		private EntityTable getEneityTable(Class<?> resultType){
