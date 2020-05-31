@@ -27,4 +27,11 @@ public class HomeApi extends FirstApi {
     public Object testDate(@RequestBody TestDateReq req){
         return req;
     }
+
+    @PostMapping(value = "/testList")
+    public Object testList(ListReq req){
+        System.out.println(JSONUtil.toJsonStr(req.getUserIds()));
+
+        return  req.hashCode();
+    }
 }
