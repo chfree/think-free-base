@@ -137,4 +137,12 @@ public interface ISqlExpression {
 	String toSql();
 	
 	Map<String, Object> getParams();
+
+	ISqlExpression union(ISqlExpression sqlExpression1, ISqlExpression sqlExpression2);
+
+	ISqlExpression addUnion(ISqlExpression sqlExpression);
+
+	ISqlExpression unionAll(ISqlExpression sqlExpression1, ISqlExpression sqlExpression2);
+
+	ISqlExpression addUnionAll(ISqlExpression sqlExpression);
 }

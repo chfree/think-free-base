@@ -248,6 +248,36 @@ public class SqlExpression implements ISqlExpression {
 		return params;
 	}
 
+	@Override
+	public ISqlExpression union(ISqlExpression sqlExpression1, ISqlExpression sqlExpression2) {
+		this.addBody("("+sqlExpression1.toSql() + ") union (" + sqlExpression2.toSql()+")")
+				.setParamAll(sqlExpression1.getParams()).setParamAll(sqlExpression2.getParams());
+
+		return this;
+	}
+
+	@Override
+	public ISqlExpression addUnion(ISqlExpression sqlExpression) {
+		this.addBody(" union (" + sqlExpression.toSql()+")").setParamAll(sqlExpression.getParams());
+
+		return this;
+	}
+
+	@Override
+	public ISqlExpression unionAll(ISqlExpression sqlExpression1, ISqlExpression sqlExpression2) {
+		this.addBody("("+sqlExpression1.toSql() + ") union all (" + sqlExpression2.toSql()+")")
+				.setParamAll(sqlExpression1.getParams()).setParamAll(sqlExpression2.getParams());
+
+		return this;
+	}
+
+	@Override
+	public ISqlExpression addUnionAll(ISqlExpression sqlExpression) {
+		this.addBody(" union all (" + sqlExpression.toSql()+")").setParamAll(sqlExpression.getParams());
+
+		return this;
+	}
+
 
 	@Override
 	public String toSql() {
