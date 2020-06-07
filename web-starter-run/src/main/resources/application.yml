@@ -2,10 +2,10 @@ server:
   port: 8081
   servlet:
     context-path: /tennetcn
-think:
-  ratelimit:
-    enabled: true
-    policyList[0]:
-      type: URL
-      limit: 10
-      matcher: /tennetcn/home/hello
+#think:
+#  ratelimit:
+#    enabled: true
+#    policyList[0]:
+#      type: URL
+#      limit: 10
+#      matcher: /tennetcn/home/hello

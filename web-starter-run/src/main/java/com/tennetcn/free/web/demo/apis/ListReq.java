@@ -6,5 +6,7 @@ import java.util.List;
 
 @Data
 public class ListReq {
+    private String name;
+
     private List<String> userIds;
 }
