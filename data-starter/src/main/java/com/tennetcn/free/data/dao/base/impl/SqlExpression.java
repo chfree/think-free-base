@@ -1,9 +1,9 @@
 package com.tennetcn.free.data.dao.base.impl;
 
-import com.tennetcn.free.core.util.StringHelper;
-import com.tennetcn.free.data.dao.base.ISqlExpression;
 import com.tennetcn.free.core.enums.OrderEnum;
 import com.tennetcn.free.core.message.data.OrderByEnum;
+import com.tennetcn.free.core.util.StringHelper;
+import com.tennetcn.free.data.dao.base.ISqlExpression;
 import com.tennetcn.free.data.message.OrderInfo;
 import com.tennetcn.free.data.message.SqlOperateMode;
 import com.tennetcn.free.data.utils.ClassAnnotationUtils;
@@ -277,7 +277,6 @@ public class SqlExpression implements ISqlExpression {
 
 		return this;
 	}
-
 
 	@Override
 	public String toSql() {
