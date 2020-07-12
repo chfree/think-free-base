@@ -33,14 +33,18 @@ public class PagerModel implements Serializable {
 		this.pageSize=pageSize;
 	}
 	
-	public PagerModel(int pageSize, int pagerIndex){
+	public PagerModel(int pageSize, int pageIndex){
 		setDefault();
 		this.pageSize=pageSize;
-		this.pageIndex=pagerIndex;
+		this.pageIndex=pageIndex;
 	}
 	
 	private void setDefault(){
 		this.pageSize=15;
 		this.pageIndex=1;
+	}
+
+	public int getCurrentSize(){
+		return (this.pageIndex - 1) * this.pageSize;
 	}
 }
