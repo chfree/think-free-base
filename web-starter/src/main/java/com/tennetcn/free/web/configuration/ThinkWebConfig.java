@@ -17,6 +17,9 @@ public class ThinkWebConfig {
     @Value("${think.cors.enable:true}")
     private boolean corsEnable;
 
+    @Value("${think.cors.path:/**}")
+    private String corsPath;
+
     @Value("${think.log.request:true}")
     private boolean logRequest;
 

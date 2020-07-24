@@ -1,4 +1,4 @@
-package com.tennetcn.free.web.autoconfig;
+package com.tennetcn.free.web.filter;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -18,7 +18,7 @@ import java.net.InetAddress;
  * @comment
  */
 
-public class DomainFilter  implements Filter {
+public class TraceIdFilter implements Filter {
 
     @Override
     public void destroy() {

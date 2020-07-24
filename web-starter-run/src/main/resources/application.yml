@@ -2,6 +2,9 @@ server:
   port: 8081
   servlet:
     context-path: /tennetcn
+think:
+  checkmac:
+    enabled: true
 #think:
 #  ratelimit:
 #    enabled: true
