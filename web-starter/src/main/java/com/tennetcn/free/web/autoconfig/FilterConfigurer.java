@@ -2,8 +2,12 @@ package com.tennetcn.free.web.autoconfig;
 
 import com.tennetcn.free.web.configuration.CheckMacConfig;
 import com.tennetcn.free.web.configuration.ThinkWebConfig;
+import com.tennetcn.free.web.filter.AjaxCorsFilter;
 import com.tennetcn.free.web.filter.SignatureCheckFilter;
 import com.tennetcn.free.web.filter.TraceIdFilter;
+import com.tennetcn.free.web.filter.checkhelper.ICheckHelper;
+import com.tennetcn.free.web.filter.checkhelper.MacCheckHelper;
+import com.tennetcn.free.web.filter.checkhelper.TimestampCheckHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -52,49 +56,63 @@ public class FilterConfigurer implements WebMvcConfigurer {
     }
 
     @Bean
-    public CorsFilter corsFilter() {
+    public AjaxCorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        if(webConfig.isCorsEnable()){
+        if(webConfig.isCorsEnabled()){
             source.registerCorsConfiguration(webConfig.getCorsPath(), buildConfig());
         }
-        return new CorsFilter(source);
+        return new AjaxCorsFilter(source);
     }
 
     @Bean
     public FilterRegistrationBean filterRegistTraceIdFilter(){
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         TraceIdFilter traceIdFilter = new TraceIdFilter();
+        traceIdFilter.setOrder(101);
         registrationBean.setFilter(traceIdFilter);
 
         List<String> urlPatterns = new ArrayList<String>();
         urlPatterns.add("/*");
         registrationBean.setUrlPatterns(urlPatterns);
-        registrationBean.setOrder(200);
+        registrationBean.setOrder(3000);
 
         return registrationBean;
     }
 
-    @Bean
-    public SignatureCheckFilter newSignatureCheckFilter(){
-        SignatureCheckFilter signatureCheckFilter = new SignatureCheckFilter();
+    @Autowired
+    MacCheckHelper macCheckHelper;
 
-        return signatureCheckFilter;
+    @Autowired
+    TimestampCheckHelper timestampCheckHelper;
+
+    private SignatureCheckFilter newSignatureCheckFilter(){
+        ICheckHelper helper = null;
+        if(checkMacConfig.getStrategy() == null || checkMacConfig.getStrategy().equalsIgnoreCase(SignatureCheckFilter.CHECK_STRATEGY_MAC)){
+            helper = macCheckHelper;
+        }else if(checkMacConfig.getStrategy().equalsIgnoreCase(SignatureCheckFilter.CHECK_STRATEGY_TIMESTAMP)){
+            helper = timestampCheckHelper;
+        }else{
+            throw new IllegalArgumentException("Input Strategy is Error! input value is " + checkMacConfig.getStrategy() + "must is " + SignatureCheckFilter.CHECK_STRATEGY_MAC + " or " + SignatureCheckFilter.CHECK_STRATEGY_TIMESTAMP);
+        }
+        return new SignatureCheckFilter(helper,checkMacConfig);
     }
 
     @Bean
-    @ConditionalOnProperty(value = "think.checkmac.enabled",havingValue = "true")
-    public FilterRegistrationBean filterRegistSignatureCheckFilter(){
-        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+    //@ConditionalOnProperty(value = "think.checkmac.enabled",havingValue = "true")
+    public FilterRegistrationBean<SignatureCheckFilter> filterRegistSignatureCheckFilter(){
+        FilterRegistrationBean<SignatureCheckFilter> registrationBean = new FilterRegistrationBean<>();
+        SignatureCheckFilter signatureCheckFilter = newSignatureCheckFilter();
+        signatureCheckFilter.setOrder(99);
+        registrationBean.setFilter(signatureCheckFilter);
 
-        registrationBean.setFilter(newSignatureCheckFilter());
-        registrationBean.setOrder(checkMacConfig.getFilterOrder());
 
         List<String> tempUrlPatterns = (StringUtils.isEmpty(checkMacConfig.getUrlPatterns()))
-                ? Arrays.asList(checkMacConfig.getUrlPatterns().split(","))
-                :new ArrayList<String>();
+                ? new ArrayList<String>()
+                :Arrays.asList(checkMacConfig.getUrlPatterns().split(","));
         List<String> urlPatterns = Collections.unmodifiableList(tempUrlPatterns);
         registrationBean.setUrlPatterns(urlPatterns);
-
+        registrationBean.setOrder(Integer.MAX_VALUE);
+        registrationBean.setOrder(2000);
 
         return registrationBean;
     }

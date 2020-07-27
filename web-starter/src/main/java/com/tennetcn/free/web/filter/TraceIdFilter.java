@@ -3,6 +3,7 @@ package com.tennetcn.free.web.filter;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import org.slf4j.MDC;
+import org.springframework.boot.web.servlet.filter.OrderedFilter;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.*;
@@ -18,7 +19,8 @@ import java.net.InetAddress;
  * @comment
  */
 
-public class TraceIdFilter implements Filter {
+public class TraceIdFilter implements OrderedFilter {
+    private int order = 100;
 
     @Override
     public void destroy() {
@@ -80,5 +82,14 @@ public class TraceIdFilter implements Filter {
             e.printStackTrace();
         }
         return hostName;
+    }
+
+    @Override
+    public int getOrder() {
+        return this.order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 }

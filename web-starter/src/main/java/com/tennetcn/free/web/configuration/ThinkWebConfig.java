@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 @Data
 @Configurable
 public class ThinkWebConfig {
-    @Value("${think.cors.enable:true}")
-    private boolean corsEnable;
+    @Value("${think.cors.enabled:true}")
+    private boolean corsEnabled;
 
     @Value("${think.cors.path:/**}")
     private String corsPath;

@@ -9,7 +9,7 @@ import javax.validation.Valid;
 import java.util.Date;
 
 @RestController
-@RequestMapping(value = "/home")
+@RequestMapping(value = "/api/home")
 public class HomeApi extends FirstApi {
 
     @GetMapping(value = "/hello")

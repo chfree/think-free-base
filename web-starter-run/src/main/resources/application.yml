@@ -5,6 +5,8 @@ server:
 think:
   checkmac:
     enabled: true
+logging:
+  config: classpath:logback-dev.xml
 #think:
 #  ratelimit:
 #    enabled: true

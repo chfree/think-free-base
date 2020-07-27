@@ -45,7 +45,7 @@ public class BaseResponse {
      */
     private String traceId;
 
-    private Map<String,Object> arguments=new HashMap<String, Object>();
+    private Map<String,Object> arguments= null;
 
     public BaseResponse(){
         this.status = ResponseStatus.SUCCESS;
@@ -61,10 +61,16 @@ public class BaseResponse {
     }
 
     public void put(String key,Object value){
+        if(arguments == null){
+            arguments = new HashMap<String, Object>();
+        }
         arguments.put(key, value);
     }
 
     public void putResult(Object value){
+        if(arguments == null){
+            arguments = new HashMap<String, Object>();
+        }
         arguments.put(defaultResultKey, value);
     }
 
@@ -74,6 +80,9 @@ public class BaseResponse {
     }
 
     public Object get(String key){
+        if(arguments == null){
+            return null;
+        }
         return arguments.get(key);
     }
 

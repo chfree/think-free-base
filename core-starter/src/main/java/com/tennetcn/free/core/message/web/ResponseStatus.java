@@ -7,5 +7,8 @@ public class ResponseStatus {
     public static final int SUCCESS=200;
 
     //服务器异常
+    public static final int SIGNATURE_ERROR=999;
+
+    //服务器异常
     public static final int SERVER_ERROR=1000;
 }

@@ -53,19 +53,19 @@ public class CheckMacConfig {
     /**
      * SignatureCheckFilter拦截匹配的名单
      */
-    @Value("${think.checkmac.url-patterns:}")
+    @Value("${think.checkmac.url-patterns:/api/*}")
     private String urlPatterns;
 
     /**
-     * 在拦截匹配中，允许一些名单
+     * filter order
      */
-    @Value("${think.checkmac.filter-order:100}")
+    @Value("${think.checkmac.filter-order:100000000}")
     private int filterOrder;
 
     /**
      * 在拦截匹配中，允许一些名单
      */
-    @Value("${think.checkmac.allowlist:}")
+    @Value("${think.checkmac.allowlist:/v2/api-docs}")
     private String allowlist;
 
 }
