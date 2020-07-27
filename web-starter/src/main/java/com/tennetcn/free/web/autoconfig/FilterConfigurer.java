@@ -68,13 +68,11 @@ public class FilterConfigurer implements WebMvcConfigurer {
     public FilterRegistrationBean filterRegistTraceIdFilter(){
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         TraceIdFilter traceIdFilter = new TraceIdFilter();
-        traceIdFilter.setOrder(101);
         registrationBean.setFilter(traceIdFilter);
 
         List<String> urlPatterns = new ArrayList<String>();
         urlPatterns.add("/*");
         registrationBean.setUrlPatterns(urlPatterns);
-        registrationBean.setOrder(3000);
 
         return registrationBean;
     }
@@ -102,7 +100,6 @@ public class FilterConfigurer implements WebMvcConfigurer {
     public FilterRegistrationBean<SignatureCheckFilter> filterRegistSignatureCheckFilter(){
         FilterRegistrationBean<SignatureCheckFilter> registrationBean = new FilterRegistrationBean<>();
         SignatureCheckFilter signatureCheckFilter = newSignatureCheckFilter();
-        signatureCheckFilter.setOrder(99);
         registrationBean.setFilter(signatureCheckFilter);
 
 
@@ -111,8 +108,6 @@ public class FilterConfigurer implements WebMvcConfigurer {
                 :Arrays.asList(checkMacConfig.getUrlPatterns().split(","));
         List<String> urlPatterns = Collections.unmodifiableList(tempUrlPatterns);
         registrationBean.setUrlPatterns(urlPatterns);
-        registrationBean.setOrder(Integer.MAX_VALUE);
-        registrationBean.setOrder(2000);
 
         return registrationBean;
     }

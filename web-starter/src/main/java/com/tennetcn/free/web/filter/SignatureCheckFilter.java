@@ -33,7 +33,6 @@ import java.util.List;
  */
 
 @Slf4j
-@Order(100000)
 public class SignatureCheckFilter implements OrderedFilter {
     private int order = 1005;
     public static final String CHECK_STRATEGY_MAC = "mac";
