@@ -10,21 +10,21 @@ import com.tennetcn.free.core.enums.BaseEnum;
  */
 
 public enum QuartzTaskConcurrent implements BaseEnum<String> {
-    YES("y","是"),
-    NO("n","否");
+    YES("是","y"),
+    NO("否","n");
 
-    private String key;
+    private String text;
 
     private String value;
 
-    QuartzTaskConcurrent(String key, String value) {
-        this.key = key;
+    QuartzTaskConcurrent(String text, String value) {
+        this.text = text;
         this.value = value;
     }
 
     @Override
-    public String getKey() {
-        return this.key;
+    public String getText() {
+        return this.text;
     }
 
     @Override

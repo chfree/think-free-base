@@ -10,21 +10,21 @@ import com.tennetcn.free.core.enums.BaseEnum;
  */
 
 public enum QuartzTaskStatus implements BaseEnum<String> {
-    OPEN("open","开启"),
-    CLOSE("close","关闭");
+    OPEN("开启" ,"open"),
+    CLOSE("关闭","close");
 
-    private String key;
+    private String text;
 
     private String value;
 
-    QuartzTaskStatus(String key,String value) {
-        this.key = key;
+    QuartzTaskStatus(String text,String value) {
+        this.text = text;
         this.value = value;
     }
 
     @Override
-    public String getKey() {
-        return this.key;
+    public String getText() {
+        return this.text;
     }
 
     @Override

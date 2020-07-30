@@ -67,7 +67,7 @@ public class ThinkJobListener implements JobListener {
 
     private void saveJobWasExecutedLog(JobExecutionContext jobExecutionContext,JobExecutionException e){
         QuartzTaskLog taskLog = getTaskLog(jobExecutionContext);
-        taskLog.setExecPhase(ExecPhaseEnum.JOBWASEXECUTED.getKey());
+        taskLog.setExecPhase(ExecPhaseEnum.JOBWASEXECUTED.getValue());
         taskLog.setExecId(jobExecutionContext.get("execId").toString());
         taskLog.setStartTime((DateTime) jobExecutionContext.get("startTime"));
         taskLog.setEndTime(DateUtil.date());

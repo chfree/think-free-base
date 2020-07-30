@@ -1,11 +1,17 @@
 package com.tennetcn.free.web.filter.checkhelper;
 
+import com.tennetcn.free.core.util.StringHelper;
 import com.tennetcn.free.web.configuration.CheckMacConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 public abstract class AbstractCheckHelper implements ICheckHelper {
 
@@ -21,8 +27,36 @@ public abstract class AbstractCheckHelper implements ICheckHelper {
         final StringBuilder sb = new StringBuilder(checkMacConfig.getSalt());
         sb.append(null2Empty(getUri(wrapper)));
         sb.append(null2Empty(getQueryString(wrapper)));
-        sb.append(null2Empty(getBody(wrapper)));
+
+        // 如果是application json提交，则获取body
+        if(isJson(wrapper)){
+            sb.append(null2Empty(getBody(wrapper)));
+        }else{
+            // 否则获取paramMap
+            sb.append(getParamMapString(wrapper));
+        }
+
         return sb.toString();
+    }
+
+    // 将map转换为a=1&b=2 模式
+    private String getParamMapString(ServletRequest request){
+        List<String> result = new ArrayList<>();
+
+        Enumeration<String> parameterNames = request.getParameterNames();
+        while (parameterNames.hasMoreElements()){
+            String name = parameterNames.nextElement();
+            result.add(name+"="+request.getParameter(name));
+        }
+        return StringHelper.join(result,"&");
+    }
+
+    private boolean isJson(ServletRequest request) {
+        if (request.getContentType() != null) {
+            return request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE) ||
+                    request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE);
+        }
+        return false;
     }
 
     /**
@@ -34,7 +68,8 @@ public abstract class AbstractCheckHelper implements ICheckHelper {
         String headerFieldName = checkMacConfig.getHeaderFieldName();
         final String signature = (wrapper.getHeader(headerFieldName) == null)?wrapper.getParameter(headerFieldName):wrapper.getHeader(headerFieldName);
         if (signature == null) {
-            throw new IllegalStateException("#macCheck# Request does not have signature field");
+            return "123";
+            //throw new IllegalStateException("#macCheck# Request does not have signature field");
         }
         return signature;
     }

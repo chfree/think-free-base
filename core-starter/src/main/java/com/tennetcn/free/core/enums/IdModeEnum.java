@@ -11,16 +11,16 @@ public enum  IdModeEnum implements BaseEnum<String>{
     UUID("uuid","UUID"),
     SNOW("snow","SNOW");
 
-    private String key;
+    private String text;
     private String value;
-    IdModeEnum(String key,String value){
-        this.key = key;
+    IdModeEnum(String text,String value){
+        this.text = text;
         this.value = value;
     }
 
     @Override
-    public String getKey() {
-        return this.key;
+    public String getText() {
+        return this.text;
     }
 
     @Override

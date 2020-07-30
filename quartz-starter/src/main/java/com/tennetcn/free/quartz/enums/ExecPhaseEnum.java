@@ -15,18 +15,18 @@ public enum ExecPhaseEnum implements BaseEnum<String> {
     JOBWASEXECUTED("jobWasExecuted","jobWasExecuted");
 
 
-    private String key;
+    private String text;
 
     private String value;
 
-    ExecPhaseEnum(String key, String value) {
-        this.key = key;
+    ExecPhaseEnum(String text, String value) {
+        this.text = text;
         this.value = value;
     }
 
     @Override
-    public String getKey() {
-        return this.key;
+    public String getText() {
+        return this.text;
     }
 
     @Override

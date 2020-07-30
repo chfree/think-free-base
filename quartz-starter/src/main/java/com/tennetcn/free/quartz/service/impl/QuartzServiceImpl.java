@@ -48,7 +48,7 @@ public class QuartzServiceImpl implements IQuartzService {
         if(task==null){
             throw new QuartzBizException("quartz task is null");
         }
-        if (!QuartzTaskStatus.OPEN.getKey().equals(task.getStatus())) {
+        if (!QuartzTaskStatus.OPEN.getValue().equals(task.getStatus())) {
             return false;
         }
         try {
@@ -67,7 +67,7 @@ public class QuartzServiceImpl implements IQuartzService {
 
             JobDataMap map = initJobDataMap(task);
             Class<? extends BatchCommonJob> jobClass = null;
-            if (QuartzTaskConcurrent.YES.getKey().equals(task.getConcurrent())) {
+            if (QuartzTaskConcurrent.YES.getValue().equals(task.getConcurrent())) {
                 jobClass = BatchDisallowConcurrentJob.class;
             } else {
                 jobClass = BatchConcurrentJob.class;
@@ -122,7 +122,7 @@ public class QuartzServiceImpl implements IQuartzService {
     @Override
     public boolean initAllTask() {
         QuartzTaskSearch search = new QuartzTaskSearch();
-        search.setStatus(QuartzTaskStatus.OPEN.getKey());
+        search.setStatus(QuartzTaskStatus.OPEN.getValue());
         List<QuartzTask> list = quartzTaskService.queryListBySearch(search,null);
 
         if (list == null) {
