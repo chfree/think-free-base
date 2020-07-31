@@ -61,6 +61,16 @@ public interface ISqlExpression {
 	ISqlExpression andWhereInString(String column,String ...values);
 	
 	ISqlExpression andWhereInString(List<String> values,String join,String... columns);
+
+	ISqlExpression andWhereNotIn(String column,ISqlExpression sqlExpression);
+
+	ISqlExpression andWhereNotIn(String column,List<Object> values);
+
+	ISqlExpression andWhereNotInString(String column,List<String> values);
+
+	ISqlExpression andWhereNotInString(String column,String ...values);
+
+	ISqlExpression andWhereNotInString(List<String> values,String join,String... columns);
 	
 	ISqlExpression orWhere(String value);
 	

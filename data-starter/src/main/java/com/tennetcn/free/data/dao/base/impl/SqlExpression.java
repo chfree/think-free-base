@@ -561,8 +561,12 @@ public class SqlExpression implements ISqlExpression {
 
 	@Override
 	public ISqlExpression andWhereIn(String column,ISqlExpression sqlExpression){
+		return andWhereIn("in",column,sqlExpression);
+	}
+
+	private ISqlExpression andWhereIn(String inOrNotIn,String column,ISqlExpression sqlExpression){
 		StringBuilder builder=new StringBuilder();
-		builder.append(column+" in (");
+		builder.append(column+" "+inOrNotIn+" (");
 		builder.append(sqlExpression.toSql());
 		builder.append(")");
 
@@ -574,13 +578,17 @@ public class SqlExpression implements ISqlExpression {
 
 	@Override
 	public ISqlExpression andWhereIn(String column, List<Object> values) {
+		return andWhereIn("in",column,values);
+	}
+
+	private ISqlExpression andWhereIn(String inOrNotIn,String column, List<Object> values) {
 		if(values==null||values.size()<=0){
 			return this;
 		}
 		column = resolveColumnMainTable(column);
 
 		StringBuffer builder=new StringBuffer();
-		builder.append(column+" in (");
+		builder.append(column+" "+inOrNotIn+" (");
 		String columnName = "";
 		for (int i = 0; i < values.size(); i++) {
 			columnName = resolveColumn(column)+i;
@@ -592,21 +600,24 @@ public class SqlExpression implements ISqlExpression {
 			this.setParam(columnName, values.get(i));
 		}
 		builder.append(")");
-		
+
 		andWhere(builder.toString());
-		
+
 		return this;
 	}
 
-
 	@Override
 	public ISqlExpression andWhereInString(String column, List<String> values) {
+		return andWhereInString("in",column,values);
+	}
+
+	private ISqlExpression andWhereInString(String inOrNotIn,String column, List<String> values) {
 		if(values==null||values.size()<=0){
 			return this;
 		}
 		column = resolveColumnMainTable(column);
 		StringBuffer builder=new StringBuffer();
-		builder.append(column+" in (");
+		builder.append(column+" "+inOrNotIn+" (");
 		String columnName = "";
 		for (int i = 0; i < values.size(); i++) {
 
@@ -619,9 +630,9 @@ public class SqlExpression implements ISqlExpression {
 			this.setParam(columnName, values.get(i));
 		}
 		builder.append(")");
-		
+
 		andWhere(builder.toString());
-		
+
 		return this;
 	}
 
@@ -633,6 +644,10 @@ public class SqlExpression implements ISqlExpression {
 
 	@Override
 	public ISqlExpression andWhereInString(List<String> values, String join,String... columns) {
+		return andWhereInString("in",values,join,columns);
+	}
+
+	private ISqlExpression andWhereInString(String inOrNotIn,List<String> values, String join,String... columns){
 		if(values==null||values.size()<=0){
 			return this;
 		}
@@ -651,28 +666,53 @@ public class SqlExpression implements ISqlExpression {
 
 				inWhereId=resolveColumn(column);
 			}
-			sbWheres.append(column+" in (");
+			sbWheres.append(column+" "+inOrNotIn+" (");
 			for (int i = 0; i < values.size(); i++) {
 				if(i==values.size()-1){
 					sbWheres.append("#{"+inWhereId+i+"}");
 				}else{
 					sbWheres.append("#{"+inWhereId+i+"},");
 				}
-				
+
 				if(inWhereMap.isEmpty()){
 					this.setParam(resolveColumn(column)+i, values.get(i));
 				}
 			}
-			
+
 			sbWheres.append(")");
 		}
 		this.setParamAll(inWhereMap);
-		
+
 		andWhere(sbWheres.toString());
-		
+
 		return this;
 	}
-	
+
+	@Override
+	public ISqlExpression andWhereNotIn(String column, ISqlExpression sqlExpression) {
+		return andWhereIn("not in",column,sqlExpression);
+	}
+
+	@Override
+	public ISqlExpression andWhereNotIn(String column, List<Object> values) {
+		return andWhereIn(column,values);
+	}
+
+	@Override
+	public ISqlExpression andWhereNotInString(String column, List<String> values) {
+		return andWhereInString("not in",column,values);
+	}
+
+	@Override
+	public ISqlExpression andWhereNotInString(String column, String... values) {
+		return andWhereInString("not in",column, Arrays.asList(values));
+	}
+
+	@Override
+	public ISqlExpression andWhereNotInString(List<String> values, String join, String... columns) {
+		return andWhereInString("not in",values,join,columns);
+	}
+
 	private String resolveColumn(String column){
 
 		return column.replaceAll("\\.", "_");
