@@ -1,6 +1,7 @@
 package com.tennetcn.free.data.dao.base;
 
 import com.tennetcn.free.core.enums.OrderEnum;
+import com.tennetcn.free.core.message.data.PagerModel;
 import com.tennetcn.free.data.message.OrderInfo;
 
 import java.util.List;
@@ -155,4 +156,8 @@ public interface ISqlExpression {
 	ISqlExpression unionAll(ISqlExpression sqlExpression1, ISqlExpression sqlExpression2);
 
 	ISqlExpression addUnionAll(ISqlExpression sqlExpression);
+
+	ISqlExpression limit(PagerModel pagerModel);
+
+	ISqlExpression limit(int pageIndex,int pageSize);
 }

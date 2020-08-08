@@ -23,6 +23,7 @@ public class PagerModel implements Serializable {
 	 */
 	private int pageSize;
 
+	private int currentSize = -1;
 	
 	public PagerModel(){
 		setDefault();
@@ -45,6 +46,9 @@ public class PagerModel implements Serializable {
 	}
 
 	public int getCurrentSize(){
-		return (this.pageIndex - 1) * this.pageSize;
+		if(this.currentSize<0){
+			return (this.pageIndex - 1) * this.pageSize;
+		}
+		return this.currentSize;
 	}
 }

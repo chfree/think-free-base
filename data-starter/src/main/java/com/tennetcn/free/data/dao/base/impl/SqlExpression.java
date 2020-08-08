@@ -2,6 +2,7 @@ package com.tennetcn.free.data.dao.base.impl;
 
 import com.tennetcn.free.core.enums.OrderEnum;
 import com.tennetcn.free.core.message.data.OrderByEnum;
+import com.tennetcn.free.core.message.data.PagerModel;
 import com.tennetcn.free.core.util.StringHelper;
 import com.tennetcn.free.data.dao.base.ISqlExpression;
 import com.tennetcn.free.data.message.OrderInfo;
@@ -45,6 +46,8 @@ public class SqlExpression implements ISqlExpression {
 	private StringBuffer setBuffer = new StringBuffer();
 
 	private StringBuffer fromBuffer = new StringBuffer();
+
+	private StringBuffer limitBuffer = new StringBuffer();
 
 	public SqlExpression() {
 		if (params == null) {
@@ -279,6 +282,17 @@ public class SqlExpression implements ISqlExpression {
 	}
 
 	@Override
+	public ISqlExpression limit(PagerModel pagerModel) {
+		limitBuffer.append(" limit " + pagerModel.getCurrentSize()+" , " +pagerModel.getPageSize());
+		return this;
+	}
+
+	@Override
+	public ISqlExpression limit(int pageIndex, int pageSize) {
+		return limit(new PagerModel(pageSize,pageIndex));
+	}
+
+	@Override
 	public String toSql() {
 		String result = bodyBuffer.toString();
 		if (sqlOperateMode == SqlOperateMode.select) {
@@ -286,6 +300,7 @@ public class SqlExpression implements ISqlExpression {
 			result += getWhereString();
 			result += groupBuffer.toString();
 			result += orderBuffer.toString();
+			result += limitBuffer.toString();
 		} else if (sqlOperateMode == SqlOperateMode.update) {
 			result += fromBuffer.toString();
 			result += setBuffer.toString();
