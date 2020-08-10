@@ -29,7 +29,7 @@ public class CheckMacConfig {
     /**
      * 请求头字段名
      */
-    @Value("${think.checkmac.header-field-name:}")
+    @Value("${think.checkmac.header-field-name:signature}")
     private String headerFieldName;
 
     /**

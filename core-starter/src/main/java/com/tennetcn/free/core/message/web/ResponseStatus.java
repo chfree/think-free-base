@@ -6,8 +6,8 @@ public class ResponseStatus {
     //请求成功
     public static final int SUCCESS=200;
 
-    //服务器异常
-    public static final int SIGNATURE_ERROR=999;
+    //签名异常
+    public static final int SIGNATURE_ERROR=401;
 
     //服务器异常
     public static final int SERVER_ERROR=1000;
