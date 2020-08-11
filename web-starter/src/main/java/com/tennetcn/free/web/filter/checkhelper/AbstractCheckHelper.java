@@ -28,12 +28,15 @@ public abstract class AbstractCheckHelper implements ICheckHelper {
         sb.append(null2Empty(getUri(wrapper)));
         sb.append(null2Empty(getQueryString(wrapper)));
 
-        // 如果是application json提交，则获取body
-        if(isJson(wrapper)){
-            sb.append(null2Empty(getBody(wrapper)));
-        }else{
-            // 否则获取paramMap
-            sb.append(getParamMapString(wrapper));
+        // 不是get才取paramMap或是inputStream里面的json
+        if(!"get".equalsIgnoreCase(wrapper.getMethod())){
+            // 如果是application json提交，则获取body
+            if(isJson(wrapper)){
+                sb.append(null2Empty(getBody(wrapper)));
+            }else{
+                // 否则获取paramMap
+                sb.append(getParamMapString(wrapper));
+            }
         }
 
         return sb.toString();
@@ -68,8 +71,7 @@ public abstract class AbstractCheckHelper implements ICheckHelper {
         String headerFieldName = checkMacConfig.getHeaderFieldName();
         final String signature = (wrapper.getHeader(headerFieldName) == null)?wrapper.getParameter(headerFieldName):wrapper.getHeader(headerFieldName);
         if (signature == null) {
-            return "123";
-            //throw new IllegalStateException("#macCheck# Request does not have signature field");
+            throw new IllegalStateException("#macCheck# Request does not have signature field");
         }
         return signature;
     }
