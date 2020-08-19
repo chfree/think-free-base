@@ -292,6 +292,22 @@ public class SqlExpression implements ISqlExpression {
 		return limit(new PagerModel(pageSize,pageIndex));
 	}
 
+    @Override
+    public ISqlExpression selectDistinct(String body) {
+		select(" distinct " + body);
+		return this;
+    }
+
+	@Override
+	public ISqlExpression selectDistinct(String... bodys) {
+		if (bodys != null && bodys.length > 0) {
+			String body = StringHelper.join(bodys, ",");
+			addBody("select distinct " + body);
+		}
+		sqlOperateMode = SqlOperateMode.select;
+		return this;
+	}
+
 	@Override
 	public String toSql() {
 		String result = bodyBuffer.toString();

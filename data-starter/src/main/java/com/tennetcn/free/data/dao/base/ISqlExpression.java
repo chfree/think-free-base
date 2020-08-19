@@ -160,4 +160,8 @@ public interface ISqlExpression {
 	ISqlExpression limit(PagerModel pagerModel);
 
 	ISqlExpression limit(int pageIndex,int pageSize);
+
+	ISqlExpression selectDistinct(String body);
+
+	ISqlExpression selectDistinct(String... bodys);
 }
