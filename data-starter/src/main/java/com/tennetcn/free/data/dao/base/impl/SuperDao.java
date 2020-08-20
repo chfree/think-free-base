@@ -692,6 +692,9 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
 	@Override
 	public int insertListEx(List<E> list) {
+		if(list==null||list.isEmpty()){
+			return 0;
+		}
 		return mapper.insertListEx(list);
 	}
 }
