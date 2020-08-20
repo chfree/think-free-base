@@ -17,4 +17,7 @@ public interface ILoginUserService extends ISuperDao<LoginUser> {
     List<TestUser> queryTestUserxs();
 
     List<TestUser1> queryTestUsers1();
+
+    void batchInsert(List<LoginUser> users);
+
 }

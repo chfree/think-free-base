@@ -1,5 +1,7 @@
 package com.tennetcn.free.data.dao.base.impl;
 
+import cn.hutool.aop.ProxyUtil;
+import cn.hutool.core.util.ReflectUtil;
 import com.tennetcn.free.core.enums.ModelStatus;
 import com.tennetcn.free.core.message.data.ModelBase;
 import com.tennetcn.free.core.message.data.OrderByEnum;
@@ -7,6 +9,7 @@ import com.tennetcn.free.core.message.data.PagerModel;
 import com.tennetcn.free.data.dao.base.IMapper;
 import com.tennetcn.free.data.dao.base.ISqlExpression;
 import com.tennetcn.free.data.dao.base.ISuperDao;
+import com.tennetcn.free.data.dao.base.interceptor.IBaseInterceptor;
 import com.tennetcn.free.data.dao.base.mapper.SqlMapper;
 import com.tennetcn.free.data.message.DaoBaseRuntimeException;
 import com.tennetcn.free.data.message.OrderInfo;
@@ -14,6 +17,7 @@ import com.tennetcn.free.data.utils.ClassAnnotationUtils;
 import com.tennetcn.free.data.utils.Pager2RowBounds;
 import com.tennetcn.free.data.utils.SqlExpressionFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.binding.MapperProxy;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
@@ -22,6 +26,7 @@ import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.entity.Example.OrderBy;
 
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -51,6 +56,9 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 	public String getTableName() {
 		return ClassAnnotationUtils.getTableName(entityClass);
 	}
+
+	@Autowired
+	private BatchInsertProcessor batchInsertProcessor;
 
 	@Override
 	public <T extends ModelBase> String getTableName(Class<T> classType) {
@@ -696,5 +704,39 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			return 0;
 		}
 		return mapper.insertListEx(list);
+	}
+
+	private String getSqlId(String methodName){
+		Class clazz = (Class)ReflectUtil.getFieldValue(ReflectUtil.getFieldValue(this.mapper, "h"),"mapperInterface");
+
+		return clazz.getName() + "." + methodName;
+	}
+
+	@Override
+	public int batchInsertList(List<E> list){
+		String sqlId = getSqlId("insert");
+
+		return batchInsertProcessor.insertListBatch(sqlId,list);
+	}
+
+	@Override
+	public int batchUpdateList(List<E> list){
+		String sqlId = getSqlId("update");
+
+		return batchInsertProcessor.updateListBatch(sqlId,list);
+	}
+
+	@Override
+	public int batchInsertSelectiveList(List<E> list) {
+		String sqlId = getSqlId("insertSelective");
+
+		return batchInsertProcessor.insertListBatch(sqlId,list);
+	}
+
+	@Override
+	public int batchUpdateSelectiveList(List<E> list) {
+		String sqlId = getSqlId("updateSelective");
+
+		return batchInsertProcessor.updateListBatch(sqlId,list);
 	}
 }

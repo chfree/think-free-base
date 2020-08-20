@@ -67,12 +67,6 @@ public class LoginUser extends ModelBase {
     @Column(name="user_mark")
     private String userMark;
 
-    @Column(name="is_locked")
-    private Integer isLocked;
-
-    @Column(name="is_login")
-    private Integer isLogin;
-
     @Column(name="unique_mark")
     private String uniqueMark;
 

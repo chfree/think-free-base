@@ -169,4 +169,12 @@ public interface ISuperDao<E extends ModelBase> {
 	String queryScalar(ISqlExpression sqlExpression);
 	
 	int insertListEx(List<E> list);
+
+	int batchInsertList(List<E> list);
+
+	int batchUpdateList(List<E> list);
+
+	int batchInsertSelectiveList(List<E> list);
+
+	int batchUpdateSelectiveList(List<E> list);
 }

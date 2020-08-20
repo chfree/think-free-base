@@ -51,4 +51,9 @@ public class LoginUserServiceImpl extends SuperDao<LoginUser> implements ILoginU
         sqlExpression.selectAllFrom(LoginUser.class);
         return queryList(sqlExpression, TestUser1.class);
     }
+
+    @Override
+    public void batchInsert(List<LoginUser> users) {
+        batchInsertList(users);
+    }
 }

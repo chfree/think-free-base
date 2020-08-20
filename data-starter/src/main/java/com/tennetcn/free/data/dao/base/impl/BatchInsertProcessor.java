@@ -21,14 +21,14 @@ public class BatchInsertProcessor {
     @Autowired
     private SqlSessionFactory sqlSessionFactory;
 
-    public void insertListBatch(String sqlId, List data) {
-        insertListBatch(sqlId,data,64);
+    public int insertListBatch(String sqlId, List data) {
+        return insertListBatch(sqlId,data,64);
     }
 
-    public void insertListBatch(String sqlId, List data, int batchSize) {
+    public int insertListBatch(String sqlId, List data, int batchSize) {
         Assert.isTrue(batchSize > 0,"批量插入规模数量必须大于0");
         if(data==null||data.isEmpty()){
-            return;
+            return 0;
         }
         SqlSession session = sqlSessionFactory.openSession(ExecutorType.BATCH, false);
         try {
@@ -47,6 +47,7 @@ public class BatchInsertProcessor {
         } finally {
             session.close();
         }
+        return data.size();
     }
 
     public int updateListBatch(String sqlID, List lstData){

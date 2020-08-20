@@ -177,5 +177,15 @@ public abstract class SuperService<E extends ModelBase> implements ISuperService
     public int insertListEx(List<E> list) {
         return getSuperDao().insertListEx(list);
     }
+
+    @Override
+    public int batchInsertList(List<E> list) {
+        return getSuperDao().batchInsertList(list);
+    }
+
+    @Override
+    public int batchUpdateList(List<E> list) {
+        return getSuperDao().batchUpdateList(list);
+    }
 }
 
