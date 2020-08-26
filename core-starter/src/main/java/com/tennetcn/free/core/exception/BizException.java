@@ -17,6 +17,10 @@ public class BizException extends RuntimeException {
         this(defaultErrorCode,msg);
     }
 
+    public BizException(String msg,Throwable throwable) {
+        this(defaultErrorCode,msg,throwable);
+    }
+
     public BizException(int code, Object... params) {
         this.code = code;
         this.params = params;
@@ -25,6 +29,11 @@ public class BizException extends RuntimeException {
 
     public BizException(int code, String msg) {
         super(msg);
+        this.code = code;
+    }
+
+    public BizException(int code, String msg,Throwable throwable) {
+        super(msg,throwable);
         this.code = code;
     }
 
