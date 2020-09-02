@@ -159,6 +159,12 @@ public interface ISuperDao<E extends ModelBase> {
 	int update(ISqlExpression sqlExpression);
 	
 	int delete(ISqlExpression sqlExpression);
+
+	int deleteByIds(List<String> ids);
+
+	int deleteByIds(String ...ids);
+
+	int deleteByIds(String ids);
 	
 	int insert(ISqlExpression sqlExpression);
 	

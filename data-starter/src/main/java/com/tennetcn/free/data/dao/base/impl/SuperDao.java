@@ -1,6 +1,5 @@
 package com.tennetcn.free.data.dao.base.impl;
 
-import cn.hutool.aop.ProxyUtil;
 import cn.hutool.core.util.ReflectUtil;
 import com.tennetcn.free.core.enums.ModelStatus;
 import com.tennetcn.free.core.message.data.ModelBase;
@@ -9,7 +8,6 @@ import com.tennetcn.free.core.message.data.PagerModel;
 import com.tennetcn.free.data.dao.base.IMapper;
 import com.tennetcn.free.data.dao.base.ISqlExpression;
 import com.tennetcn.free.data.dao.base.ISuperDao;
-import com.tennetcn.free.data.dao.base.interceptor.IBaseInterceptor;
 import com.tennetcn.free.data.dao.base.mapper.SqlMapper;
 import com.tennetcn.free.data.message.DaoBaseRuntimeException;
 import com.tennetcn.free.data.message.OrderInfo;
@@ -17,7 +15,6 @@ import com.tennetcn.free.data.utils.ClassAnnotationUtils;
 import com.tennetcn.free.data.utils.Pager2RowBounds;
 import com.tennetcn.free.data.utils.SqlExpressionFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.binding.MapperProxy;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
@@ -26,7 +23,6 @@ import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 import tk.mybatis.mapper.entity.Example.OrderBy;
 
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -91,9 +87,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 	@Override
 	public List<E> queryListByIds(List<String> ids) throws DaoBaseRuntimeException {
 		ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
-		sqlExpression.addBody("select * from " + getTableName());
-
-		sqlExpression.andWhereInString(getPrimaryKey(), ids);
+		sqlExpression.selectAllFrom(entityClass).andWhereInString(getPrimaryKey(), ids);
 
 		return queryList(sqlExpression);
 	}
@@ -649,6 +643,28 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			e.printStackTrace();
 			throw new DaoBaseRuntimeException(e);
 		}
+	}
+
+	@Override
+	public int deleteByIds(List<String> ids) {
+		if(ids==null||ids.isEmpty()){
+			return 0;
+		}
+		ISqlExpression deleteSql = SqlExpressionFactory.createExpression();
+		deleteSql.delete().from(entityClass).andWhereInString(getPrimaryKey(), ids);
+
+		return delete(deleteSql);
+	}
+
+	@Override
+	public int deleteByIds(String... ids) {
+		return deleteByIds(Arrays.asList(ids));
+	}
+
+	@Override
+	public int deleteByIds(String ids) {
+		String[] split = ids.split(",");
+		return deleteByIds(Arrays.asList(ids));
 	}
 
 	@Override

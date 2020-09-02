@@ -67,6 +67,12 @@ public interface ISuperService<E extends ModelBase> {
 
     int deleteModel(E e);
 
+    int deleteByIds(List<String> ids);
+
+    int deleteByIds(String ...ids);
+
+    int deleteByIds(String ids);
+
     int deleteModelByExample(Object example);
 
     boolean applyChange(E e);

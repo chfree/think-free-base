@@ -161,6 +161,21 @@ public abstract class SuperService<E extends ModelBase> implements ISuperService
     }
 
     @Override
+    public int deleteByIds(List<String> ids) {
+        return getSuperDao().deleteByIds(ids);
+    }
+
+    @Override
+    public int deleteByIds(String... ids) {
+        return getSuperDao().deleteByIds(ids);
+    }
+
+    @Override
+    public int deleteByIds(String ids) {
+        return getSuperDao().deleteByIds(ids);
+    }
+
+    @Override
     public int deleteModelByExample(Object example) {
         return getSuperDao().deleteModelByExample(example);
     }
