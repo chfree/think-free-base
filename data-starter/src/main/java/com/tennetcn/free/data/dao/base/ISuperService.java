@@ -83,9 +83,13 @@ public interface ISuperService<E extends ModelBase> {
 
     int batchInsertList(List<E> list);
 
+    int batchInsertList(List<E> list,int batchSize);
+
     int batchUpdateList(List<E> list);
 
     int batchInsertSelectiveList(List<E> list);
+
+    int batchInsertSelectiveList(List<E> list,int batchSize);
 
     int batchUpdateSelectiveList(List<E> list);
 }

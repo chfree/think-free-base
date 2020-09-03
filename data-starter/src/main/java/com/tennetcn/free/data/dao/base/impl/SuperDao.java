@@ -730,9 +730,14 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
 	@Override
 	public int batchInsertList(List<E> list){
+		return batchInsertList(list,64);
+	}
+
+	@Override
+	public int batchInsertList(List<E> list, int batchSize) {
 		String sqlId = getSqlId("insert");
 
-		return batchInsertProcessor.insertListBatch(sqlId,list);
+		return batchInsertProcessor.insertListBatch(sqlId,list,batchSize);
 	}
 
 	@Override
@@ -744,9 +749,14 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
 	@Override
 	public int batchInsertSelectiveList(List<E> list) {
+		return batchInsertSelectiveList(list,64);
+	}
+
+	@Override
+	public int batchInsertSelectiveList(List<E> list, int batchSize) {
 		String sqlId = getSqlId("insertSelective");
 
-		return batchInsertProcessor.insertListBatch(sqlId,list);
+		return batchInsertProcessor.insertListBatch(sqlId,list,batchSize);
 	}
 
 	@Override
