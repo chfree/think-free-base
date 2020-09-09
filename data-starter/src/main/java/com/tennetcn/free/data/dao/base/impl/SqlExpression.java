@@ -308,7 +308,12 @@ public class SqlExpression implements ISqlExpression {
 		return this;
 	}
 
-	@Override
+    @Override
+    public ISqlExpression setColumn(String column, ISqlExpression sqlExpression) {
+        return setColumn(column,"("+sqlExpression.toSql()+")").setParamAll(sqlExpression.getParams());
+    }
+
+    @Override
 	public String toSql() {
 		String result = bodyBuffer.toString();
 		if (sqlOperateMode == SqlOperateMode.select) {

@@ -164,4 +164,6 @@ public interface ISqlExpression {
 	ISqlExpression selectDistinct(String body);
 
 	ISqlExpression selectDistinct(String... bodys);
+
+	ISqlExpression setColumn(String column,ISqlExpression sqlExpression);
 }
