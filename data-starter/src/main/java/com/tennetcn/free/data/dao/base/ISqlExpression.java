@@ -124,6 +124,8 @@ public interface ISqlExpression {
 	ISqlExpression update(Class<?> tClass,String alias);
 	
 	ISqlExpression set(String column,String columnKey);
+
+	ISqlExpression setValue(String column,String value);
 	
 	ISqlExpression setColumn(String column,String value);
 	

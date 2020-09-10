@@ -310,7 +310,7 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public ISqlExpression setColumn(String column, ISqlExpression sqlExpression) {
-        return setColumn(column,"("+sqlExpression.toSql()+")").setParamAll(sqlExpression.getParams());
+        return setValue(column,"("+sqlExpression.toSql()+")").setParamAll(sqlExpression.getParams());
     }
 
     @Override
@@ -517,7 +517,18 @@ public class SqlExpression implements ISqlExpression {
 		}
 		return this;
 	}
-	
+
+	@Override
+	public ISqlExpression setValue(String column, String value) {
+		if(setBuffer.length()==0){
+			setBuffer.append(" set ");
+			setBuffer.append(column+"=" + value);
+		}else{
+			setBuffer.append(","+column+"=" + value);
+		}
+		return this;
+	}
+
 	@Override
 	public ISqlExpression setColumn(String column,String value){
 		this.set(column, column)
