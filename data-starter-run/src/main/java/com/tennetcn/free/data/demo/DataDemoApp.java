@@ -8,6 +8,7 @@ import com.tennetcn.free.data.demo.logical.model.LoginUser;
 import com.tennetcn.free.data.demo.logical.service.ILoginUserService;
 import com.tennetcn.free.data.demo.logical.viewmodel.TestUser;
 import com.tennetcn.free.data.demo.logical.viewmodel.TestUser1;
+import com.tennetcn.free.data.utils.ClassAnnotationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -34,20 +35,24 @@ public class DataDemoApp implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("is run success!!!");
 
-        List<LoginUser> loginUsers = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            LoginUser user = new LoginUser();
-            user.setId(PkIdUtils.getId());
-            user.setAccount("batchInsert" + i);
-            user.setName("batch insert" + i);
-            user.setPassword("000000");
+        String primaryKey = ClassAnnotationUtils.getFirstColumnKey(LoginUser.class);
+        System.out.println(primaryKey);
 
-            loginUsers.add(user);
-        }
-
-        loginUserService.batchInsert(loginUsers);
+//        System.out.println("is run success!!!");
+//
+//        List<LoginUser> loginUsers = new ArrayList<>();
+//        for (int i = 0; i < 10; i++) {
+//            LoginUser user = new LoginUser();
+//            user.setId(PkIdUtils.getId());
+//            user.setAccount("batchInsert" + i);
+//            user.setName("batch insert" + i);
+//            user.setPassword("000000");
+//
+//            loginUsers.add(user);
+//        }
+//
+//        loginUserService.batchInsert(loginUsers);
 
 //        System.out.println(PkIdUtils.getId());
 //        for (int i = 0; i < 10; i++) {

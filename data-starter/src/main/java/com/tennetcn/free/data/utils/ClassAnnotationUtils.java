@@ -6,16 +6,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import com.tennetcn.free.core.message.data.OrderByEnum;
 import com.tennetcn.free.data.message.OrderInfo;
+import tk.mybatis.mapper.entity.EntityColumn;
+import tk.mybatis.mapper.mapperhelper.EntityHelper;
 
 /**
  * @author  chenghuan-home
@@ -23,6 +27,7 @@ import com.tennetcn.free.data.message.OrderInfo;
  * @comment 
  */
 
+@Slf4j
 public class ClassAnnotationUtils {
 	static{
 		entityNames=new HashMap<String,String>();
@@ -89,7 +94,18 @@ public class ClassAnnotationUtils {
 		}
 		return primaryKey;
 	}
-	
+
+
+	public static <E> String getFirstColumnKey(Class<E> eClass){
+		Set<EntityColumn> pkColumns = EntityHelper.getPKColumns(eClass);
+
+		if(pkColumns==null||pkColumns.isEmpty()){
+			log.info("no find @Id info");
+			return "";
+		}
+		EntityColumn next = pkColumns.iterator().next();
+		return  next.getColumn();
+	}
 	
 	public static <E> List<OrderInfo> getOrderInfoList(Class<E> eClass){
 		List<OrderInfo> orderInfoList=orderByKeys.get(eClass.getName());

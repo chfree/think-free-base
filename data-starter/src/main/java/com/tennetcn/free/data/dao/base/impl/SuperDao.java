@@ -62,8 +62,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 	}
 
 	@Override
-	public String getPrimaryKey() {
-		return ClassAnnotationUtils.getPrimaryKey(entityClass);
+	public String getDbFirstColumnKey() {
+		return ClassAnnotationUtils.getFirstColumnKey(entityClass);
 	}
 
 	@Override
@@ -87,7 +87,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 	@Override
 	public List<E> queryListByIds(List<String> ids) throws DaoBaseRuntimeException {
 		ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
-		sqlExpression.selectAllFrom(entityClass).andWhereInString(getPrimaryKey(), ids);
+		sqlExpression.selectAllFrom(entityClass).andWhereInString(getDbFirstColumnKey(), ids);
 
 		return queryList(sqlExpression);
 	}
@@ -651,7 +651,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 			return 0;
 		}
 		ISqlExpression deleteSql = SqlExpressionFactory.createExpression();
-		deleteSql.delete().from(entityClass).andWhereInString(getPrimaryKey(), ids);
+		deleteSql.delete().from(entityClass).andWhereInString(getDbFirstColumnKey(), ids);
 
 		return delete(deleteSql);
 	}

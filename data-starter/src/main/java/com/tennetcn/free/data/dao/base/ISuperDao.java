@@ -37,10 +37,10 @@ public interface ISuperDao<E extends ModelBase> {
 	<T extends ModelBase> String getTableName(Class<T> classType);
 	
 	/**
-	 * 获得当前泛型参数的属性的@Id值
+	 * 获得当前泛型参数的属性的@Idd第一个值
 	 * @return
 	 */
-	String getPrimaryKey();
+	String getDbFirstColumnKey();
 	
 	/**
 	 * 取得实体类的的排序信息集合
