@@ -2,6 +2,7 @@ package com.tennetcn.free.web.filter;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.tennetcn.free.core.util.CommonUtils;
 import org.slf4j.MDC;
 import org.springframework.boot.web.servlet.filter.OrderedFilter;
 import org.springframework.util.StringUtils;
@@ -29,7 +30,7 @@ public class TraceIdFilter implements OrderedFilter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-        String traceId = getTraceId();
+        String traceId = CommonUtils.getTraceId();
         request.setAttribute("traceId", traceId);
 
         HttpServletResponse response = (HttpServletResponse) res;
@@ -50,38 +51,6 @@ public class TraceIdFilter implements OrderedFilter {
     @Override
     public void init(FilterConfig arg0) throws ServletException {
 
-    }
-
-    /**
-     * 全局唯一跟踪号
-     * @return
-     */
-    private String getTraceId() {
-        String hostName=getHostName();
-        if(hostName.length()>=5) {
-            hostName=hostName.substring(0, 5);
-        }else {
-
-            hostName=org.apache.commons.lang3.StringUtils.leftPad(hostName, 5,"X");
-        }
-
-        String currentDate = DateUtil.format(DateUtil.date(),"yyyyMMddHHmmss");
-        String rndNum = RandomUtil.randomInt(100000, 999999)+""+RandomUtil.randomInt(10000, 99999);
-        return hostName+currentDate+rndNum;
-    }
-
-    //获得机器名称,为空则返回'UNHST'-unknow host
-    private String getHostName() {
-        String hostName = "UNHST";
-        try{
-            InetAddress addr = InetAddress.getLocalHost();
-            if(!StringUtils.isEmpty(addr.getHostName())) {
-                hostName= addr.getHostName();
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return hostName;
     }
 
     @Override

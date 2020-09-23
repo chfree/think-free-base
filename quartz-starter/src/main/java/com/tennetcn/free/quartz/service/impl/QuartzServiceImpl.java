@@ -1,5 +1,6 @@
 package com.tennetcn.free.quartz.service.impl;
 
+import com.tennetcn.free.core.exception.BizException;
 import com.tennetcn.free.quartz.enums.QuartzTaskConcurrent;
 import com.tennetcn.free.quartz.enums.QuartzTaskStatus;
 import com.tennetcn.free.quartz.exception.QuartzBizException;
@@ -66,12 +67,7 @@ public class QuartzServiceImpl implements IQuartzService {
             }
 
             JobDataMap map = initJobDataMap(task);
-            Class<? extends BatchCommonJob> jobClass = null;
-            if (QuartzTaskConcurrent.YES.getValue().equals(task.getConcurrent())) {
-                jobClass = BatchDisallowConcurrentJob.class;
-            } else {
-                jobClass = BatchConcurrentJob.class;
-            }
+            Class<? extends BatchCommonJob> jobClass = getJob(task);
 
             JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(jobKey).withDescription(task.getDescription())
                     .setJobData(map).storeDurably().build();
@@ -82,6 +78,16 @@ public class QuartzServiceImpl implements IQuartzService {
             throw new QuartzBizException("init quartz task for job fail",ex);
         }
         return true;
+    }
+
+    private Class<? extends BatchCommonJob>  getJob(QuartzTask task){
+        Class<? extends BatchCommonJob> jobClass = null;
+        if (QuartzTaskConcurrent.YES.getValue().equals(task.getConcurrent())) {
+            jobClass = BatchDisallowConcurrentJob.class;
+        } else {
+            jobClass = BatchConcurrentJob.class;
+        }
+        return jobClass;
     }
 
     @Override
@@ -178,6 +184,19 @@ public class QuartzServiceImpl implements IQuartzService {
             log.error("注册listener失败",ex);
             throw new QuartzBizException("注册listener失败",ex);
         }
+    }
+
+    @Override
+    public boolean runTask(String taskName) {
+        QuartzTask task = quartzTaskService.queryModelByName(taskName);
+        JobDataMap map = initJobDataMap(task);
+
+        try {
+            new BatchConcurrentJob().invoke(map);
+        }catch (Exception ex){
+            throw new BizException("QuartzService runTask is error",ex);
+        }
+        return true;
     }
 
 

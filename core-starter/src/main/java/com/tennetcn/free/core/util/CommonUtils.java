@@ -1,7 +1,10 @@
 package com.tennetcn.free.core.util;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.RandomUtil;
 import org.springframework.util.StringUtils;
 
+import java.net.InetAddress;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,5 +84,37 @@ public class CommonUtils {
         Matcher isNum = pattern.matcher(str);
 
         return isNum.matches();
+    }
+
+    /**
+     * 全局唯一跟踪号 30位
+     * @return
+     */
+    public static String getTraceId() {
+        String hostName=getHostName();
+        if(hostName.length()>=5) {
+            hostName=hostName.substring(0, 5);
+        }else {
+
+            hostName=org.apache.commons.lang3.StringUtils.leftPad(hostName, 5,"X");
+        }
+
+        String currentDate = DateUtil.format(DateUtil.date(),"yyyyMMddHHmmss");
+        String rndNum = RandomUtil.randomInt(100000, 999999)+""+RandomUtil.randomInt(10000, 99999);
+        return hostName+currentDate+rndNum;
+    }
+
+    //获得机器名称,为空则返回'UNHST'-unknow host
+    public static String getHostName() {
+        String hostName = "UNHST";
+        try{
+            InetAddress addr = InetAddress.getLocalHost();
+            if(!StringUtils.isEmpty(addr.getHostName())) {
+                hostName= addr.getHostName();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return hostName;
     }
 }

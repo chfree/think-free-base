@@ -1,12 +1,15 @@
 package com.tennetcn.free.quartz.job.commJob;
 
 import cn.hutool.json.JSONUtil;
+import com.tennetcn.free.core.util.CommonUtils;
 import com.tennetcn.free.core.util.SpringContextUtils;
 import com.tennetcn.free.quartz.exception.QuartzBizException;
 import com.tennetcn.free.quartz.job.BaseJob;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionException;
+import org.slf4j.MDC;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -25,6 +28,15 @@ public abstract class BatchCommonJob implements BaseJob {
 			json = JSONUtil.toJsonStr(map);
 			String service = map.getString(EXEC_SERVICE);
 			String method = map.getString(EXEC_METHOD);
+
+			try {
+				String bussiness = MDC.get("bussiness");
+				if(StringUtils.isEmpty(bussiness)) {
+					MDC.put("bussiness", CommonUtils.getTraceId() + method);
+				}
+			}catch(Exception e) {
+				log.error("execute job fail,no method find. " , e);
+			}
 
 			Object obj = SpringContextUtils.getCurrentContext().getBean(service);
 			Class<?> clazz = obj.getClass();

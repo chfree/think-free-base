@@ -52,4 +52,9 @@ public interface IQuartzService {
 
 
     void registerListener();
+
+    /**
+     * 执行一次task
+     */
+    boolean runTask(String taskName);
 }
