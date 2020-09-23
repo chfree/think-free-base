@@ -3,6 +3,7 @@ package com.tennetcn.free.quartz.listener;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import com.tennetcn.free.core.util.CommonUtils;
 import com.tennetcn.free.core.util.PkIdUtils;
 import com.tennetcn.free.quartz.enums.ExecPhaseEnum;
 import com.tennetcn.free.quartz.job.commJob.BatchCommonJob;
@@ -43,7 +44,7 @@ public class ThinkJobListener implements JobListener {
     }
 
     private void saveJobToBeExecutedLog(JobExecutionContext jobExecutionContext){
-        jobExecutionContext.put("execId",IdUtil.randomUUID());
+        jobExecutionContext.put("execId", CommonUtils.getTraceId());
         jobExecutionContext.put("startTime",DateUtil.date());
     }
 

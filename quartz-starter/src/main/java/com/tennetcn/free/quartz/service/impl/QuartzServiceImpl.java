@@ -1,6 +1,11 @@
 package com.tennetcn.free.quartz.service.impl;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import com.tennetcn.free.core.exception.BizException;
+import com.tennetcn.free.core.util.CommonUtils;
+import com.tennetcn.free.core.util.PkIdUtils;
+import com.tennetcn.free.quartz.enums.ExecPhaseEnum;
 import com.tennetcn.free.quartz.enums.QuartzTaskConcurrent;
 import com.tennetcn.free.quartz.enums.QuartzTaskStatus;
 import com.tennetcn.free.quartz.exception.QuartzBizException;
@@ -11,6 +16,7 @@ import com.tennetcn.free.quartz.listener.ThinkJobListener;
 import com.tennetcn.free.quartz.listener.ThinkSchedulerListener;
 import com.tennetcn.free.quartz.listener.ThinkTriggerListener;
 import com.tennetcn.free.quartz.logical.model.QuartzTask;
+import com.tennetcn.free.quartz.logical.model.QuartzTaskLog;
 import com.tennetcn.free.quartz.logical.service.IQuartzTaskLogService;
 import com.tennetcn.free.quartz.logical.service.IQuartzTaskService;
 import com.tennetcn.free.quartz.logical.viewmodel.QuartzTaskSearch;
@@ -191,12 +197,41 @@ public class QuartzServiceImpl implements IQuartzService {
         QuartzTask task = quartzTaskService.queryModelByName(taskName);
         JobDataMap map = initJobDataMap(task);
 
+        QuartzTaskLog taskLog = getQuartzTaskLog(map);
+        taskLog.setExecPhase(ExecPhaseEnum.HANDEXEC.getValue());
+        taskLog.setExecId(CommonUtils.getTraceId());
+        taskLog.setStartTime(DateUtil.date());
         try {
             new BatchConcurrentJob().invoke(map);
+
+
+
         }catch (Exception ex){
+            taskLog.setResult("error");
+            taskLog.setErrorMessage(ex.getMessage());
+
             throw new BizException("QuartzService runTask is error",ex);
+        }finally {
+            taskLog.setEndTime(DateUtil.date());
+            long msDiff=DateUtil.betweenMs(taskLog.getEndTime(),taskLog.getStartTime());
+            taskLog.setMsDiff(msDiff);
+
+            quartzTaskLogService.addModel(taskLog);
         }
         return true;
+    }
+
+    private QuartzTaskLog getQuartzTaskLog(JobDataMap map){
+        QuartzTaskLog taskLog = new QuartzTaskLog();
+        taskLog.setId(PkIdUtils.getId());
+        taskLog.setRecordTime(DateUtil.date());
+        taskLog.setResult("success");
+        taskLog.setBeanName(map.getString(BatchCommonJob.EXEC_SERVICE));
+        taskLog.setMethodName(map.getString(BatchCommonJob.EXEC_METHOD));
+        taskLog.setParameter(map.getString(BatchCommonJob.EXEC_PARAMETER));
+        taskLog.setTaskName(map.getString(BatchCommonJob.TASK_NAME));
+
+        return taskLog;
     }
 
 

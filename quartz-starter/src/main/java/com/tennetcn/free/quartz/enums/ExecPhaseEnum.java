@@ -12,7 +12,8 @@ import com.tennetcn.free.core.enums.BaseEnum;
 public enum ExecPhaseEnum implements BaseEnum<String> {
 
     JOBTOBEEXECUTED("jobToBeExecuted","jobToBeExecuted"),
-    JOBWASEXECUTED("jobWasExecuted","jobWasExecuted");
+    JOBWASEXECUTED("jobWasExecuted","jobWasExecuted"),
+    HANDEXEC("handExec","handExec");
 
 
     private String text;
