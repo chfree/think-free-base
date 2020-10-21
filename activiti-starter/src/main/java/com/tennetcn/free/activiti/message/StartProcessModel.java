@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author chfree
@@ -26,6 +27,8 @@ public class StartProcessModel {
     private List<String> groups;
 
     private String assignee;
+
+    private Map<String,Object> vars;
 
     public void setGroups(List<String> groups){
         this.groups = groups;

@@ -78,6 +78,7 @@ public class ActivitiService implements IActivitiService {
         var.put(FlowVariableKey.ASSIGNEE,startProcessModel.getAssignee());
         var.put(FlowVariableKey.CAN_USERS,startProcessModel.getCanUsers());
         var.put(FlowVariableKey.CAN_GROUPS,startProcessModel.getCanGroups());
+        var.putAll(startProcessModel.getVars());
 
         return runtimeService.startProcessInstanceByKey(startProcessModel.getKey(),startProcessModel.getBusinessId(),var);
     }
