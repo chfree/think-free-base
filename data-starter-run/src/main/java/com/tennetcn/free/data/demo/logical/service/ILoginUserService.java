@@ -20,4 +20,6 @@ public interface ILoginUserService extends ISuperDao<LoginUser> {
 
     void batchInsert(List<LoginUser> users);
 
+    int querySeq(String seqName);
+
 }

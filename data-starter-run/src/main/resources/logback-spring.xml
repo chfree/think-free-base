@@ -31,7 +31,7 @@
             <charset>UTF-8</charset>
         </encoder>
     </appender>
-    <root level="DEBUG">
+    <root level="ERROR">
         <appender-ref ref="CONSOLE" />
     </root>
     <logger name="org.springframework" additivity="false">

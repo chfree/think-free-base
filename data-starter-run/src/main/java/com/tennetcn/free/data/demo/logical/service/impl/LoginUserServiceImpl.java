@@ -56,4 +56,12 @@ public class LoginUserServiceImpl extends SuperDao<LoginUser> implements ILoginU
     public void batchInsert(List<LoginUser> users) {
         batchInsertList(users);
     }
+
+    @Override
+    public int querySeq(String seqName) {
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.addBody("select nextval('"+seqName+"')");
+
+        return queryScalarInt(sqlExpression);
+    }
 }

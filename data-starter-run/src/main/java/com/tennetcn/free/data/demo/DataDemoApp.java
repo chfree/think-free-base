@@ -9,6 +9,7 @@ import com.tennetcn.free.data.demo.logical.service.ILoginUserService;
 import com.tennetcn.free.data.demo.logical.viewmodel.TestUser;
 import com.tennetcn.free.data.demo.logical.viewmodel.TestUser1;
 import com.tennetcn.free.data.utils.ClassAnnotationUtils;
+import javafx.concurrent.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -33,11 +34,30 @@ public class DataDemoApp implements CommandLineRunner {
     @Autowired
     ICached cached;
 
+    private void testSeq(){
+
+        RunTest rt1 = new RunTest(loginUserService);
+
+        rt1.start();
+    }
+
+
+
     @Override
     public void run(String... args) throws Exception {
+        for(int i = 100; i > 0; i--) {
+            testSeq();
+        }
+        try {
+            Thread.sleep(5000);
+            System.out.println(RunTest.testMap.keySet().size());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        String primaryKey = ClassAnnotationUtils.getFirstColumnKey(LoginUser.class);
-        System.out.println(primaryKey);
+
+//        String primaryKey = ClassAnnotationUtils.getFirstColumnKey(LoginUser.class);
+//        System.out.println(primaryKey);
 
 //        System.out.println("is run success!!!");
 //
