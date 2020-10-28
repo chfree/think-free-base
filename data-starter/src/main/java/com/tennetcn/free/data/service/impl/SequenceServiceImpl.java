@@ -1,5 +1,6 @@
 package com.tennetcn.free.data.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import com.tennetcn.free.data.dao.ISequenceDao;
 import com.tennetcn.free.data.dao.base.ISqlExpression;
 import com.tennetcn.free.data.dao.base.impl.SqlExpression;
@@ -27,5 +28,15 @@ public class SequenceServiceImpl implements ISequenceService {
     @Override
     public int getSeq(String seqName) {
         return sequenceDao.getSeq(seqName);
+    }
+
+    @Override
+    public String getSeq(String seqName, String prefix) {
+        return prefix + getSeq(seqName);
+    }
+
+    @Override
+    public String getDateSeq(String seqName, String prefix) {
+        return prefix + DateUtil.format(DateUtil.date(),"YYYYMMDD");
     }
 }

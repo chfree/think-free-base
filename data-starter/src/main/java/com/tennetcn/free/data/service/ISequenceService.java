@@ -9,4 +9,8 @@ package com.tennetcn.free.data.service;
 
 public interface ISequenceService {
     int getSeq(String seqName);
+
+    String getSeq(String seqName,String prefix);
+
+    String getDateSeq(String seqName,String prefix);
 }
