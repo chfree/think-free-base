@@ -30,11 +30,6 @@ public class RunTest extends Thread{
     private void getSeq(){
         for(int i = 2; i > 0; i--) {
             int seq_approve_no = loginUserService.querySeq("seq_approve_no");
-            try {
-                Thread.sleep(10*i);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             String s = String.valueOf(seq_approve_no);
             testMap.put(s,s);
             System.out.println(this.getName()+":"+seq_approve_no);

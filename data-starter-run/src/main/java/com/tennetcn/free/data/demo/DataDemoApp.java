@@ -1,5 +1,6 @@
 package com.tennetcn.free.data.demo;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONUtil;
 import com.tennetcn.free.core.cache.ICached;
 import com.tennetcn.free.core.util.PkIdUtils;
@@ -45,11 +46,14 @@ public class DataDemoApp implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        System.out.println(DateUtil.currentSeconds());
         for(int i = 100; i > 0; i--) {
             testSeq();
         }
         try {
-            Thread.sleep(5000);
+            System.out.println(DateUtil.currentSeconds());
+            Thread.sleep(2000);
+            System.out.println(DateUtil.currentSeconds());
             System.out.println(RunTest.testMap.keySet().size());
         } catch (InterruptedException e) {
             e.printStackTrace();

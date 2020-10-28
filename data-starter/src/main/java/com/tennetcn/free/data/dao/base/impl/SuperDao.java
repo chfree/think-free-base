@@ -5,7 +5,9 @@ import com.tennetcn.free.core.enums.ModelStatus;
 import com.tennetcn.free.core.message.data.ModelBase;
 import com.tennetcn.free.core.message.data.OrderByEnum;
 import com.tennetcn.free.core.message.data.PagerModel;
+import com.tennetcn.free.data.dao.base.IBatchInsertProcessor;
 import com.tennetcn.free.data.dao.base.IMapper;
+import com.tennetcn.free.data.dao.base.ISqlExecutor;
 import com.tennetcn.free.data.dao.base.ISqlExpression;
 import com.tennetcn.free.data.dao.base.ISuperDao;
 import com.tennetcn.free.data.dao.base.mapper.SqlMapper;
@@ -43,6 +45,9 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 		return mapper;
 	}
 
+	@Autowired
+	ISqlExecutor sqlExecutor;
+
 	@Override
 	public String getModelName() {
 		return ClassAnnotationUtils.getModelName(entityClass);
@@ -54,7 +59,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 	}
 
 	@Autowired
-	private BatchInsertProcessor batchInsertProcessor;
+	IBatchInsertProcessor batchInsertProcessor;
 
 	@Override
 	public <T extends ModelBase> String getTableName(Class<T> classType) {
@@ -275,212 +280,77 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
 	@Override
 	public int update(String sql) throws DaoBaseRuntimeException {
-		SqlSession session = getSqlSessionFactory().openSession(true);
-		try {
-			SqlMapper mapper = new SqlMapper(session);
-			return mapper.update(sql);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		} finally {
-			session.close();
-		}
+		return sqlExecutor.update(sql);
 	}
 
 	@Override
 	public int update(String sql, Object params) throws DaoBaseRuntimeException {
-		SqlSession session = getSqlSessionFactory().openSession(true);
-		try {
-			SqlMapper mapper = new SqlMapper(session);
-			return mapper.update(sql, params);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		} finally {
-			session.close();
-		}
+		return sqlExecutor.update(sql,params);
 	}
 
 	@Override
 	public int delete(String sql) throws DaoBaseRuntimeException {
-		SqlSession session = getSqlSessionFactory().openSession(true);
-		try {
-			SqlMapper mapper = new SqlMapper(session);
-			return mapper.delete(sql);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		} finally {
-			session.close();
-		}
+		return sqlExecutor.delete(sql);
 	}
 
 	@Override
 	public int delete(String sql, Object params) throws DaoBaseRuntimeException {
-		SqlSession session = getSqlSessionFactory().openSession(true);
-		try {
-			SqlMapper mapper = new SqlMapper(session);
-			return mapper.delete(sql, params);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		} finally {
-			session.close();
-		}
+		return sqlExecutor.delete(sql, params);
 	}
 
 	@Override
 	public int insert(String sql) throws DaoBaseRuntimeException {
-		SqlSession session = getSqlSessionFactory().openSession(true);
-		try {
-			SqlMapper mapper = new SqlMapper(session);
-			return mapper.insert(sql);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		} finally {
-			session.close();
-		}
+		return sqlExecutor.insert(sql);
 	}
 
 	@Override
 	public int insert(String sql, Object params) throws DaoBaseRuntimeException {
-		SqlSession session = getSqlSessionFactory().openSession(true);
-		try {
-			SqlMapper mapper = new SqlMapper(session);
-			return mapper.insert(sql, params);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		} finally {
-			session.close();
-		}
+		return sqlExecutor.insert(sql, params);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectList(String sql) throws DaoBaseRuntimeException {
-		SqlSession session = getSqlSessionFactory().openSession(true);
-		try {
-			SqlMapper mapper = new SqlMapper(session);
-			return mapper.selectList(sql);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		} finally {
-			session.close();
-		}
+		return sqlExecutor.selectList(sql);
 	}
 
 	@Override
 	public <T> List<T> selectList(String sql, Class<T> resultType) throws DaoBaseRuntimeException {
-		SqlSession session = getSqlSessionFactory().openSession(true);
-		try {
-			SqlMapper mapper = new SqlMapper(session);
-			return mapper.selectList(sql, resultType);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		} finally {
-			session.close();
-		}
+		return sqlExecutor.selectList(sql,resultType);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectList(String sql, Object value) throws DaoBaseRuntimeException {
-		SqlSession session = getSqlSessionFactory().openSession(true);
-		try {
-			SqlMapper mapper = new SqlMapper(session);
-			return mapper.selectList(sql, value);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		} finally {
-			session.close();
-		}
+		return sqlExecutor.selectList(sql, value);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectListEx(String sql, Object value, RowBounds rowBounds) throws DaoBaseRuntimeException {
-		SqlSession session = getSqlSessionFactory().openSession(true);
-		try {
-			SqlMapper mapper = new SqlMapper(session);
-			return mapper.selectListEx(sql, value, rowBounds);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		} finally {
-			session.close();
-		}
+		return sqlExecutor.selectListEx(sql, value, rowBounds);
 	}
 
 	@Override
 	public <T> List<T> selectList(String sql, Object value, Class<T> resultType) throws DaoBaseRuntimeException {
-		SqlSession session = getSqlSessionFactory().openSession(true);
-		try {
-			SqlMapper mapper = new SqlMapper(session);
-			return mapper.selectList(sql, value, resultType);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		} finally {
-			session.close();
-		}
+		return sqlExecutor.selectList(sql, value, resultType);
 	}
 
 	@Override
 	public Map<String, Object> selectOne(String sql) throws DaoBaseRuntimeException {
-		SqlSession session = getSqlSessionFactory().openSession(true);
-		try {
-			SqlMapper mapper = new SqlMapper(session);
-			return mapper.selectOne(sql);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		} finally {
-			session.close();
-		}
+		return sqlExecutor.selectOne(sql);
 	}
 
 	@Override
 	public <T> T selectOne(String sql, Class<T> resultType) throws DaoBaseRuntimeException {
-		SqlSession session = getSqlSessionFactory().openSession(true);
-		try {
-			SqlMapper mapper = new SqlMapper(session);
-			return mapper.selectOne(sql, resultType);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		} finally {
-			session.close();
-		}
+		return sqlExecutor.selectOne(sql, resultType);
 	}
 
 	@Override
 	public Map<String, Object> selectOne(String sql, Object value) throws DaoBaseRuntimeException {
-		SqlSession session = getSqlSessionFactory().openSession(true);
-		try {
-			SqlMapper mapper = new SqlMapper(session);
-			return mapper.selectOne(sql, value);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		} finally {
-			session.close();
-		}
+		return sqlExecutor.selectOne(sql, value);
 	}
 
 	@Override
 	public <T> T selectOne(String sql, Object value, Class<T> resultType) throws DaoBaseRuntimeException {
-		SqlSession session = getSqlSessionFactory().openSession(true);
-		try {
-			SqlMapper mapper = new SqlMapper(session);
-			return mapper.selectOne(sql, value, resultType);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		} finally {
-			session.close();
-		}
+		return sqlExecutor.selectOne(sql, value, resultType);
 	}
 
 	@Override
@@ -499,44 +369,17 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
 	@Override
 	public <T> List<T> selectList(String sql, RowBounds rowBounds, Class<T> resultType) throws DaoBaseRuntimeException {
-		SqlSession session = getSqlSessionFactory().openSession(true);
-		try {
-			SqlMapper mapper = new SqlMapper(session);
-			return mapper.selectList(sql, rowBounds, resultType);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		} finally {
-			session.close();
-		}
+		return sqlExecutor.selectList(sql, rowBounds, resultType);
 	}
 
 	@Override
 	public <T> List<T> selectList(String sql, Object value, RowBounds rowBounds, Class<T> resultType) throws DaoBaseRuntimeException {
-		SqlSession session = getSqlSessionFactory().openSession(true);
-		try {
-			SqlMapper mapper = new SqlMapper(session);
-			return mapper.selectList(sql, value, rowBounds, resultType);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		} finally {
-			session.close();
-		}
+		return sqlExecutor.selectList(sql, value, rowBounds, resultType);
 	}
 
 	@Override
 	public int queryCount(String sql, Object value) throws DaoBaseRuntimeException {
-		SqlSession session = getSqlSessionFactory().openSession(true);
-		try {
-			SqlMapper mapper = new SqlMapper(session);
-			return mapper.queryCount(sql, value);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		} finally {
-			session.close();
-		}
+		return sqlExecutor.queryCount(sql, value);
 	}
 
 	// 自定义
@@ -552,12 +395,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
 	@Override
 	public <T> T queryModel(ISqlExpression sqlExpression, Class<T> resultType) {
-		try {
-			return selectOne(sqlExpression.toSql(), sqlExpression.getParams(), resultType);
-		} catch (DaoBaseRuntimeException e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		}
+		return sqlExecutor.queryModel(sqlExpression, resultType);
 	}
 
 	@Override
@@ -572,12 +410,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
 	@Override
 	public <T> List<T> queryList(ISqlExpression sqlExpression, Class<T> resultType) {
-		try {
-			return selectList(sqlExpression.toSql(), sqlExpression.getParams(), resultType);
-		} catch (DaoBaseRuntimeException e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		}
+		return sqlExecutor.queryList(sqlExpression, resultType);
 	}
 
 	@Override
@@ -597,52 +430,27 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
 	@Override
 	public List<Map<String, Object>> queryListEx(ISqlExpression sqlExpression, PagerModel pagerModel) {
-		try {
-			return selectListEx(sqlExpression.toSql(), sqlExpression.getParams(), Pager2RowBounds.getRowBounds(pagerModel));
-		} catch (DaoBaseRuntimeException e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		}
+		return sqlExecutor.queryListEx(sqlExpression, pagerModel);
 	}
 
 	@Override
 	public <T> List<T> queryList(ISqlExpression sqlExpression, PagerModel pagerModel, Class<T> resultType) {
-		try {
-			return selectList(sqlExpression.toSql(), sqlExpression.getParams(), Pager2RowBounds.getRowBounds(pagerModel), resultType);
-		} catch (DaoBaseRuntimeException e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		}
+		return sqlExecutor.queryList(sqlExpression, pagerModel, resultType);
 	}
 
 	@Override
 	public int queryCount(ISqlExpression sqlExpression) {
-		try {
-			return queryCount(sqlExpression.toSql(), sqlExpression.getParams());
-		} catch (DaoBaseRuntimeException e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		}
+		return sqlExecutor.queryCount(sqlExpression);
 	}
 
 	@Override
 	public int update(ISqlExpression sqlExpression) {
-		try {
-			return update(sqlExpression.toSql(), sqlExpression.getParams());
-		} catch (DaoBaseRuntimeException e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		}
+		return sqlExecutor.update(sqlExpression);
 	}
 
 	@Override
 	public int delete(ISqlExpression sqlExpression) {
-		try {
-			return delete(sqlExpression.toSql(), sqlExpression.getParams());
-		} catch (DaoBaseRuntimeException e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		}
+		return sqlExecutor.delete(sqlExpression);
 	}
 
 	@Override
@@ -669,49 +477,22 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
 	@Override
 	public int insert(ISqlExpression sqlExpression) {
-		try {
-			return insert(sqlExpression.toSql(), sqlExpression.getParams());
-		} catch (DaoBaseRuntimeException e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		}
+		return sqlExecutor.insert(sqlExpression);
 	}
 
 	@Override
 	public double queryScalarDouble(ISqlExpression sqlExpression) {
-		String scalar = queryScalar(sqlExpression);
-		if(StringUtils.isEmpty(scalar)){
-			return Double.NaN;
-		}
-		return Double.parseDouble(scalar);
+		return sqlExecutor.queryScalarDouble(sqlExpression);
 	}
 
 	@Override
 	public int queryScalarInt(ISqlExpression sqlExpression) {
-		String scalar = queryScalar(sqlExpression);
-		if(StringUtils.isEmpty(scalar)){
-			return 0;
-		}
-		return Integer.parseInt(scalar);
+		return sqlExecutor.queryScalarInt(sqlExpression);
 	}
 
 	@Override
 	public String queryScalar(ISqlExpression sqlExpression) {
-		List<Map<String, Object>> list;
-		try {
-			list = selectList(sqlExpression.toSql(), sqlExpression.getParams());
-			if (list == null || list.size() == 0) {
-				return null;
-			}
-			Map<String, Object> map = list.get(0);
-			if (map == null || map.keySet() == null || map.keySet().toArray() == null || map.keySet().toArray().length <= 0 || map.get(map.keySet().toArray()[0]) == null) {
-				return null;
-			}
-			return map.get(map.keySet().toArray()[0]).toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new DaoBaseRuntimeException(e);
-		}
+		return sqlExecutor.queryScalar(sqlExpression);
 	}
 
 	@Override

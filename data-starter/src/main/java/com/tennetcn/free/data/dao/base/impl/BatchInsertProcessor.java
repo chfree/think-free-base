@@ -1,5 +1,6 @@
 package com.tennetcn.free.data.dao.base.impl;
 
+import com.tennetcn.free.data.dao.base.IBatchInsertProcessor;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -17,14 +18,16 @@ import java.util.List;
  */
 
 @Component
-public class BatchInsertProcessor {
+public class BatchInsertProcessor implements IBatchInsertProcessor {
     @Autowired
     private SqlSessionFactory sqlSessionFactory;
 
+    @Override
     public int insertListBatch(String sqlId, List data) {
         return insertListBatch(sqlId,data,64);
     }
 
+    @Override
     public int insertListBatch(String sqlId, List data, int batchSize) {
         Assert.isTrue(batchSize > 0,"批量插入规模数量必须大于0");
         if(data==null||data.isEmpty()){
@@ -50,6 +53,7 @@ public class BatchInsertProcessor {
         return data.size();
     }
 
+    @Override
     public int updateListBatch(String sqlID, List lstData){
         if(lstData==null||lstData.isEmpty()){
             return 0;

@@ -1,5 +1,6 @@
 package com.tennetcn.free.data.demo.logical.service.impl;
 
+import com.tennetcn.free.data.dao.base.ISqlExecutor;
 import com.tennetcn.free.data.dao.base.ISqlExpression;
 import com.tennetcn.free.data.dao.base.impl.SuperDao;
 import com.tennetcn.free.data.demo.logical.mapper.LoginUserMapper;
@@ -18,6 +19,9 @@ public class LoginUserServiceImpl extends SuperDao<LoginUser> implements ILoginU
 
     @Autowired
     private LoginUserMapper loginUserMapper;
+
+    @Autowired
+    ISqlExecutor sqlExecutor;
 
     @Override
     public List<LoginUser> queryListMPByIds(List<String> ids) {
@@ -62,6 +66,6 @@ public class LoginUserServiceImpl extends SuperDao<LoginUser> implements ILoginU
         ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
         sqlExpression.addBody("select nextval('"+seqName+"')");
 
-        return queryScalarInt(sqlExpression);
+        return sqlExecutor.queryScalarInt(sqlExpression);
     }
 }

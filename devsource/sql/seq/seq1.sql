@@ -14,7 +14,11 @@ CREATE  FUNCTION `nextval`(seq_name VARCHAR(50)) RETURNS bigint
 READS SQL DATA
 BEGIN
 
-   UPDATE base_sequence SET current_value=last_insert_id(current_value+increment) WHERE name=seq_name;
+      UPDATE base_sequence
+SET current_value=last_insert_id(
+case when current_value+increment > max_value then min_value else current_value+increment end
+)
+WHERE name=seq_name;
    return last_insert_id();
 
 END//
