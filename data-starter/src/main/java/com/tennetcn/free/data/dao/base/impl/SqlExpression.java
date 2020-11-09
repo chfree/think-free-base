@@ -49,6 +49,8 @@ public class SqlExpression implements ISqlExpression {
 
 	private StringBuffer limitBuffer = new StringBuffer();
 
+	private StringBuffer callFunParam = new StringBuffer();
+
 	public SqlExpression() {
 		if (params == null) {
 			params = new HashMap<String, Object>();
@@ -313,22 +315,41 @@ public class SqlExpression implements ISqlExpression {
         return setValue(column,"("+sqlExpression.toSql()+")").setParamAll(sqlExpression.getParams());
     }
 
-    @Override
+	@Override
+	public ISqlExpression callFunction(String funName) {
+		sqlOperateMode = SqlOperateMode.callFun;
+		this.addBody("select " + funName);
+
+		return this;
+	}
+
+	@Override
+	public ISqlExpression setFunParam(String funName, String funValue) {
+		callFunParam.append("#{"+funName+"}");
+		setParam(funName, funValue);
+		return this;
+	}
+
+	@Override
 	public String toSql() {
 		String result = bodyBuffer.toString();
-		if (sqlOperateMode == SqlOperateMode.select) {
+		if (SqlOperateMode.select.equals(sqlOperateMode)) {
 			result += fromBuffer.toString();
 			result += getWhereString();
 			result += groupBuffer.toString();
 			result += orderBuffer.toString();
 			result += limitBuffer.toString();
-		} else if (sqlOperateMode == SqlOperateMode.update) {
+		} else if (SqlOperateMode.update.equals(sqlOperateMode)) {
 			result += fromBuffer.toString();
 			result += setBuffer.toString();
 			result += getWhereString();
-		} else if (sqlOperateMode == SqlOperateMode.delete) {
+		} else if (SqlOperateMode.delete.equals(sqlOperateMode)) {
 			result += fromBuffer.toString();
 			result += getWhereString();
+		} else if(SqlOperateMode.callFun.equals(sqlOperateMode)){
+			result += "(";
+			result += String.join(",",callFunParam);
+			result += ")";
 		}
 
 		return result;

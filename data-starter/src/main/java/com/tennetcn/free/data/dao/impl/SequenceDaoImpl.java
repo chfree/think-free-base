@@ -23,7 +23,7 @@ public class SequenceDaoImpl implements ISequenceDao {
     @Override
     public int getSeq(String seqName) {
         ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
-        sqlExpression.select("nextval(#{seqName})").setParam("seqName", seqName);
+        sqlExpression.callFunction("nextval").setFunParam("seqName", seqName);
 
         return sqlExecutor.queryScalarInt(sqlExpression);
     }

@@ -168,4 +168,8 @@ public interface ISqlExpression {
 	ISqlExpression selectDistinct(String... bodys);
 
 	ISqlExpression setColumn(String column,ISqlExpression sqlExpression);
+
+	ISqlExpression callFunction(String funName);
+
+	ISqlExpression setFunParam(String funName,String funValue);
 }

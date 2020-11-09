@@ -8,4 +8,6 @@ public class SqlOperateMode {
     public static final String select="3";
 
     public static final String delete="4";
+
+    public static final String callFun="5";
 }
