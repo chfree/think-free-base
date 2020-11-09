@@ -37,6 +37,6 @@ public class SequenceServiceImpl implements ISequenceService {
 
     @Override
     public String getDateSeq(String seqName, String prefix) {
-        return prefix + DateUtil.format(DateUtil.date(),"YYYYMMDD");
+        return prefix + DateUtil.format(DateUtil.date(),"yyyyMMdd") + getSeq(seqName);
     }
 }
