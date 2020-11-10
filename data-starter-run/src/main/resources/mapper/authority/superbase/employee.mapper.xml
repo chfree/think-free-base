@@ -23,12 +23,16 @@
 			#{item}
 		</foreach>
 	</select>
-	<select id="getLoginUserNamesByIds" resultType="String">
+	<select id="getLoginUserNamesByIds" resultType="java.lang.String">
 		select name from
 		<include refid="tableName" />
 		where id in
 		<foreach item="item" collection="list" open="(" separator="," close=")">
 			#{item}
 		</foreach>
+	</select>
+
+	<select id="testGlobal" resultType="java.lang.Integer">
+		select count(1) from base_authority_user where name =#{loginUser.name} or name=#{glbName}
 	</select>
 </mapper>

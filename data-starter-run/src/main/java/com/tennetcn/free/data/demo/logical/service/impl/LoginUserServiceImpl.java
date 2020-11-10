@@ -68,4 +68,12 @@ public class LoginUserServiceImpl extends SuperDao<LoginUser> implements ILoginU
 
         return sqlExecutor.queryScalarInt(sqlExpression);
     }
+
+    @Override
+    public String queryAllParentDeptById(String id) {
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.callFunction("queryAllDeptParentById").setFunParam("id",id);
+
+        return queryScalar(sqlExpression);
+    }
 }

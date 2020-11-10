@@ -5,6 +5,7 @@ import cn.hutool.json.JSONUtil;
 import com.tennetcn.free.core.cache.ICached;
 import com.tennetcn.free.core.util.PkIdUtils;
 import com.tennetcn.free.core.util.SnowFlakeIdUtils;
+import com.tennetcn.free.data.demo.logical.mapper.LoginUserMapper;
 import com.tennetcn.free.data.demo.logical.model.LoginUser;
 import com.tennetcn.free.data.demo.logical.service.ILoginUserService;
 import com.tennetcn.free.data.demo.logical.viewmodel.TestUser;
@@ -33,6 +34,9 @@ public class DataDemoApp implements CommandLineRunner {
     private ILoginUserService loginUserService;
 
     @Autowired
+    LoginUserMapper loginUserMapper;
+
+    @Autowired
     ICached cached;
 
     private void testSeq(){
@@ -42,10 +46,7 @@ public class DataDemoApp implements CommandLineRunner {
         rt1.start();
     }
 
-
-
-    @Override
-    public void run(String... args) throws Exception {
+    private void runTestSeq(){
         System.out.println(DateUtil.currentSeconds());
         for(int i = 100; i > 0; i--) {
             testSeq();
@@ -58,7 +59,17 @@ public class DataDemoApp implements CommandLineRunner {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
 
+
+    @Override
+    public void run(String... args) throws Exception {
+//        String ids = loginUserService.queryAllParentDeptById("4291cb5a-baba-11e9-ba9d-bfe43b78a9e4");
+//        System.out.println(ids);
+//        LoginUser loginUser = new LoginUser();
+//        loginUser.setName("test");
+//        int count = loginUserMapper.testGlobal(loginUser);
+//        System.out.println(count);
 
 //        String primaryKey = ClassAnnotationUtils.getFirstColumnKey(LoginUser.class);
 //        System.out.println(primaryKey);

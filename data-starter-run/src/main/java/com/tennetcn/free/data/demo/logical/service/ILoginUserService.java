@@ -22,4 +22,6 @@ public interface ILoginUserService extends ISuperDao<LoginUser> {
 
     int querySeq(String seqName);
 
+    String queryAllParentDeptById(String id);
+
 }
