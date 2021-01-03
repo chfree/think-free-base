@@ -3,13 +3,8 @@ package com.tennetcn.free.data.dao.base.impl;
 import cn.hutool.core.util.ReflectUtil;
 import com.tennetcn.free.core.enums.ModelStatus;
 import com.tennetcn.free.core.message.data.ModelBase;
-import com.tennetcn.free.core.message.data.OrderByEnum;
 import com.tennetcn.free.core.message.data.PagerModel;
-import com.tennetcn.free.data.dao.base.IBatchInsertProcessor;
-import com.tennetcn.free.data.dao.base.IMapper;
-import com.tennetcn.free.data.dao.base.ISqlExecutor;
-import com.tennetcn.free.data.dao.base.ISqlExpression;
-import com.tennetcn.free.data.dao.base.ISuperDao;
+import com.tennetcn.free.data.dao.base.*;
 import com.tennetcn.free.data.dao.base.mapper.SqlMapper;
 import com.tennetcn.free.data.message.DaoBaseRuntimeException;
 import com.tennetcn.free.data.message.OrderInfo;
@@ -22,8 +17,6 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import tk.mybatis.mapper.entity.Example;
-import tk.mybatis.mapper.entity.Example.OrderBy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -78,7 +71,10 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
 	@Override
 	public List<E> queryList() throws DaoBaseRuntimeException {
-		return getMapper().selectAll();
+		ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+		sqlExpression.selectAllFrom(entityClass);
+
+		return queryList(sqlExpression);
 	}
 
 	@Override
@@ -107,56 +103,12 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
 	@Override
 	public List<E> queryList(PagerModel pagerModel) throws DaoBaseRuntimeException {
-		return queryList(true, pagerModel);
+		return getMapper().selectByRowBounds(null, Pager2RowBounds.getRowBounds(pagerModel));
 	}
-
-	private void setOrderBy(Object exampleObj) {
-		List<OrderInfo> orderInfoList = getOrderInfoList();
-		if (orderInfoList == null) {
-			return;
-		}
-
-		Example example = (Example) exampleObj;
-		OrderBy orderBy = null;
-
-		for (OrderInfo orderInfo : orderInfoList) {
-			if (orderBy == null) {
-				orderBy = example.orderBy(orderInfo.getProperty());
-			} else {
-				orderBy.orderBy(orderInfo.getProperty());
-			}
-
-			if (OrderByEnum.ASC.equals(orderInfo.getOrderBy())) {
-				orderBy.asc();
-			} else {
-				orderBy.desc();
-			}
-		}
-	}
-
-
-
+	
 	@Override
 	public List<E> queryList(E e) throws DaoBaseRuntimeException {
 		return getMapper().select(e);
-	}
-
-	@Override
-	public List<E> queryListByExample(Object example) throws DaoBaseRuntimeException {
-		setOrderBy(example);
-		return getMapper().selectByExample(example);
-	}
-
-	@Override
-	public List<E> queryList(Object example, PagerModel pagerModel) throws DaoBaseRuntimeException {
-		setOrderBy(example);
-		return getMapper().selectByExampleAndRowBounds(example, Pager2RowBounds.getRowBounds(pagerModel));
-	}
-
-	@Override
-	public List<E> queryList(Object example, RowBounds rowBounds) throws DaoBaseRuntimeException {
-		setOrderBy(example);
-		return getMapper().selectByExampleAndRowBounds(example, rowBounds);
 	}
 
 	@Override
@@ -170,25 +122,8 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 	}
 
 	@Override
-	public E queryModelByExample(Object example) throws DaoBaseRuntimeException {
-		List<E> list = getMapper().selectByExample(example);
-		if (list == null) {
-			return null;
-		}
-		if (list.size() == 0) {
-			return null;
-		}
-		return list.get(0);
-	}
-
-	@Override
 	public int queryCount(E e) throws DaoBaseRuntimeException {
 		return getMapper().selectCount(e);
-	}
-
-	@Override
-	public int queryCountByExample(Object example) throws DaoBaseRuntimeException {
-		return getMapper().selectCountByExample(example);
 	}
 
 	@Override
@@ -219,15 +154,15 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 		return getMapper().updateByPrimaryKeySelective(e) > 0;
 	}
 
-	@Override
-	public int updateModelByExample(E e, Object example) throws DaoBaseRuntimeException {
-		return getMapper().updateByExample(e, example);
-	}
-
-	@Override
-	public int updateModelSelectiveByExample(E e, Object example) throws DaoBaseRuntimeException {
-		return getMapper().updateByExampleSelective(e, example);
-	}
+//	@Override
+//	public int updateModelByExample(E e, Object example) throws DaoBaseRuntimeException {
+//		return getMapper().updateByExample(e, example);
+//	}
+//
+//	@Override
+//	public int updateModelSelectiveByExample(E e, Object example) throws DaoBaseRuntimeException {
+//		return getMapper().updateByExampleSelective(e, example);
+//	}
 
 	@Override
 	public boolean deleteModel(String key) throws DaoBaseRuntimeException {
@@ -239,10 +174,10 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 		return getMapper().delete(e);
 	}
 
-	@Override
-	public int deleteModelByExample(Object example) throws DaoBaseRuntimeException {
-		return getMapper().deleteByExample(example);
-	}
+//	@Override
+//	public int deleteModelByExample(Object example) throws DaoBaseRuntimeException {
+//		return getMapper().deleteByExample(example);
+//	}
 
 	@Override
 	public boolean applyChange(E e) throws DaoBaseRuntimeException {

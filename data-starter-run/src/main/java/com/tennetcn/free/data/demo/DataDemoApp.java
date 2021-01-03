@@ -3,6 +3,7 @@ package com.tennetcn.free.data.demo;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONUtil;
 import com.tennetcn.free.core.cache.ICached;
+import com.tennetcn.free.core.message.data.PagerModel;
 import com.tennetcn.free.core.util.PkIdUtils;
 import com.tennetcn.free.core.util.SnowFlakeIdUtils;
 import com.tennetcn.free.data.demo.logical.mapper.LoginUserMapper;
@@ -95,9 +96,12 @@ public class DataDemoApp implements CommandLineRunner {
 //            System.out.println(SnowFlakeIdUtils.nextId());
 //        }
 //
-//        int count = loginUserService.queryCount();
-//
-//        System.out.println("count:" + count);
+        int count = loginUserService.queryCount();
+
+        System.out.println("count:" + count);
+
+        List<LoginUser> loginUsers = loginUserService.queryList(new PagerModel(5, 1));
+        System.out.println(loginUsers.size());
 //
 //
 //

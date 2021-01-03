@@ -1,8 +1,8 @@
 package com.tennetcn.free.data.dao.base;
 
+import com.tennetcn.free.core.message.data.ModelBase;
 import com.tennetcn.free.core.message.data.PagerModel;
 import com.tennetcn.free.data.message.DaoBaseRuntimeException;
-import com.tennetcn.free.core.message.data.ModelBase;
 import com.tennetcn.free.data.message.OrderInfo;
 import org.apache.ibatis.session.RowBounds;
 
@@ -60,23 +60,13 @@ public interface ISuperDao<E extends ModelBase> {
 	
 	List<E> queryList(E e) throws DaoBaseRuntimeException;
 	
-	List<E> queryListByExample(Object example) throws DaoBaseRuntimeException;
-	
-	List<E> queryList(Object example, PagerModel pagerModel) throws DaoBaseRuntimeException;
-	
-	List<E> queryList(Object example,RowBounds rowBounds) throws DaoBaseRuntimeException;
-	
 	int queryCount() throws DaoBaseRuntimeException;
 	
 	int queryCount(E e) throws DaoBaseRuntimeException;
 	
-	int queryCountByExample(Object example) throws DaoBaseRuntimeException;
-	
 	E queryModel(String key) throws DaoBaseRuntimeException;
 	
 	E queryModel(E e) throws DaoBaseRuntimeException;
-	
-	E queryModelByExample(Object example) throws DaoBaseRuntimeException;
 	
 	boolean addModel(E e) throws DaoBaseRuntimeException;
 	
@@ -84,17 +74,11 @@ public interface ISuperDao<E extends ModelBase> {
 	
 	boolean updateModel(E e)  throws DaoBaseRuntimeException;
 	
-	int updateModelByExample(E e,Object example)  throws DaoBaseRuntimeException;
-	
 	boolean updateModelSelective(E e) throws DaoBaseRuntimeException;
-	
-	int updateModelSelectiveByExample(E e,Object example)  throws DaoBaseRuntimeException;
 	
 	boolean deleteModel(String key) throws DaoBaseRuntimeException;
 	
 	int deleteModel(E e) throws DaoBaseRuntimeException;
-	
-	int deleteModelByExample(Object example) throws DaoBaseRuntimeException;
 	
 	boolean applyChange(E e) throws DaoBaseRuntimeException;
 	

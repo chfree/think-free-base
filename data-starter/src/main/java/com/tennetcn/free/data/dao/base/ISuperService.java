@@ -33,23 +33,13 @@ public interface ISuperService<E extends ModelBase> {
 
     List<E> queryList(PagerModel pagerModel);
 
-    List<E> queryListByExample(Object example);
-
-    List<E> queryList(Object example, RowBounds rowBounds);
-
-    List<E> queryList(Object example, PagerModel pagerModel);
-
     int queryCount(E e);
-
-    int queryCountByExample(Object example);
 
     int queryCount();
 
     E queryModel(String key);
 
     E queryModel(E e);
-
-    E queryModelByExample(Object example);
 
     boolean addModel(E e);
 
@@ -58,10 +48,6 @@ public interface ISuperService<E extends ModelBase> {
     boolean updateModel(E e);
 
     boolean updateModelSelective(E e);
-
-    int updateModelByExample(E e, Object example);
-
-    int updateModelSelectiveByExample(E e, Object example);
 
     boolean deleteModel(String key);
 
@@ -72,8 +58,6 @@ public interface ISuperService<E extends ModelBase> {
     int deleteByIds(String ...ids);
 
     int deleteByIds(String ids);
-
-    int deleteModelByExample(Object example);
 
     boolean applyChange(E e);
 

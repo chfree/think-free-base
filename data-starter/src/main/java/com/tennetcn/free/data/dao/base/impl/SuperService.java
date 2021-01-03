@@ -76,28 +76,8 @@ public abstract class SuperService<E extends ModelBase> implements ISuperService
     }
 
     @Override
-    public List<E> queryListByExample(Object example) {
-        return getSuperDao().queryListByExample(example);
-    }
-
-    @Override
-    public List<E> queryList(Object example, RowBounds rowBounds) {
-        return getSuperDao().queryList(example, rowBounds);
-    }
-
-    @Override
-    public List<E> queryList(Object example, PagerModel pagerModel) {
-        return getSuperDao().queryList(example, pagerModel);
-    }
-
-    @Override
     public int queryCount(E e) {
         return getSuperDao().queryCount(e);
-    }
-
-    @Override
-    public int queryCountByExample(Object example) {
-        return getSuperDao().queryCountByExample(example);
     }
 
     @Override
@@ -113,11 +93,6 @@ public abstract class SuperService<E extends ModelBase> implements ISuperService
     @Override
     public E queryModel(E e) {
         return getSuperDao().queryModel(e);
-    }
-
-    @Override
-    public E queryModelByExample(Object example) {
-        return getSuperDao().queryModelByExample(example);
     }
 
     @Override
@@ -138,16 +113,6 @@ public abstract class SuperService<E extends ModelBase> implements ISuperService
     @Override
     public boolean updateModelSelective(E e) {
         return getSuperDao().updateModelSelective(e);
-    }
-
-    @Override
-    public int updateModelByExample(E e, Object example) {
-        return getSuperDao().updateModelByExample(e, example);
-    }
-
-    @Override
-    public int updateModelSelectiveByExample(E e, Object example) {
-        return getSuperDao().updateModelSelectiveByExample(e, example);
     }
 
     @Override
@@ -173,11 +138,6 @@ public abstract class SuperService<E extends ModelBase> implements ISuperService
     @Override
     public int deleteByIds(String ids) {
         return getSuperDao().deleteByIds(ids);
-    }
-
-    @Override
-    public int deleteModelByExample(Object example) {
-        return getSuperDao().deleteModelByExample(example);
     }
 
     public boolean applyChange(E e) {

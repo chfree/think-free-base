@@ -12,5 +12,5 @@ import org.apache.ibatis.annotations.InsertProvider;
  */
 public interface InsertListExMapper<T>  {
 	@InsertProvider(type = SpecialExProvider.class, method = "dynamicSQL")
-    public int insertListEx(List<T> recordList);
+    int insertListEx(List<T> recordList);
 }
