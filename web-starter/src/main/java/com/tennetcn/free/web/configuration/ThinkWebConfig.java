@@ -47,7 +47,7 @@ public class ThinkWebConfig {
     /**
      * 允许哪些响应头
      */
-    @Value("${think.cors.exposed-header:*}")
+    @Value("${think.cors.exposed-header:token}")
     private String corsExposedHeader;
 
     @Value("${think.log.request:true}")
