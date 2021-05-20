@@ -1,21 +1,10 @@
 package com.tennetcn.free.activiti.run;
 
-import cn.hutool.json.JSONUtil;
-import com.tennetcn.free.activiti.service.IActivitiService;
 import org.activiti.engine.RepositoryService;
-import org.activiti.engine.repository.ProcessDefinition;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.io.File;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author chfree
@@ -29,8 +18,8 @@ public class ActivitiAppRun implements CommandLineRunner {
     @Autowired
     RepositoryService repositoryService;
 
-    @Autowired
-    IActivitiService activitiService;
+//    @Autowired
+//    IActivitiService activitiService;
 
     public static void main(String[] args) {
         SpringApplication.run(ActivitiAppRun.class, args);
