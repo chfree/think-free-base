@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Think Free Project Initializr</title>
+        <style>
+            .fielset_item{
+                margin-top:20px;
+                border:1px solid #ddd;
+                padding:10px;
+            }
+            .project_metadata .form_item{
+                height: 40px;
+            }
+            .project_metadata .form_item .item_label{
+                display: inline-block;
+                width: 120px;
+                text-align:right;
+            }
+        </style>
+    </head>
+    <body>
+        <div style="width:960px;margin:0 auto;border:1px solid #eff;">
+            <div>
+                <h1>Think Free Project Initializr</h1>
+            </div>
+            <div>
+                <form>
+                    <fieldset class="fielset_item">
+                        <legend>Spring Boot</legend>
+                        <input type="radio" name="sp" id="a1" checked><label for="a1">2.2.6</label>
+                        <input type="radio" name="sp" id="a2"><label for="a2">2.2.7</label>
+                        <input type="radio" name="sp" id="a3"><label for="a3">2.2.8</label>
+                        <input type="radio" name="sp" id="a4"><label for="a4">2.2.9</label>
+                        <input type="radio" name="sp" id="a5"><label for="a5">2.3.0</label>
+                    </fieldset>
+                    <fieldset class="project_metadata fielset_item">
+                        <legend>Project Metadata</legend>
+                        <div class="form_item">
+                            <label class="item_label" for="group">Group: </label> <input id="group" type="text" />
+                        </div>
+                        <div  class="form_item">
+                            <label class="item_label" for="artifact">Artifact: </label> <input id="artifact" type="text" />
+                        </div>
+                        <div  class="form_item">
+                            <label class="item_label" for="name">Name: </label> <input id="name" type="text" />
+                        </div>
+                        <div  class="form_item">
+                            <label class="item_label" for="description">Description: </label> <input id="description" type="text" />
+                        </div>
+                        <div  class="form_item">
+                            <label class="item_label" for="packageName">Package name: </label> <input id="packageName" type="text" />
+                        </div>
+                        <div  class="form_item">
+                            <label class="item_label" for="java8">Java: </label>
+                            <input id="java8" name="javaVer" checked type="radio" /><label for="java8">8</label>
+                            <input id="java9" name="javaVer" checked type="radio" /><label for="java9">9</label>
+                            <input id="java10" name="javaVer" checked type="radio" /><label for="java10">10</label>
+                        </div>
+                    </fieldset>
+                    <div style="width:100%;text-align:center;margin-top:10px;">
+                        <button type="button">New Project</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
