@@ -8,13 +8,37 @@
                 border:1px solid #ddd;
                 padding:10px;
             }
-            .project_metadata .form_item{
-                height: 40px;
+            .fielset_item label{
+                font-size: 14px;
             }
-            .project_metadata .form_item .item_label{
+            .form_item{
+                height: 48px;
+            }
+            .form_item .item_label{
                 display: inline-block;
                 width: 120px;
                 text-align:right;
+            }
+            .form_item input[type='text']{
+                width: 400px;
+                height: 32px;
+                border: 1px solid #ccc;
+                outline: 0px;
+            }
+            input[type='radio']{
+                width: 30px;
+            }
+            .new_project_btn{
+                cursor: pointer;
+                width:120px;
+                height:32px;
+                color: #409eff;
+                background: #ecf5ff;
+                border: 1px solid #b3d8ff;
+            }
+            .error_span{
+                color: red;
+                font-size: 12px;
             }
         </style>
     </head>
@@ -27,38 +51,66 @@
                 <form>
                     <fieldset class="fielset_item">
                         <legend>Spring Boot</legend>
-                        <input type="radio" name="sp" id="a1" checked><label for="a1">2.2.6</label>
-                        <input type="radio" name="sp" id="a2"><label for="a2">2.2.7</label>
-                        <input type="radio" name="sp" id="a3"><label for="a3">2.2.8</label>
-                        <input type="radio" name="sp" id="a4"><label for="a4">2.2.9</label>
-                        <input type="radio" name="sp" id="a5"><label for="a5">2.3.0</label>
+                        <input type="radio" value="2.0.3.RELEASE" name="sp" id="a1"><label for="a1">2.0.3</label>
+                        <input type="radio" value="2.1.6.RELEASE" name="sp" id="a2" checked><label for="a2">2.1.6</label>
+                        <input type="radio" value="2.2.6.RELEASE" name="sp" id="a3"><label for="a3">2.2.6</label>
+                        <input type="radio" value="2.3.4.RELEASE" name="sp" id="a4"><label for="a4">2.3.4</label>
+                        <input type="radio" value="2.4.5" name="sp" id="a5"><label for="a5">2.4.5</label>
                     </fieldset>
-                    <fieldset class="project_metadata fielset_item">
+                    <fieldset class="fielset_item">
+                        <legend>Think Free</legend>
+                        <input type="radio" value="0.0.1" name="javaVersion" id="javaVersion1" checked><label for="javaVersion1">0.0.1</label>
+                        <input type="radio" value="0.0.2" name="javaVersion" id="javaVersion2"><label for="javaVersion2">0.0.2</label>
+                    </fieldset>
+                    <fieldset class="fielset_item">
+                        <legend>Java Version</legend>
+                        <input type="radio" value="1.8" name="thinkFree" id="thinkFree1" checked><label for="thinkFree1">jdk8</label>
+                        <input type="radio" value="1.9" name="thinkFree" id="thinkFree2"><label for="thinkFree2">jdk9</label>
+                        <input type="radio" value="10" name="thinkFree" id="thinkFree3"><label for="thinkFree3">jdk10</label>
+                        <input type="radio" value="11" name="thinkFree" id="thinkFree4"><label for="thinkFree4">jdk11</label>
+                        <input type="radio" value="12" name="thinkFree" id="thinkFree5"><label for="thinkFree5">jdk12</label>
+                        <input type="radio" value="13" name="thinkFree" id="thinkFree6"><label for="thinkFree6">jdk13</label>
+                        <input type="radio" value="14" name="thinkFree" id="thinkFree7"><label for="thinkFree7">jdk14</label>
+                        <input type="radio" value="15" name="thinkFree" id="thinkFree8"><label for="thinkFree8">jdk15</label>
+                    </fieldset>
+                    <fieldset class="fielset_item">
+                        <legend>Author Info</legend>
+                        <div class="form_item">
+                            <label class="item_label" for="author">Author: </label> <input id="author" type="text" />
+                        </div>
+                        <div  class="form_item">
+                            <label class="item_label" for="email">Email: </label> <input id="email" type="text" />
+                        </div>
+                    </fieldset>
+                    <fieldset class="fielset_item">
                         <legend>Project Metadata</legend>
                         <div class="form_item">
-                            <label class="item_label" for="group">Group: </label> <input id="group" type="text" />
+                            <label class="item_label" for="group">Group: </label>
+                            <input id="group" type="text" />
+                            <span class="error_span">Group is required</span>
                         </div>
                         <div  class="form_item">
-                            <label class="item_label" for="artifact">Artifact: </label> <input id="artifact" type="text" />
+                            <label class="item_label" for="artifact">Artifact: </label>
+                            <input id="artifact" type="text" />
+                            <span class="error_span">Artifact is required</span>
                         </div>
                         <div  class="form_item">
-                            <label class="item_label" for="name">Name: </label> <input id="name" type="text" />
+                            <label class="item_label" for="name">Name: </label>
+                            <input id="name" type="text" />
+                            <span class="error_span">Name is required</span>
                         </div>
                         <div  class="form_item">
-                            <label class="item_label" for="description">Description: </label> <input id="description" type="text" />
+                            <label class="item_label" for="description">Description: </label>
+                            <input id="description" type="text" />
                         </div>
                         <div  class="form_item">
-                            <label class="item_label" for="packageName">Package name: </label> <input id="packageName" type="text" />
-                        </div>
-                        <div  class="form_item">
-                            <label class="item_label" for="java8">Java: </label>
-                            <input id="java8" name="javaVer" checked type="radio" /><label for="java8">8</label>
-                            <input id="java9" name="javaVer" checked type="radio" /><label for="java9">9</label>
-                            <input id="java10" name="javaVer" checked type="radio" /><label for="java10">10</label>
+                            <label class="item_label" for="packageName">Package Name: </label>
+                            <input id="packageName" type="text" />
+                            <span class="error_span">Package Name is required</span>
                         </div>
                     </fieldset>
                     <div style="width:100%;text-align:center;margin-top:10px;">
-                        <button type="button">New Project</button>
+                        <button type="button" class="new_project_btn">New Project</button>
                     </div>
                 </form>
             </div>
