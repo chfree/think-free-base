@@ -40,7 +40,76 @@
                 color: red;
                 font-size: 12px;
             }
+            .hide{
+                display: none;
+            }
         </style>
+        <script>
+        </script>
+        <script type="application/javascript">
+            function newProject(){
+                let result = true
+                result = checkInput("group", "Group is required") && result
+
+                result = checkInput("artifact", "Artifact is required")  && result
+
+                result = checkInput("name", "Name is required")  && result
+
+                result = checkInput("packageName", "Package Name is required")  && result
+
+                result = checkInput("version", "Version is required")  && result
+
+                if(!result){
+                    return;
+                }
+
+                setAction()
+
+                query("#newProjectForm").submit()
+            }
+
+            function setAction(){
+                let pathname = window.location.pathname
+                let currentPath = "/newproject/index"
+                if(pathname==currentPath){
+                    return
+                }
+                let action = query("#newProjectForm").getAttribute("action")
+                let contextPath = pathname.replace(currentPath, "")
+                query("#newProjectForm").setAttribute("action", contextPath + action)
+            }
+
+            function checkInput(idSelector, errorMessage){
+                let selectorVal = query("#" + idSelector).value
+                let errprSpanSelector = idSelector + "_error";
+                if(isEmpty(selectorVal)){
+                    query("#" + errprSpanSelector).innerText = errorMessage
+                    removeClass(query("#" + errprSpanSelector),"hide")
+                    return false
+                }else{
+                    addClass(query("#" + errprSpanSelector),"hide")
+                }
+                return true
+            }
+
+            function isEmpty(val){
+                let trimVal = (val || "").trim()
+                return trimVal == null || trimVal == undefined || trimVal == ''
+            }
+
+            function query(selector){
+                return document.querySelector(selector);
+            }
+
+            function removeClass(domObj, className){
+                console.log(domObj.getAttribute("class"))
+                domObj.setAttribute("class",domObj.getAttribute("class").replace(className, ""))
+            }
+
+            function addClass(domObj, className){
+                domObj.setAttribute("class",domObj.getAttribute("class") + " " + className)
+            }
+        </script>
     </head>
     <body>
         <div style="width:960px;margin:0 auto;border:1px solid #eff;">
@@ -48,69 +117,74 @@
                 <h1>Think Free Project Initializr</h1>
             </div>
             <div>
-                <form>
+                <form id="newProjectForm" action="/projectInit/newTemplate" method="post">
                     <fieldset class="fielset_item">
                         <legend>Spring Boot</legend>
-                        <input type="radio" value="2.0.3.RELEASE" name="sp" id="a1"><label for="a1">2.0.3</label>
-                        <input type="radio" value="2.1.6.RELEASE" name="sp" id="a2" checked><label for="a2">2.1.6</label>
-                        <input type="radio" value="2.2.6.RELEASE" name="sp" id="a3"><label for="a3">2.2.6</label>
-                        <input type="radio" value="2.3.4.RELEASE" name="sp" id="a4"><label for="a4">2.3.4</label>
-                        <input type="radio" value="2.4.5" name="sp" id="a5"><label for="a5">2.4.5</label>
+                        <input type="radio" value="2.0.3.RELEASE" name="springBootVersion" id="a1"><label for="a1">2.0.3</label>
+                        <input type="radio" value="2.1.6.RELEASE" name="springBootVersion" id="a2" checked><label for="a2">2.1.6</label>
+                        <input type="radio" value="2.2.6.RELEASE" name="springBootVersion" id="a3"><label for="a3">2.2.6</label>
+                        <input type="radio" value="2.3.4.RELEASE" name="springBootVersion" id="a4"><label for="a4">2.3.4</label>
+                        <input type="radio" value="2.4.5" name="springBootVersion" id="a5"><label for="a5">2.4.5</label>
                     </fieldset>
                     <fieldset class="fielset_item">
                         <legend>Think Free</legend>
-                        <input type="radio" value="0.0.1" name="javaVersion" id="javaVersion1" checked><label for="javaVersion1">0.0.1</label>
-                        <input type="radio" value="0.0.2" name="javaVersion" id="javaVersion2"><label for="javaVersion2">0.0.2</label>
+                        <input type="radio" value="0.0.1" name="freeVersion" id="freeVersion1" checked><label for="freeVersion1">0.0.1</label>
+                        <input type="radio" value="0.0.2" name="freeVersion" id="freeVersion2"><label for="freeVersion2">0.0.2</label>
                     </fieldset>
                     <fieldset class="fielset_item">
                         <legend>Java Version</legend>
-                        <input type="radio" value="1.8" name="thinkFree" id="thinkFree1" checked><label for="thinkFree1">jdk8</label>
-                        <input type="radio" value="1.9" name="thinkFree" id="thinkFree2"><label for="thinkFree2">jdk9</label>
-                        <input type="radio" value="10" name="thinkFree" id="thinkFree3"><label for="thinkFree3">jdk10</label>
-                        <input type="radio" value="11" name="thinkFree" id="thinkFree4"><label for="thinkFree4">jdk11</label>
-                        <input type="radio" value="12" name="thinkFree" id="thinkFree5"><label for="thinkFree5">jdk12</label>
-                        <input type="radio" value="13" name="thinkFree" id="thinkFree6"><label for="thinkFree6">jdk13</label>
-                        <input type="radio" value="14" name="thinkFree" id="thinkFree7"><label for="thinkFree7">jdk14</label>
-                        <input type="radio" value="15" name="thinkFree" id="thinkFree8"><label for="thinkFree8">jdk15</label>
+                        <input type="radio" value="1.8" name="javaVersion" id="javaVersion1" checked><label for="javaVersion1">jdk8</label>
+                        <input type="radio" value="1.9" name="javaVersion" id="javaVersion2"><label for="javaVersion2">jdk9</label>
+                        <input type="radio" value="10" name="javaVersion" id="javaVersion3"><label for="javaVersion3">jdk10</label>
+                        <input type="radio" value="11" name="javaVersion" id="javaVersion4"><label for="javaVersion4">jdk11</label>
+                        <input type="radio" value="12" name="javaVersion" id="javaVersion5"><label for="javaVersion5">jdk12</label>
+                        <input type="radio" value="13" name="javaVersion" id="javaVersion6"><label for="javaVersion6">jdk13</label>
+                        <input type="radio" value="14" name="javaVersion" id="javaVersion7"><label for="javaVersion7">jdk14</label>
+                        <input type="radio" value="15" name="javaVersion" id="javaVersion8"><label for="javaVersion8">jdk15</label>
                     </fieldset>
                     <fieldset class="fielset_item">
                         <legend>Author Info</legend>
                         <div class="form_item">
-                            <label class="item_label" for="author">Author: </label> <input id="author" type="text" />
+                            <label class="item_label" for="author">Author: </label> <input id="author" name="author" value="C.H" type="text" />
                         </div>
                         <div  class="form_item">
-                            <label class="item_label" for="email">Email: </label> <input id="email" type="text" />
+                            <label class="item_label" for="email">Email: </label> <input id="email" name="email" value="chfree@gmail.com" type="text" />
                         </div>
                     </fieldset>
                     <fieldset class="fielset_item">
                         <legend>Project Metadata</legend>
                         <div class="form_item">
                             <label class="item_label" for="group">Group: </label>
-                            <input id="group" type="text" />
-                            <span class="error_span">Group is required</span>
+                            <input id="group" name="groupId" type="text" />
+                            <span class="error_span hide" id="group_error">111</span>
                         </div>
                         <div  class="form_item">
                             <label class="item_label" for="artifact">Artifact: </label>
-                            <input id="artifact" type="text" />
-                            <span class="error_span">Artifact is required</span>
+                            <input id="artifact" name="artifactId" type="text" />
+                            <span class="error_span hide" id="artifact_error"></span>
+                        </div>
+                        <div  class="form_item">
+                            <label class="item_label" for="version">Version: </label>
+                            <input id="version" name="version" type="text" value="0.0.1" />
+                            <span class="error_span hide" id="version_error"></span>
                         </div>
                         <div  class="form_item">
                             <label class="item_label" for="name">Name: </label>
-                            <input id="name" type="text" />
-                            <span class="error_span">Name is required</span>
+                            <input id="name" type="text" name="projectName" />
+                            <span class="error_span hide" id="name_error"></span>
                         </div>
                         <div  class="form_item">
                             <label class="item_label" for="description">Description: </label>
-                            <input id="description" type="text" />
+                            <input id="description" name="description" type="text" />
                         </div>
                         <div  class="form_item">
                             <label class="item_label" for="packageName">Package Name: </label>
-                            <input id="packageName" type="text" />
-                            <span class="error_span">Package Name is required</span>
+                            <input id="packageName" type="text" name="packageName" />
+                            <span class="error_span hide" id="packageName_error"></span>
                         </div>
                     </fieldset>
                     <div style="width:100%;text-align:center;margin-top:10px;">
-                        <button type="button" class="new_project_btn">New Project</button>
+                        <button type="button" class="new_project_btn" onclick="newProject()">New Project</button>
                     </div>
                 </form>
             </div>

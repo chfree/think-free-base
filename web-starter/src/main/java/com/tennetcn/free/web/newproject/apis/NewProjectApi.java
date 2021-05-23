@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/newproject")
 public class NewProjectApi extends FirstApi {
     @GetMapping(value = "/index")
-    public String hello(){
+    public String index(){
         return "/newproject/index.html";
     }
 }
