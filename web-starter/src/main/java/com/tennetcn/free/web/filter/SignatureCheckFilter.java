@@ -10,6 +10,7 @@ import com.tennetcn.free.web.filter.checkhelper.ICheckHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.filter.OrderedFilter;
 import org.springframework.core.annotation.Order;
+import org.springframework.util.PatternMatchUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -69,6 +70,11 @@ public class SignatureCheckFilter implements OrderedFilter {
             return;
         }
         final String requestURI = req.getRequestURI();
+
+        if(!PatternMatchUtils.simpleMatch(checkMacConfig.getUrlPatterns(),requestURI)){
+            return;
+        }
+
         boolean isWhiteListIncluded = false;
         for (String uri : uriWhiteList) {
             if (requestURI.startsWith(uri)) {
