@@ -1,5 +1,5 @@
-/.project
-/.settings/
+*/.project
+*/.settings/
 .idea
 *.iml
-/target/
+*/target/
