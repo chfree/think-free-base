@@ -9,6 +9,8 @@ import com.tennetcn.free.core.exception.BizException;
 import com.tennetcn.free.web.configuration.ThinkWebConfig;
 import com.tennetcn.free.web.newproject.viewmodel.ProjectNewTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -26,7 +28,11 @@ public class NewProjectHelper {
     ThinkWebConfig thinkWebConfig;
 
     String rootPath = null;
-    public NewProjectHelper(){
+
+    private void loadSetting(){
+        if(!StringUtils.isEmpty(this.rootPath)){
+            return;
+        }
         String templatePath = thinkWebConfig.getTemplatePath();
         if(StringUtils.isEmpty(templatePath)){
             throw new BizException("think.path.template-path未正确配置");
@@ -40,6 +46,10 @@ public class NewProjectHelper {
 
 
     public String createNewProject(ProjectNewTemplate projectNewTemplate){
+
+        // 加载配置
+        loadSetting();
+
         // 创建用户根目录
         createUserPath(projectNewTemplate.getUserPath());
 
@@ -69,7 +79,7 @@ public class NewProjectHelper {
 
         FileUtil.del(userPathDisk);
 
-        return userPathDisk;
+        return userPathDisk.substring(0, userPathDisk.lastIndexOf(File.separator)) + ".zip";
     }
 
     private void createUserPath(String userPath){

@@ -27,9 +27,9 @@ public class ProjectInitApi extends FirstApi {
 
     @PostMapping(value = "newTemplate")
     public void newTemplate(ProjectNewTemplate newTemplate){
-        String projectPath = newProjectHelper.createNewProject(newTemplate);
+        String zipPath = newProjectHelper.createNewProject(newTemplate);
         try {
-            File file = new File(projectPath+".zip");
+            File file = new File(zipPath);
             HttpServletResponse response = getServletResponse();
 
             String contentType="application/octet-stream";
@@ -38,6 +38,8 @@ public class ProjectInitApi extends FirstApi {
             response.addHeader("Content-Length", "" + file.length());
 
             FileUtil.writeToStream(file, response.getOutputStream());
+
+            file.delete();
         }catch (Exception ex){
             log.error("newTemplate error", ex);
         }
