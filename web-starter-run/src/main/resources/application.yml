@@ -3,6 +3,8 @@ server:
   servlet:
     context-path: /tennetcn
 think:
+  path:
+    template-path: G:\publish\java\idea\think\think-code-build\devsource
   checkmac:
     enabled: true
 logging:

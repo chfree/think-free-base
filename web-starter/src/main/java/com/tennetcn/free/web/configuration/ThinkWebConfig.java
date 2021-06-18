@@ -14,9 +14,15 @@ import org.springframework.beans.factory.annotation.Value;
 @Data
 @Configurable
 public class ThinkWebConfig {
+    /**
+     * 是否启用跨域
+     */
     @Value("${think.cors.enabled:true}")
     private boolean corsEnabled;
 
+    /**
+     * 跨域路径
+     */
     @Value("${think.cors.path:/**}")
     private String corsPath;
 
@@ -50,15 +56,33 @@ public class ThinkWebConfig {
     @Value("${think.cors.exposed-header:token}")
     private String corsExposedHeader;
 
+    /**
+     * 打印请求日志
+     */
     @Value("${think.log.request:true}")
     private boolean logRequest;
 
+    /**
+     * 打印响应日志
+     */
     @Value("${think.log.response:true}")
     private boolean logResponse;
 
+    /**
+     * 项目运行端口
+     */
     @Value("${server.port:8080}")
     private int port;
 
+    /**
+     * 项目运行的contextPath
+     */
     @Value("${server.servlet.context-path:}")
     private String contextPath;
+
+    /**
+     * 模板根路径
+     */
+    @Value("${think.path.template-path}")
+    private String templatePath;
 }

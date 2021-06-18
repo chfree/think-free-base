@@ -1,10 +1,12 @@
 package com.tennetcn.free.web.newproject.apis;
 
 import cn.hutool.core.io.FileUtil;
+import com.tennetcn.free.web.newproject.helper.NewProjectHelper;
 import com.tennetcn.free.web.newproject.viewmodel.ProjectNewTemplate;
 import com.tennetcn.free.web.webapi.FirstApi;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,10 +22,14 @@ import java.io.OutputStream;
 @RequestMapping(value = "/projectInit/")
 public class ProjectInitApi extends FirstApi {
 
+    @Autowired
+    NewProjectHelper newProjectHelper;
+
     @PostMapping(value = "newTemplate")
     public void newTemplate(ProjectNewTemplate newTemplate){
+        String projectPath = newProjectHelper.createNewProject(newTemplate);
         try {
-            File file = new File("");
+            File file = new File(projectPath+".zip");
             HttpServletResponse response = getServletResponse();
 
             String contentType="application/octet-stream";
