@@ -5,7 +5,7 @@
     <parent>
         <artifactId>base</artifactId>
         <groupId>com.tennetcn.free</groupId>
-        <version>0.0.1</version>
+        <version>2.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,22 +15,18 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.16</version>
         </dependency>
         <dependency>
             <groupId>com.tennetcn.free</groupId>
             <artifactId>data-starter</artifactId>
-            <version>0.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.tennetcn.free</groupId>
             <artifactId>activiti-starter</artifactId>
-            <version>0.0.1</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.6</version>
         </dependency>
     </dependencies>
 

@@ -7,7 +7,7 @@
     <groupId>com.tennetcn.free</groupId>
     <artifactId>base</artifactId>
     <packaging>pom</packaging>
-    <version>0.0.1</version>
+    <version>2.0.0</version>
     <modules>
         <module>core-starter</module>
         <module>data-starter</module>
@@ -42,7 +42,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.6.RELEASE</version>
+        <version>2.5.1</version>
         <relativePath />
     </parent>
 
@@ -50,6 +50,21 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <think.free.base.version>2.0.0</think.free.base.version>
+        <spring.boot.version>2.5.1</spring.boot.version>
+        <org.mybatis.version>3.5.1</org.mybatis.version>
+        <com.google.guava.version>28.0-jre</com.google.guava.version>
+        <org.mybatis.spring.version>2.0.1</org.mybatis.spring.version>
+        <javax.persistence.version>1.0.2</javax.persistence.version>
+        <tk.mybatis.mapper.version>2.1.5</tk.mybatis.mapper.version>
+        <cn.hutool.version>4.5.16</cn.hutool.version>
+        <mysql-connector-java.version>8.0.16</mysql-connector-java.version>
+        <org.activiti-spring.version>6.0.0</org.activiti-spring.version>
+        <commons-io.version>2.6</commons-io.version>
+        <org.quartz-scheduler.quartz.version>2.3.2</org.quartz-scheduler.quartz.version>
+        <com.mchange.c3p0.version>0.9.5.2</com.mchange.c3p0.version>
+        <io.springfox.springfox-swagger2.version>2.9.2</io.springfox.springfox-swagger2.version>
+        <think.free.base.swagger-ui.version>0.0.5</think.free.base.swagger-ui.version>
     </properties>
 
 
@@ -71,94 +86,145 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>com.mchange</groupId>
+                <artifactId>c3p0</artifactId>
+                <version>${com.mchange.c3p0.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${io.springfox.springfox-swagger2.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <version>${org.quartz-scheduler.quartz.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz-jobs</artifactId>
+                <version>${org.quartz-scheduler.quartz.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.activiti</groupId>
+                <artifactId>activiti-spring</artifactId>
+                <version>${org.activiti-spring.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis</artifactId>
-                <version>3.5.1</version>
+                <version>${org.mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-java.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis-spring</artifactId>
-                <version>2.0.1</version>
+                <version>${org.mybatis.spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.persistence</groupId>
                 <artifactId>persistence-api</artifactId>
-                <version>1.0.2</version>
+                <version>${javax.persistence.version}</version>
             </dependency>
             <dependency>
                 <groupId>tk.mybatis</groupId>
                 <artifactId>mapper-spring-boot-starter</artifactId>
-                <version>2.1.5</version>
+                <version>${tk.mybatis.mapper.version}</version>
             </dependency>
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
-                <version>4.5.16</version>
+                <version>${cn.hutool.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>28.0-jre</version>
+                <version>${com.google.guava.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.tennetcn.free</groupId>
                 <artifactId>core-starter</artifactId>
-                <version>0.0.1</version>
+                <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.tennetcn.free</groupId>
                 <artifactId>data-starter</artifactId>
-                <version>0.0.1</version>
+                <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.tennetcn.free</groupId>
                 <artifactId>swagger-starter</artifactId>
-                <version>0.0.1</version>
+                <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.tennetcn.free</groupId>
                 <artifactId>web-starter</artifactId>
-                <version>0.0.1</version>
+                <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.tennetcn.free</groupId>
                 <artifactId>activiti-starter</artifactId>
-                <version>0.0.1</version>
+                <version>${think.free.base.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tennetcn.free</groupId>
+                <artifactId>rate-limiter-starter</artifactId>
+                <version>${think.free.base.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tennetcn.free</groupId>
+                <artifactId>think-swagger-ui-starter</artifactId>
+                <version>${think.free.base.swagger-ui.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tennetcn.free</groupId>
+                <artifactId>quartz-starter</artifactId>
+                <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.tennetcn.free.authority</groupId>
                 <artifactId>authority-data-starter</artifactId>
-                <version>0.0.1</version>
+                <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.tennetcn.free.authority</groupId>
                 <artifactId>authority-security-starter</artifactId>
-                <version>0.0.1</version>
+                <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.tennetcn.free.authority</groupId>
                 <artifactId>authority-login-starter</artifactId>
-                <version>0.0.1</version>
+                <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.tennetcn.free.authority</groupId>
                 <artifactId>authority-web-starter</artifactId>
-                <version>0.0.1</version>
+                <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.tennetcn.free.authority</groupId>
                 <artifactId>develop-data-starter</artifactId>
-                <version>0.0.1</version>
+                <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.tennetcn.free.authority</groupId>
                 <artifactId>develop-web-starter</artifactId>
-                <version>0.0.1</version>
+                <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
                 <groupId>think-free-activiti</groupId>
                 <artifactId>activiti-web-starter</artifactId>
-                <version>0.0.1</version>
+                <version>${think.free.base.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

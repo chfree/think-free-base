@@ -5,7 +5,7 @@
     <parent>
         <artifactId>base</artifactId>
         <groupId>com.tennetcn.free</groupId>
-        <version>0.0.1</version>
+        <version>2.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,22 +15,18 @@
         <dependency>
             <groupId>com.tennetcn.free</groupId>
             <artifactId>web-starter</artifactId>
-            <version>0.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.tennetcn.free</groupId>
             <artifactId>swagger-starter</artifactId>
-            <version>0.0.1</version>
         </dependency>
         <dependency>
             <groupId>com.tennetcn.free</groupId>
             <artifactId>think-swagger-ui-starter</artifactId>
-            <version>0.0.5</version>
         </dependency>
         <dependency>
             <groupId>com.tennetcn.free</groupId>
             <artifactId>rate-limiter-starter</artifactId>
-            <version>0.0.1</version>
         </dependency>
     </dependencies>
 </project>
