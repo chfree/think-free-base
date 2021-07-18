@@ -52,17 +52,17 @@
         <java.version>1.8</java.version>
         <think.free.base.version>2.0.0</think.free.base.version>
         <spring.boot.version>2.5.1</spring.boot.version>
-        <org.mybatis.version>3.5.1</org.mybatis.version>
-        <com.google.guava.version>28.0-jre</com.google.guava.version>
+        <org.mybatis.version>3.5.6</org.mybatis.version>
+        <com.google.guava.version>29.0-jre</com.google.guava.version>
         <org.mybatis.spring.version>2.0.1</org.mybatis.spring.version>
         <javax.persistence.version>1.0.2</javax.persistence.version>
         <tk.mybatis.mapper.version>2.1.5</tk.mybatis.mapper.version>
         <cn.hutool.version>4.5.16</cn.hutool.version>
         <mysql-connector-java.version>8.0.16</mysql-connector-java.version>
         <org.activiti-spring.version>6.0.0</org.activiti-spring.version>
-        <commons-io.version>2.6</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <org.quartz-scheduler.quartz.version>2.3.2</org.quartz-scheduler.quartz.version>
-        <com.mchange.c3p0.version>0.9.5.2</com.mchange.c3p0.version>
+        <com.mchange.c3p0.version>0.9.5.4</com.mchange.c3p0.version>
         <io.springfox.springfox-swagger2.version>2.9.2</io.springfox.springfox-swagger2.version>
         <think.free.base.swagger-ui.version>0.0.5</think.free.base.swagger-ui.version>
     </properties>
