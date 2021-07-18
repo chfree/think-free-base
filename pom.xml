@@ -62,7 +62,7 @@
         <org.activiti-spring.version>6.0.0</org.activiti-spring.version>
         <commons-io.version>2.6</commons-io.version>
         <org.quartz-scheduler.quartz.version>2.3.2</org.quartz-scheduler.quartz.version>
-        <com.mchange.c3p0.version>0.9.5.2</com.mchange.c3p0.version>
+        <com.mchange.c3p0.version>0.9.5.4</com.mchange.c3p0.version>
         <io.springfox.springfox-swagger2.version>2.9.2</io.springfox.springfox-swagger2.version>
         <think.free.base.swagger-ui.version>0.0.5</think.free.base.swagger-ui.version>
     </properties>
