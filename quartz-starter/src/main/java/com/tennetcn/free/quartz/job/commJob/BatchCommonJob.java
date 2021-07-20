@@ -3,7 +3,6 @@ package com.tennetcn.free.quartz.job.commJob;
 import cn.hutool.json.JSONUtil;
 import com.tennetcn.free.core.util.CommonUtils;
 import com.tennetcn.free.core.util.SpringContextUtils;
-import com.tennetcn.free.quartz.exception.QuartzBizException;
 import com.tennetcn.free.quartz.job.BaseJob;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobDataMap;
