@@ -83,6 +83,6 @@ public class ThinkWebConfig {
     /**
      * 模板根路径
      */
-    @Value("${think.path.template-path}")
+    @Value("${think.path.template-path:}")
     private String templatePath;
 }
