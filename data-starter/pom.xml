@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>base</artifactId>
-        <groupId>com.tennetcn.free</groupId>
+        <groupId>com.cditer.free</groupId>
         <version>2.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -26,7 +26,7 @@
             <artifactId>javax.persistence-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.tennetcn.free</groupId>
+            <groupId>com.cditer.free</groupId>
             <artifactId>core-starter</artifactId>
         </dependency>
         <dependency>

@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.tennetcn.free</groupId>
+    <groupId>com.cditer.free</groupId>
     <artifactId>base</artifactId>
     <packaging>pom</packaging>
     <version>2.0.0</version>
@@ -152,72 +152,72 @@
                 <version>${com.google.guava.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.tennetcn.free</groupId>
+                <groupId>com.cditer.free</groupId>
                 <artifactId>core-starter</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.tennetcn.free</groupId>
+                <groupId>com.cditer.free</groupId>
                 <artifactId>data-starter</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.tennetcn.free</groupId>
+                <groupId>com.cditer.free</groupId>
                 <artifactId>swagger-starter</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.tennetcn.free</groupId>
+                <groupId>com.cditer.free</groupId>
                 <artifactId>web-starter</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.tennetcn.free</groupId>
+                <groupId>com.cditer.free</groupId>
                 <artifactId>activiti-starter</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.tennetcn.free</groupId>
+                <groupId>com.cditer.free</groupId>
                 <artifactId>rate-limiter-starter</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.tennetcn.free</groupId>
+                <groupId>com.cditer.free</groupId>
                 <artifactId>think-swagger-ui-starter</artifactId>
                 <version>${think.free.base.swagger-ui.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.tennetcn.free</groupId>
+                <groupId>com.cditer.free</groupId>
                 <artifactId>quartz-starter</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.tennetcn.free.authority</groupId>
+                <groupId>com.cditer.free.authority</groupId>
                 <artifactId>authority-data-starter</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.tennetcn.free.authority</groupId>
+                <groupId>com.cditer.free.authority</groupId>
                 <artifactId>authority-security-starter</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.tennetcn.free.authority</groupId>
+                <groupId>com.cditer.free.authority</groupId>
                 <artifactId>authority-login-starter</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.tennetcn.free.authority</groupId>
+                <groupId>com.cditer.free.authority</groupId>
                 <artifactId>authority-web-starter</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.tennetcn.free.authority</groupId>
+                <groupId>com.cditer.free.authority</groupId>
                 <artifactId>develop-data-starter</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.tennetcn.free.authority</groupId>
+                <groupId>com.cditer.free.authority</groupId>
                 <artifactId>develop-web-starter</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
