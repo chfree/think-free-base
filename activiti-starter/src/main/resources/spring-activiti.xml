@@ -5,7 +5,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
   http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="com.tennetcn.free.activiti.*" />
+    <context:component-scan base-package="com.cditer.free.activiti.*" />
 
     <!-- activiti start -->
     <!-- Activiti引擎配置 -->

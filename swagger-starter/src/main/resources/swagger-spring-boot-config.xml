@@ -8,5 +8,5 @@
 	http://www.springframework.org/schema/context
 	http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:component-scan base-package="com.tennetcn.free.swagger.*" />
+    <context:component-scan base-package="com.cditer.free.swagger.*" />
 </beans>

@@ -11,7 +11,7 @@
 	http://www.springframework.org/schema/mvc
 	http://www.springframework.org/schema/mvc/spring-mvc.xsd">
     
-    <context:component-scan base-package="com.tennetcn.free.swagger.*" />
+    <context:component-scan base-package="com.cditer.free.swagger.*" />
 
 	<mvc:view-controller path="/thinkswagger" view-name="redirect:/thinkswagger/index.html" />
 </beans>  

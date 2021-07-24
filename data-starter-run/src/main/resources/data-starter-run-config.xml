@@ -8,7 +8,7 @@
     <bean class="com.cditer.free.data.extend.config.TypeAliasBean">
         <property name="packageNames">
             <list>
-                <value>com.tennetcn.free.data.demo.logical</value>
+                <value>com.cditer.free.data.demo.logical</value>
             </list>
         </property>
     </bean>
