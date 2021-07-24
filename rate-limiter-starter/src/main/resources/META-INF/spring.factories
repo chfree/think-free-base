@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.tennetcn.free.ratelimit.config.RateLimitAutoConfiguration
+com.cditer.free.ratelimit.config.RateLimitAutoConfiguration

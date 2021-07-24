@@ -221,11 +221,6 @@
                 <artifactId>develop-web-starter</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
-            <dependency>
-                <groupId>think-free-activiti</groupId>
-                <artifactId>activiti-web-starter</artifactId>
-                <version>${think.free.base.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 

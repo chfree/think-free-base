@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.tennetcn.free.swagger.autoconfig.SwaggerUIAutoConfiguation
+com.cditer.free.swagger.autoconfig.SwaggerUIAutoConfiguation

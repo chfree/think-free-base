@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.tennetcn.free.activiti.autoconfig.ActivitiAutoConfiguration
+com.cditer.free.activiti.autoconfig.ActivitiAutoConfiguration

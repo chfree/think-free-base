@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.tennetcn.free.data.demo.autoconfig.DataRunAutoConfiguration
+com.cditer.free.data.demo.autoconfig.DataRunAutoConfiguration

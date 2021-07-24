@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.tennetcn.free.standby.autoconfig.StandbyAutoConfiguration
+com.cditer.free.standby.autoconfig.StandbyAutoConfiguration

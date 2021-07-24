@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
-<mapper namespace="com.tennetcn.free.data.demo.logical.mapper.LoginUserMapper">
+<mapper namespace="com.cditer.free.data.demo.logical.mapper.LoginUserMapper">
     <resultMap type="LoginUser" id="loginUserMap">
         <id column="id" property="id"/>
         <result column="name" property="name"/>  
@@ -24,7 +24,7 @@
         <result column="isLogin" property="isLogin"/>
         <result column="uniqueMark" property="uniqueMark"/>
         <result column="businessId" property="businessId"/>
-<!--        <association property="business" resultMap="com.tennetcn.free.data.demo.logical.mapper.BusinessMapper.loginUserBusinessMap" javaType="Business">-->
+<!--        <association property="business" resultMap="BusinessMapper.loginUserBusinessMap" javaType="Business">-->
 <!--            -->
 <!--        </association>  -->
     </resultMap>  
