@@ -39,6 +39,12 @@ public class ThinkWebConfig {
     private String corsAllowedOrigin;
 
     /**
+     * todo 待学习含义
+     */
+    @Value("${think.cors.allowed-origin-pattern:*}")
+    private String corsAllowedOriginPattern;
+
+    /**
      * 允许哪些请求头
      */
     @Value("${think.cors.allowed-header:*}")
