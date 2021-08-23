@@ -43,7 +43,7 @@ public class FilterConfigurer implements WebMvcConfigurer {
          */
         corsConfiguration.setAllowCredentials(webConfig.isCorsCredentials());
         if(webConfig.isCorsCredentials()) {
-            corsConfiguration.addAllowedOriginPattern(webConfig.getCorsAllowedOrigin());
+            corsConfiguration.addAllowedOriginPattern(webConfig.getCorsAllowedOriginPattern());
         }else{
             corsConfiguration.addAllowedOrigin(webConfig.getCorsAllowedOrigin());
         }

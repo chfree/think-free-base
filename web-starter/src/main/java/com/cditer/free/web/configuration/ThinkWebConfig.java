@@ -17,7 +17,7 @@ public class ThinkWebConfig {
     /**
      * 是否启用跨域
      */
-    @Value("${think.cors.enabled:true}")
+    @Value("${think.cors.enabled:false}")
     private boolean corsEnabled;
 
     /**
