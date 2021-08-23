@@ -71,6 +71,7 @@ public class SignatureCheckFilter implements OrderedFilter {
         final String requestURI = req.getRequestURI();
 
         if(!PatternMatchUtils.simpleMatch(checkMacConfig.getUrlPatterns(),requestURI)){
+            chain.doFilter(request,response);
             return;
         }
 

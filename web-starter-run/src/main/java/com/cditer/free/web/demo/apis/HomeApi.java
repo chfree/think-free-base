@@ -33,4 +33,9 @@ public class HomeApi extends FirstApi {
 
         return  req.hashCode();
     }
+
+    @PostMapping(value = "/postTest")
+    public String testDate(String name){
+        return "post:" + name;
+    }
 }
