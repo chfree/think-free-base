@@ -5,9 +5,15 @@ import com.cditer.free.core.cache.ICached;
 import com.cditer.free.core.util.CommonUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.MockedStatic;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
 
+import static org.mockito.Mockito.*;
+
+@RunWith(MockitoJUnitRunner.class)
 public class CommonUtilsTest{
     @Test
     public void testGetUUID(){
@@ -66,15 +72,52 @@ public class CommonUtilsTest{
         Assert.assertTrue(anInterface);
     }
 
+    @Test
     public void testTestIsInterface() {
+        boolean anInterface = CommonUtils.isInterface(CachedImpl.class, ICached.class.getName());
+
+        Assert.assertTrue(anInterface);
     }
 
+    @Test
     public void testIsNumeric() {
+        Assert.assertTrue(CommonUtils.isNumeric("123"));
+
+        Assert.assertFalse(CommonUtils.isNumeric("adc"));
+
+        Assert.assertFalse(CommonUtils.isNumeric("1a2d3c"));
     }
 
+    @Test
     public void testGetTraceId() {
+        String traceId = CommonUtils.getTraceId();
+
+        Assert.assertEquals(traceId.length(),30);
+
+        try(MockedStatic<CommonUtils> mockStatic = mockStatic(CommonUtils.class)){
+            mockStatic.when(CommonUtils::getHostName).thenReturn("chenghuan");
+            // 一旦 Mock 一个类，那么它所有的静态方法都被 Mockito 接管。
+            mockStatic.when(CommonUtils::getTraceId).thenCallRealMethod();
+
+            String traceId1 = CommonUtils.getTraceId();
+            Assert.assertEquals(traceId1.length(),30);
+
+            Assert.assertTrue(traceId1.contains("cheng"));
+            Assert.assertFalse(traceId1.contains("chenghuan"));
+
+            mockStatic.when(CommonUtils::getHostName).thenReturn("ch");
+            String traceId2 = CommonUtils.getTraceId();
+            Assert.assertEquals(traceId2.length(),30);
+            System.out.println(traceId2);
+            Assert.assertTrue(traceId2.contains("XXXch"));
+        }
+
     }
 
+    @Test
     public void testGetHostName() {
+        String hostName = CommonUtils.getHostName();
+
+        Assert.assertNotNull(hostName);
     }
 }

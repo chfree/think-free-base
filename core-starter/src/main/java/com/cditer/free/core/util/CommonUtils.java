@@ -2,6 +2,7 @@ package com.cditer.free.core.util;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.net.InetAddress;
@@ -9,6 +10,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class CommonUtils {
 
     public static String getUUID(){
@@ -95,7 +97,6 @@ public class CommonUtils {
         if(hostName.length()>=5) {
             hostName=hostName.substring(0, 5);
         }else {
-
             hostName=org.apache.commons.lang3.StringUtils.leftPad(hostName, 5,"X");
         }
 
@@ -113,7 +114,7 @@ public class CommonUtils {
                 hostName= addr.getHostName();
             }
         }catch(Exception e){
-            e.printStackTrace();
+            log.warn("getHostName is error", e);
         }
         return hostName;
     }
