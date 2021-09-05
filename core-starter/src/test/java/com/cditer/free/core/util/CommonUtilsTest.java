@@ -11,6 +11,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -108,7 +111,6 @@ public class CommonUtilsTest{
             mockStatic.when(CommonUtils::getHostName).thenReturn("ch");
             String traceId2 = CommonUtils.getTraceId();
             Assert.assertEquals(traceId2.length(),30);
-            System.out.println(traceId2);
             Assert.assertTrue(traceId2.contains("XXXch"));
         }
 
@@ -119,5 +121,10 @@ public class CommonUtilsTest{
         String hostName = CommonUtils.getHostName();
 
         Assert.assertNotNull(hostName);
+
+        try(MockedStatic<InetAddress> mockStatic = mockStatic(InetAddress.class)){
+            mockStatic.when(InetAddress::getLocalHost).thenThrow(new UnknownHostException());
+            Assert.assertEquals("UNHST", CommonUtils.getHostName());
+        }
     }
 }
