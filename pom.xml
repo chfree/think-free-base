@@ -9,19 +9,19 @@
     <packaging>pom</packaging>
     <version>2.0.0</version>
     <modules>
-        <module>core-starter</module>
-        <module>data-starter</module>
-        <module>web-starter</module>
-        <module>data-starter-run</module>
-        <module>web-starter-run</module>
-        <module>swagger-starter</module>
-        <module>activiti-starter</module>
-        <module>activiti-starter-run</module>
-        <module>think-swagger-ui-starter</module>
-        <module>rate-limiter-starter</module>
-        <module>standby-data-starter</module>
-        <module>quartz-starter</module>
-        <module>quartz-demo-run</module>
+        <module>common/core-starter</module>
+        <module>data/data-starter</module>
+        <module>data/data-starter-run</module>
+        <module>web/web-starter</module>
+        <module>web/web-starter-run</module>
+        <module>swagger/swagger-starter</module>
+        <module>swagger/think-swagger-ui-starter</module>
+        <module>activiti/activiti-starter</module>
+        <module>activiti/activiti-starter-run</module>
+        <module>extend/rate-limiter-starter</module>
+        <module>extend/standby-data-starter</module>
+        <module>quartz/quartz-starter</module>
+        <module>quartz/quartz-demo-run</module>
     </modules>
 
     <repositories>

@@ -6,16 +6,12 @@
         <artifactId>base</artifactId>
         <groupId>com.cditer.free</groupId>
         <version>2.0.0</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>swagger-starter</artifactId>
+    <artifactId>standby-data-starter</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 </project>
