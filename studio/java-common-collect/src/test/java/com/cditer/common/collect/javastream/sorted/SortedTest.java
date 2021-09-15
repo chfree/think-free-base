@@ -1,9 +1,11 @@
 package com.cditer.common.collect.javastream.sorted;
 
+import com.cditer.common.collect.model.User;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,4 +39,20 @@ public class SortedTest {
         Assert.assertEquals(String.join(",", sortedStrList),"-8,2,8,19");
 
     }
+
+    @Test
+    public void testModelSorted(){
+        List<User> users = new ArrayList<>();
+        users.add(new User("cheng", 18));
+        users.add(new User("chfree", 16));
+        users.add(new User("ch", 20));
+
+        List<User> sortedUsers = users.stream().sorted(Comparator.comparing(item -> item.getAge())).collect(Collectors.toList());
+
+        List<String> ages = sortedUsers.stream().map(item -> String.valueOf(item.getAge())).collect(Collectors.toList());
+
+        Assert.assertEquals("16,18,20", String.join(",", ages));
+    }
+
+
 }
