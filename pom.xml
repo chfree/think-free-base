@@ -12,6 +12,7 @@
         <module>common/core-starter</module>
         <module>data/data-starter</module>
         <module>data/data-starter-run</module>
+        <module>data/user-data-server</module>
         <module>web/web-starter</module>
         <module>web/web-starter-run</module>
         <module>swagger/swagger-starter</module>
