@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.cditer.free.core.autoconfig.CoreAutoConfiguration
+com.cditer.free.login.autoconfig.LoginWebAutoConfiguration

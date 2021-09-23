@@ -1,6 +1,6 @@
 package com.cditer.free.core.util;
 
-import com.cditer.free.core.boot.autoconfig.CoreBootConfig;
+import com.cditer.free.core.autoconfig.CoreBootConfig;
 
 /**
  * @author chfree

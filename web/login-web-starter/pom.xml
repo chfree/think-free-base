@@ -23,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>com.cditer.free</groupId>
-            <artifactId>user-data-server</artifactId>
+            <artifactId>user-data-service-starter</artifactId>
             <version>2.0.0</version>
         </dependency>
     </dependencies>

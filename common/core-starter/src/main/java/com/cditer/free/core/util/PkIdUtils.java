@@ -2,7 +2,7 @@ package com.cditer.free.core.util;
 
 import cn.hutool.core.util.IdUtil;
 import com.cditer.free.core.enums.IdModeEnum;
-import com.cditer.free.core.boot.autoconfig.CoreBootConfig;
+import com.cditer.free.core.autoconfig.CoreBootConfig;
 
 /**
  * @author chfree
