@@ -15,4 +15,6 @@ public interface IUserDao extends ISuperDao<User> {
     int queryCountBySearch(UserSearch search);
 
     User queryModelBySearch(UserSearch search);
+
+    User queryModelByLogin(String account, String password);
 }

@@ -17,4 +17,8 @@ public interface IUserService extends ISuperService<User> {
     User queryModelBySearch(UserSearch search);
 
     User queryModelBySearch(String userId);
+
+    User queryModelByLogin(String account, String password);
+
+    String passwordFormat(String password);
 }

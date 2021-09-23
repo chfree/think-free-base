@@ -1,5 +1,6 @@
 package com.cditer.free.usersever.logical.service.impl;
 
+import cn.hutool.crypto.SecureUtil;
 import com.cditer.free.usersever.logical.dao.IUserDao;
 import com.cditer.free.usersever.logical.entity.model.User;
 import com.cditer.free.usersever.logical.entity.viewmodel.UserSearch;
@@ -37,5 +38,15 @@ public class UserServiceImpl extends SuperService<User> implements IUserService 
         userSearch.setId(userId);
 
         return queryModelBySearch(userSearch);
+    }
+
+    @Override
+    public User queryModelByLogin(String account, String password) {
+        return userDao.queryModelByLogin(account,passwordFormat(password));
+    }
+
+    @Override
+    public String passwordFormat(String password){
+        return SecureUtil.md5(password);
     }
 }

@@ -38,6 +38,16 @@ public class UserDaoImpl extends SuperDao<User> implements IUserDao {
         return queryModel(sqlExpression);
     }
 
+    @Override
+    public User queryModelByLogin(String account, String password) {
+        ISqlExpression sqlExpression=SqlExpressionFactory.createExpression();
+        sqlExpression.selectAllFrom(User.class)
+                .andEq("account",account)
+                .andEq("password",password);
+
+        return queryModel(sqlExpression);
+    }
+
     private void appendExpression(ISqlExpression sqlExpression, UserSearch search){
         sqlExpression.andEqNoEmpty("id",search.getId());
 
