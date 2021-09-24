@@ -2,6 +2,7 @@ package com.cditer.free.login.apis;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import com.cditer.free.core.cache.ICached;
 import com.cditer.free.core.message.web.BaseResponse;
 import com.cditer.free.core.util.SpringContextUtils;
 import com.cditer.free.login.handle.ILoginAllowIntceptor;
@@ -19,8 +20,6 @@ import com.cditer.free.user.logical.enums.LoginStatus;
 import com.cditer.free.user.logical.service.ILoginAuthService;
 import com.cditer.free.user.logical.service.IUserService;
 import com.cditer.free.user.utils.LoginUtil;
-import com.cditer.free.web.message.WebResponseStatus;
-import com.cditer.free.web.security.AuthorityApi;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -43,7 +42,10 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequestMapping(value = "/api/v1/authority/login/",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-public class LoginApi extends AuthorityApi {
+public class LoginApi {
+
+    //数据异常
+    private static final int LOGIN_ERROR=1001;
 
     @Autowired
     private IUserService userService;
@@ -52,13 +54,16 @@ public class LoginApi extends AuthorityApi {
     private ILoginAuthService loginAuthService;
 
     @Autowired
-    CreateTokenFactory createTokenFactory;
+    private CreateTokenFactory createTokenFactory;
 
     @Autowired
-    JwtHelper jwtHelper;
+    private JwtHelper jwtHelper;
 
     @Autowired
-    LoginConfig loginConfig;
+    private LoginConfig loginConfig;
+
+    @Autowired
+    private ICached cached;
 
     @PostMapping("login")
     @Transactional
@@ -72,14 +77,14 @@ public class LoginApi extends AuthorityApi {
         User user = userService.queryModelByLogin(loginReq.getUsername(),loginReq.getPassword());
         if(user==null){
             response.setMessage("用户名或密码不正确");
-            response.setStatus(WebResponseStatus.DATA_ERROR);
+            response.setStatus(LOGIN_ERROR);
             return response;
         }
 
         // 用户名密码正确了，在检查状态是否正常,不是正常则不允许登陆
         if(!LoginStatus.NORMAL.getValue().equals(user.getStatus())){
             response.setMessage("您的用户状态处于【"+LoginStatus.convert2Text(user.getStatus())+"】，暂时无法登陆，请联系管理员");
-            response.setStatus(WebResponseStatus.DATA_ERROR);
+            response.setStatus(LOGIN_ERROR);
             return response;
         }
 
@@ -97,7 +102,7 @@ public class LoginApi extends AuthorityApi {
         // 执行Logined切入点
         if(!isAllowLogin(loginModel, user)){
             response.setMessage("该用户暂时无法登陆，请联系管理员");
-            response.setStatus(WebResponseStatus.DATA_ERROR);
+            response.setStatus(LOGIN_ERROR);
             return;
         }
 
@@ -176,5 +181,9 @@ public class LoginApi extends AuthorityApi {
 
         resp.put("pubKey", pubKey);
         return resp;
+    }
+
+    private LoginModel getCurrentLogin(){
+        return new LoginModel();
     }
 }
