@@ -1,7 +1,7 @@
-package com.cditer.free.web.aspect;
+package com.cditer.free.coreweb.aspect;
 
 import cn.hutool.json.JSONUtil;
-import com.cditer.free.web.configuration.ThinkWebConfig;
+import com.cditer.free.coreweb.configuration.ThinkWebConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -32,7 +32,7 @@ public class LogInfo {
     @Autowired
     ThinkWebConfig webConfig;
 
-    @Pointcut("execution( public * com.tennetcn..*.apis..*.* (..)) && @within(org.springframework.web.bind.annotation.RequestMapping)")
+    @Pointcut("execution( public * com.cditer..*.apis..*.* (..)) && @within(org.springframework.web.bind.annotation.RequestMapping)")
     public void weblog() {};
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping) " +
