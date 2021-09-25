@@ -12,9 +12,8 @@
         <module>common/core-starter</module>
         <module>data/data-starter</module>
         <module>data/data-starter-run</module>
-        <module>data/user-data-service-starter</module>
+        <module>web/core-web-starter</module>
         <module>web/webmvc-starter</module>
-        <module>web/login-web-starter</module>
         <module>web/webmvc-starter-run</module>
         <module>swagger/swagger-starter</module>
         <module>swagger/think-swagger-ui-starter</module>
@@ -186,6 +185,16 @@
             <dependency>
                 <groupId>com.cditer.free</groupId>
                 <artifactId>core-web-starter</artifactId>
+                <version>${think.free.base.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.cditer.free</groupId>
+                <artifactId>login-web-starter</artifactId>
+                <version>${think.free.base.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.cditer.free</groupId>
+                <artifactId>user-data-service-starter</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
