@@ -1,4 +1,4 @@
-package com.cditer.free.web.filter.checkhelper;
+package com.cditer.free.webmvc.filter.checkhelper;
 
 import com.cditer.free.core.util.StringHelper;
 import com.cditer.free.coreweb.configuration.CheckMacConfig;

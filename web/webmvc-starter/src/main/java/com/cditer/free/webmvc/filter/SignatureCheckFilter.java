@@ -1,12 +1,12 @@
-package com.cditer.free.web.filter;
+package com.cditer.free.webmvc.filter;
 
 import cn.hutool.json.JSONUtil;
 import com.cditer.free.core.exception.BizException;
 import com.cditer.free.core.message.web.BaseResponse;
 import com.cditer.free.core.message.web.ResponseStatus;
 import com.cditer.free.coreweb.configuration.CheckMacConfig;
-import com.cditer.free.web.filter.checkhelper.CachingRequestWrapper;
-import com.cditer.free.web.filter.checkhelper.ICheckHelper;
+import com.cditer.free.webmvc.filter.checkhelper.CachingRequestWrapper;
+import com.cditer.free.webmvc.filter.checkhelper.ICheckHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.filter.OrderedFilter;
 import org.springframework.util.PatternMatchUtils;

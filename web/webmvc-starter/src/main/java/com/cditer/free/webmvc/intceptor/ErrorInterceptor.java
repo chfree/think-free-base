@@ -1,4 +1,4 @@
-package com.cditer.free.web.intceptor;
+package com.cditer.free.webmvc.intceptor;
 
 import org.springframework.web.servlet.HandlerInterceptor;
 

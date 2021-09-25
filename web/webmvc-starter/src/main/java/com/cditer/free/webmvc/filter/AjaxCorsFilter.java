@@ -1,4 +1,4 @@
-package com.cditer.free.web.filter;
+package com.cditer.free.webmvc.filter;
 
 import org.springframework.boot.web.servlet.filter.OrderedFilter;
 import org.springframework.web.cors.CorsConfiguration;

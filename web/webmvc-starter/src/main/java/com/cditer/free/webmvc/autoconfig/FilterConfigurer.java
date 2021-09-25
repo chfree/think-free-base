@@ -1,20 +1,18 @@
-package com.cditer.free.web.autoconfig;
+package com.cditer.free.webmvc.autoconfig;
 
 import com.cditer.free.coreweb.configuration.CheckMacConfig;
 import com.cditer.free.coreweb.configuration.ThinkWebConfig;
-import com.cditer.free.web.filter.AjaxCorsFilter;
-import com.cditer.free.web.filter.SignatureCheckFilter;
-import com.cditer.free.web.filter.TraceIdFilter;
-import com.cditer.free.web.filter.checkhelper.ICheckHelper;
-import com.cditer.free.web.filter.checkhelper.MacCheckHelper;
-import com.cditer.free.web.filter.checkhelper.TimestampCheckHelper;
+import com.cditer.free.webmvc.filter.AjaxCorsFilter;
+import com.cditer.free.webmvc.filter.SignatureCheckFilter;
+import com.cditer.free.webmvc.filter.TraceIdFilter;
+import com.cditer.free.webmvc.filter.checkhelper.ICheckHelper;
+import com.cditer.free.webmvc.filter.checkhelper.MacCheckHelper;
+import com.cditer.free.webmvc.filter.checkhelper.TimestampCheckHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;

@@ -1,6 +1,6 @@
-package com.cditer.free.web.adapter;
+package com.cditer.free.webmvc.adapter;
 
-import com.cditer.free.web.intceptor.ErrorInterceptor;
+import com.cditer.free.webmvc.intceptor.ErrorInterceptor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

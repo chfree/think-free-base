@@ -1,4 +1,4 @@
-package com.cditer.free.web.intceptor;
+package com.cditer.free.webmvc.intceptor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NamedThreadLocal;

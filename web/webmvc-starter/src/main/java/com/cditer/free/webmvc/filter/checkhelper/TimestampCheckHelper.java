@@ -1,4 +1,4 @@
-package com.cditer.free.web.filter.checkhelper;
+package com.cditer.free.webmvc.filter.checkhelper;
 
 import cn.hutool.crypto.digest.DigestUtil;
 import org.springframework.stereotype.Component;
