@@ -180,7 +180,12 @@
             </dependency>
             <dependency>
                 <groupId>com.cditer.free</groupId>
-                <artifactId>web-starter</artifactId>
+                <artifactId>webmvc-starter</artifactId>
+                <version>${think.free.base.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.cditer.free</groupId>
+                <artifactId>core-web-starter</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
