@@ -189,16 +189,6 @@
             </dependency>
             <dependency>
                 <groupId>com.cditer.free</groupId>
-                <artifactId>login-web-starter</artifactId>
-                <version>${think.free.base.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.cditer.free</groupId>
-                <artifactId>user-data-service-starter</artifactId>
-                <version>${think.free.base.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.cditer.free</groupId>
                 <artifactId>activiti-starter</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
@@ -217,36 +207,36 @@
                 <artifactId>quartz-starter</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.cditer.free.authority</groupId>
-                <artifactId>authority-data-starter</artifactId>
-                <version>${think.free.base.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.cditer.free.authority</groupId>
-                <artifactId>authority-security-starter</artifactId>
-                <version>${think.free.base.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.cditer.free.authority</groupId>
-                <artifactId>authority-login-starter</artifactId>
-                <version>${think.free.base.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.cditer.free.authority</groupId>
-                <artifactId>authority-web-starter</artifactId>
-                <version>${think.free.base.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.cditer.free.authority</groupId>
-                <artifactId>develop-data-starter</artifactId>
-                <version>${think.free.base.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.cditer.free.authority</groupId>
-                <artifactId>develop-web-starter</artifactId>
-                <version>${think.free.base.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.cditer.free.authority</groupId>-->
+<!--                <artifactId>authority-data-starter</artifactId>-->
+<!--                <version>${think.free.base.version}</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>com.cditer.free.authority</groupId>-->
+<!--                <artifactId>authority-security-starter</artifactId>-->
+<!--                <version>${think.free.base.version}</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>com.cditer.free.authority</groupId>-->
+<!--                <artifactId>authority-login-starter</artifactId>-->
+<!--                <version>${think.free.base.version}</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>com.cditer.free.authority</groupId>-->
+<!--                <artifactId>authority-web-starter</artifactId>-->
+<!--                <version>${think.free.base.version}</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>com.cditer.free.authority</groupId>-->
+<!--                <artifactId>develop-data-starter</artifactId>-->
+<!--                <version>${think.free.base.version}</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>com.cditer.free.authority</groupId>-->
+<!--                <artifactId>develop-web-starter</artifactId>-->
+<!--                <version>${think.free.base.version}</version>-->
+<!--            </dependency>-->
         </dependencies>
     </dependencyManagement>
 

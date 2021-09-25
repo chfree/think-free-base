@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.cditer.free</groupId>
-            <artifactId>web-starter</artifactId>
+            <artifactId>webmvc-starter</artifactId>
         </dependency>
         <dependency>
             <groupId>com.cditer.free</groupId>
