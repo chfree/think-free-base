@@ -14,5 +14,5 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @PropertySource("classpath:web-boot.properties")
 @ImportResource(locations={"classpath:core-web-boot-config.xml"})
-public class CoreWebConfiguration {
+public class CoreWebAutoConfiguration {
 }
