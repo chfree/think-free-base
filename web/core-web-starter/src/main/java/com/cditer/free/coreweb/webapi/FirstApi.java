@@ -17,9 +17,6 @@ import java.util.Date;
 @Slf4j
 @Data
 public abstract class FirstApi {
-
-    ServletWebRequest servletWebRequest;
-
     @Autowired
     protected HttpServletRequest servletRequest;
 
