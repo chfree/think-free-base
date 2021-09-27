@@ -10,6 +10,7 @@
     <version>2.0.0</version>
     <modules>
         <module>common/core-starter</module>
+        <module>common/jwt-util</module>
         <module>data/data-starter</module>
         <module>data/data-starter-run</module>
         <module>web/core-web-starter</module>
@@ -165,6 +166,11 @@
             <dependency>
                 <groupId>com.cditer.free</groupId>
                 <artifactId>core-starter</artifactId>
+                <version>${think.free.base.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.cditer.free</groupId>
+                <artifactId>jwt-util</artifactId>
                 <version>${think.free.base.version}</version>
             </dependency>
             <dependency>
