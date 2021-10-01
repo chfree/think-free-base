@@ -1,7 +1,7 @@
 package com.cditer.free.jwt.core;
 
 import com.cditer.free.jwt.config.JwtConfig;
-import com.cditer.free.security.message.LoginModel;
+import com.cditer.free.core.message.security.LoginModel;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

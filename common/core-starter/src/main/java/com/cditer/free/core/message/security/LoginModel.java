@@ -1,4 +1,4 @@
-package com.cditer.free.security.message;
+package com.cditer.free.core.message.security;
 
 import cn.hutool.core.map.MapUtil;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
