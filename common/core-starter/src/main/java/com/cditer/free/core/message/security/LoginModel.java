@@ -1,12 +1,6 @@
 package com.cditer.free.core.message.security;
 
-import cn.hutool.core.map.MapUtil;
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import lombok.Data;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author chfree
