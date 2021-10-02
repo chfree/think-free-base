@@ -1,5 +1,6 @@
 package com.cditer.free.core.util;
 
+import com.cditer.free.core.exception.BizException;
 import com.cditer.free.core.message.common.ClassMetadata;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
@@ -20,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class ReflectUtils {
-    public static ClassMetadata getField(Object object, String fieldName) throws IllegalAccessException {
+    public static ClassMetadata getField(Object object, String fieldName){
         if (object == null) {
             return null;
         }
@@ -33,7 +34,11 @@ public class ReflectUtils {
                 classMetadata.setTypeName(field.getType().getTypeName());
 
                 field.setAccessible(true);
-                classMetadata.setValue(field.get(object));
+                try {
+                    classMetadata.setValue(field.get(object));
+                } catch (IllegalAccessException e) {
+                    throw new BizException(e);
+                }
 
                 return classMetadata;
             }
@@ -48,7 +53,7 @@ public class ReflectUtils {
         return field.getName();
     }
 
-    public static Field getField(SerializableFunction<?, ?> function) {
+    public static <T, R> Field getField(SerializableFunction<T, R> function) {
         return cache.computeIfAbsent(function, ReflectUtils::findField);
     }
 
@@ -57,7 +62,7 @@ public class ReflectUtils {
         return field.getAnnotation(type);
     }
 
-    public static Field findField(SerializableFunction<?, ?> function) {
+    public static <T, R> Field findField(SerializableFunction<T, R> function) {
         Field field = null;
         String fieldName = null;
         try {
