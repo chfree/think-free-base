@@ -1,5 +1,6 @@
 package com.cditer.free.core.util;
 
+import com.cditer.free.core.cache.ICached;
 import com.cditer.free.core.exception.BizException;
 import com.cditer.free.core.message.common.ClassMetadata;
 import org.springframework.util.ClassUtils;
@@ -21,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class ReflectUtils {
-    public static ClassMetadata getField(Object object, String fieldName){
+    public static ClassMetadata getField(Object object, String fieldName) {
         if (object == null) {
             return null;
         }
@@ -46,7 +47,26 @@ public class ReflectUtils {
         return null;
     }
 
-    private static Map<SerializableFunction<?, ?>, Field> cache = new ConcurrentHashMap<>();
+    private static Map<SerializableFunction<?, ?>, Field> staticCacheMap = new ConcurrentHashMap<>();
+
+    private static final String SERIALIZABLE_FUNCTION_KEY = "serializableFunctionKey";
+
+    private static Map<SerializableFunction<?, ?>, Field> getCache() {
+        ICached cached = SpringContextUtils.getBean(ICached.class);
+
+        if(cached == null){
+            return staticCacheMap;
+        }
+
+        Map<SerializableFunction<?, ?>, Field> cacheMap = (Map<SerializableFunction<?, ?>, Field>) cached.get(SERIALIZABLE_FUNCTION_KEY, Map.class);
+
+        if (cacheMap == null) {
+            cacheMap = new ConcurrentHashMap<>();
+            cached.put(SERIALIZABLE_FUNCTION_KEY, cacheMap);
+        }
+
+        return cacheMap;
+    }
 
     public static <T, R> String getFieldName(SerializableFunction<T, R> function) {
         Field field = ReflectUtils.getField(function);
@@ -54,10 +74,10 @@ public class ReflectUtils {
     }
 
     public static <T, R> Field getField(SerializableFunction<T, R> function) {
-        return cache.computeIfAbsent(function, ReflectUtils::findField);
+        return getCache().computeIfAbsent(function, ReflectUtils::findField);
     }
 
-    public static <T,R,A extends Annotation> A getFieldByAnno(SerializableFunction<T, R> function, Class<A> type){
+    public static <T, R, A extends Annotation> A getFieldByAnno(SerializableFunction<T, R> function, Class<A> type) {
         Field field = getField(function);
         return field.getAnnotation(type);
     }

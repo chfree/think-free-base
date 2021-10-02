@@ -20,4 +20,12 @@ public class SpringContextUtils implements ApplicationContextAware {
     public static void setCurrentContext(ApplicationContext applicationContext) {
         context=applicationContext;
     }
+
+    public static <T> T getBean(Class<?> clazz){
+        ApplicationContext currentContext = getCurrentContext();
+        if(currentContext==null){
+            return null;
+        }
+        return (T)currentContext.getBean(clazz);
+    }
 }
