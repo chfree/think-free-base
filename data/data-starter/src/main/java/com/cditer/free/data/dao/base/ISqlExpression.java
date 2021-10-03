@@ -2,6 +2,7 @@ package com.cditer.free.data.dao.base;
 
 import com.cditer.free.core.enums.OrderEnum;
 import com.cditer.free.core.message.data.PagerModel;
+import com.cditer.free.core.util.SerializableFunction;
 import com.cditer.free.data.message.OrderInfo;
 
 import java.util.List;
@@ -24,6 +25,8 @@ public interface ISqlExpression {
 	ISqlExpression andWhere(String value);
 	
 	ISqlExpression andEq(String column,String value);
+
+	<T, R> ISqlExpression andEq(SerializableFunction<T, R> column, String value);
 
 	ISqlExpression andLike(String column,String value);
 
@@ -114,6 +117,8 @@ public interface ISqlExpression {
 	ISqlExpression selectCount(String column);
 	
 	ISqlExpression select(String... bodys);
+
+	<T, R> ISqlExpression select(SerializableFunction<T, R>... bodys);
 
 	ISqlExpression appendSelect(String... bodys);
 	
