@@ -303,7 +303,7 @@ public class SqlExpression implements ISqlExpression {
 	@Override
 	public ISqlExpression selectDistinct(String... bodys) {
 		if (bodys != null && bodys.length > 0) {
-			String body = StringHelper.join(bodys, ",");
+			String body = String.join(",", bodys);
 			addBody("select distinct " + body);
 		}
 		sqlOperateMode = SqlOperateMode.select;
@@ -479,7 +479,7 @@ public class SqlExpression implements ISqlExpression {
 	@Override
 	public ISqlExpression select(String... bodys) {
 		if (bodys != null && bodys.length > 0) {
-			String body = StringHelper.join(bodys, ",");
+			String body = String.join(",", bodys);
 			addBody("select " + body);
 		}
 		sqlOperateMode = SqlOperateMode.select;
@@ -489,7 +489,7 @@ public class SqlExpression implements ISqlExpression {
 	@Override
 	public ISqlExpression appendSelect(String... bodys){
 		if (bodys != null && bodys.length > 0) {
-			String body = StringHelper.join(bodys, ",");
+			String body = String.join(",", bodys);
 			addBody(","+body);
 		}
 		return this;
@@ -559,7 +559,7 @@ public class SqlExpression implements ISqlExpression {
 	
 	public ISqlExpression set(String... columnKeys){
 		if(columnKeys!=null&&columnKeys.length>0){
-			String sets=StringHelper.join(columnKeys,",");
+			String sets=String.join(",", columnKeys);
 			if(setBuffer.length()==0){
 				setBuffer.append(" set ");
 				setBuffer.append(sets);
