@@ -48,7 +48,6 @@ public class SqlExpression implements ISqlExpression {
 
     private StringBuffer bodyBuffer = new StringBuffer();
 
-    // private StringBuffer orderBuffer = new StringBuffer();
     private List<String> orderList = new ArrayList<>();
 
     private StringBuffer groupBuffer = new StringBuffer();
@@ -319,12 +318,6 @@ public class SqlExpression implements ISqlExpression {
         return this;
     }
 
-    @Override
-    public ISqlExpression addBody(String body, Class<?> tClass) {
-        bodyBuffer.append(" " + body + " " + ClassAnnotationUtils.getTableName(tClass));
-        return this;
-    }
-
     public Map<String, Object> getParams() {
         return params;
     }
@@ -361,7 +354,7 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public ISqlExpression limit(PagerModel pagerModel) {
-        limitBuffer.append(" limit " + pagerModel.getCurrentSize() + " , " + pagerModel.getPageSize());
+        limitBuffer.append(" limit " + pagerModel.getCurrentSize() + "," + pagerModel.getPageSize());
         return this;
     }
 
@@ -566,7 +559,11 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public ISqlExpression select(String body) {
-        addBody("select " + body);
+        if(bodyBuffer.indexOf("select ")>=0) {
+            addBody("," + body);
+        }else{
+            addBody("select " + body);
+        }
         sqlOperateMode = SqlOperateMode.select;
         return this;
     }
@@ -577,12 +574,23 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
+    public <T, R> ISqlExpression appendSelect(SerializableFunction<T, R> column) {
+        return appendSelect(function2ColumnName(column));
+    }
+
+    @Override
     public ISqlExpression select(String... bodys) {
-        if (bodys != null && bodys.length > 0) {
-            String body = String.join(",", bodys);
-            addBody("select " + body);
+        if (bodys == null && bodys.length <= 0) {
+            return this;
         }
         sqlOperateMode = SqlOperateMode.select;
+
+        String body = String.join(",", bodys);
+        if(bodyBuffer.indexOf("select ")>=0){
+            addBody("," + body);
+        }else{
+            addBody("select " + body);
+        }
         return this;
     }
 

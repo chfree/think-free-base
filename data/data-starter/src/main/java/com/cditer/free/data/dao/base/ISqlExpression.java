@@ -112,8 +112,6 @@ public interface ISqlExpression {
 
     ISqlExpression addBody(String body);
 
-    ISqlExpression addBody(String body, Class<?> tClass);
-
     ISqlExpression leftJoin(String body);
 
     ISqlExpression leftJoin(Class<?> tClass, String alias);
@@ -137,6 +135,8 @@ public interface ISqlExpression {
     ISqlExpression select(String body);
 
     ISqlExpression appendSelect(String body);
+
+    <T, R> ISqlExpression appendSelect(SerializableFunction<T, R> column);
 
     ISqlExpression selectCount();
 

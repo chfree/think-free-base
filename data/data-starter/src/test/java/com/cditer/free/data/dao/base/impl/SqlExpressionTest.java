@@ -1,5 +1,6 @@
 package com.cditer.free.data.dao.base.impl;
 
+import cn.hutool.db.sql.Order;
 import com.cditer.free.core.enums.OrderEnum;
 import com.cditer.free.core.util.ReflectUtils;
 import com.cditer.free.data.dao.base.ISqlExpression;
@@ -265,34 +266,101 @@ public class SqlExpressionTest {
 
     @Test
     public void addOrder() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andEq("name", "cheng").addOrder("name", OrderEnum.asc).addOrder("age", OrderEnum.desc);
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name=#{name}) order by name asc,age desc");
     }
 
     @Test
     public void addBody() {
-    }
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.addBody("select name,age").from(TestDataUser.class, "u").andEq(TestDataUser::getName, "cheng");
 
-    @Test
-    public void testAddBody() {
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from basic_authority_user u where (name=#{name})");
+        Assert.assertEquals("cheng", sqlExpression.getParams().get("name"));
     }
 
     @Test
     public void getParams() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.setParam("name", "cheng");
+
+        Assert.assertEquals("cheng", sqlExpression.getParams().get("name"));
     }
 
     @Test
     public void union() {
+        ISqlExpression sqlExpression = getEmptySql();
+        ISqlExpression sql1 = getEmptySql();
+        ISqlExpression sql2 = getEmptySql();
+
+        sql1.select("name,age").from("user1").andEq("name", "cheng");
+        sql2.select("name,age").from("user2").andEq(TestDataUser::getAccount, "1234");
+
+        sqlExpression.union(sql1, sql2);
+
+        Assert.assertEquals(sqlExpression.toSql(),"(select name,age from user1 where (name=#{name})) union (select name,age from user2 where (account=#{account}))");
+        Assert.assertEquals(sqlExpression.getParams().get("account"), sql2.getParams().get("account"));
+        Assert.assertEquals(sqlExpression.getParams().get("name"), sql1.getParams().get("name"));
     }
 
     @Test
     public void addUnion() {
+        ISqlExpression sqlExpression = getEmptySql();
+        ISqlExpression sql1 = getEmptySql();
+        ISqlExpression sql2 = getEmptySql();
+
+        sql1.select("name,age").from("user1").andEq("name", "cheng");
+        sql2.select("name,age").from("user2").andEq(TestDataUser::getAccount, "1234");
+
+        sqlExpression.union(sql1, sql2);
+
+        ISqlExpression sql3 = getEmptySql();
+        sql3.select("name,age").from("user3").andEq(TestDataUser::getBuId, "buid");
+        sqlExpression.addUnion(sql3);
+
+        Assert.assertEquals(sqlExpression.toSql(),"(select name,age from user1 where (name=#{name})) union (select name,age from user2 where (account=#{account})) union (select name,age from user3 where (bu_id=#{bu_id}))");
+        Assert.assertEquals(sqlExpression.getParams().get("account"), sql2.getParams().get("account"));
+        Assert.assertEquals(sqlExpression.getParams().get("name"), sql1.getParams().get("name"));
+        Assert.assertEquals(sqlExpression.getParams().get("bu_id"), sql3.getParams().get("bu_id"));
     }
 
     @Test
     public void unionAll() {
+        ISqlExpression sqlExpression = getEmptySql();
+        ISqlExpression sql1 = getEmptySql();
+        ISqlExpression sql2 = getEmptySql();
+
+        sql1.select("name,age").from("user1").andEq("name", "cheng");
+        sql2.select("name,age").from("user2").andEq(TestDataUser::getAccount, "1234");
+
+        sqlExpression.unionAll(sql1, sql2);
+
+        Assert.assertEquals(sqlExpression.toSql(),"(select name,age from user1 where (name=#{name})) union all (select name,age from user2 where (account=#{account}))");
+        Assert.assertEquals(sqlExpression.getParams().get("account"), sql2.getParams().get("account"));
+        Assert.assertEquals(sqlExpression.getParams().get("name"), sql1.getParams().get("name"));
     }
 
     @Test
     public void addUnionAll() {
+        ISqlExpression sqlExpression = getEmptySql();
+        ISqlExpression sql1 = getEmptySql();
+        ISqlExpression sql2 = getEmptySql();
+
+        sql1.select("name,age").from("user1").andEq("name", "cheng");
+        sql2.select("name,age").from("user2").andEq(TestDataUser::getAccount, "1234");
+
+        sqlExpression.unionAll(sql1, sql2);
+
+        ISqlExpression sql3 = getEmptySql();
+        sql3.select("name,age").from("user3").andEq(TestDataUser::getBuId, "buid");
+        sqlExpression.addUnionAll(sql3);
+
+        Assert.assertEquals(sqlExpression.toSql(),"(select name,age from user1 where (name=#{name})) union all (select name,age from user2 where (account=#{account})) union all (select name,age from user3 where (bu_id=#{bu_id}))");
+        Assert.assertEquals(sqlExpression.getParams().get("account"), sql2.getParams().get("account"));
+        Assert.assertEquals(sqlExpression.getParams().get("name"), sql1.getParams().get("name"));
+        Assert.assertEquals(sqlExpression.getParams().get("bu_id"), sql3.getParams().get("bu_id"));
     }
 
     @Test
@@ -381,6 +449,18 @@ public class SqlExpressionTest {
 
     @Test
     public void select() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name").select("age").from(TestDataUser.class);
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,age from basic_authority_user");
+    }
+
+    @Test
+    public void selectFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select(TestDataUser::getName).select(TestDataUser::getAccount).from(TestDataUser.class);
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,account from basic_authority_user");
     }
 
     @Test
@@ -502,8 +582,8 @@ public class SqlExpressionTest {
     @Test
     public void testSelectFun() {
         ISqlExpression sqlExpression = getEmptySql();
-        sqlExpression.select(TestDataUser::getName,TestDataUser::getAccount).from(TestDataUser.class);
+        sqlExpression.select(TestDataUser::getName,TestDataUser::getAccount).appendSelect(TestDataUser::getBuId).from(TestDataUser.class);
 
-        Assert.assertEquals(sqlExpression.toSql(), String.format("select name,account from basic_authority_user"));
+        Assert.assertEquals(sqlExpression.toSql(), String.format("select name,account,bu_id from basic_authority_user"));
     }
 }
