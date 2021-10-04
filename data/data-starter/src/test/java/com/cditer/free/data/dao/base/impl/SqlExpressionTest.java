@@ -1,5 +1,6 @@
 package com.cditer.free.data.dao.base.impl;
 
+import com.cditer.free.core.enums.OrderEnum;
 import com.cditer.free.core.util.ReflectUtils;
 import com.cditer.free.data.dao.base.ISqlExpression;
 import com.cditer.free.data.test.model.TestDataUser;
@@ -24,10 +25,19 @@ public class SqlExpressionTest {
 
     @Test
     public void getSqlExpression() {
+        ISqlExpression sqlExpression = getEmptySql();
+
+        Assert.assertNotNull(sqlExpression.getSqlExpression());
+        Assert.assertEquals(sqlExpression, sqlExpression.getSqlExpression());
     }
 
     @Test
     public void andWhere() {
+        ISqlExpression sqlExpression = getEmptySql();
+
+        sqlExpression.select("name").from("user").andWhere("id=#{id}");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name from user where (id=#{id})");
     }
 
     @Test
@@ -52,66 +62,205 @@ public class SqlExpressionTest {
 
     @Test
     public void andLike() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andLike("name", "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like %#{name}%)");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+    }
+
+    @Test
+    public void andLikeFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andLike(TestDataUser::getName, "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like %#{name}%)");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
     }
 
     @Test
     public void andRightLike() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andRightLike("name", "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like #{name}%)");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+    }
+
+    @Test
+    public void andRightLikeFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andRightLike(TestDataUser::getName, "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like #{name}%)");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
     }
 
     @Test
     public void andLikeNoEmpty() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andLikeNoEmpty("name", "cheng").andLikeNoEmpty("age", null);
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like %#{name}%)");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertFalse(sqlExpression.getParams().containsKey("age"));
+    }
+
+    @Test
+    public void andLikeNoEmptyFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andLikeNoEmpty(TestDataUser::getName, "cheng").andLikeNoEmpty(TestDataUser::getAccount, null);
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like %#{name}%)");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertFalse(sqlExpression.getParams().containsKey("account"));
     }
 
     @Test
     public void andRightLikeNoEmpty() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andRightLikeNoEmpty("name", "cheng").andRightLikeNoEmpty("age", null);
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like #{name}%)");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertFalse(sqlExpression.getParams().containsKey("age"));
+    }
+
+    @Test
+    public void andRightLikeNoEmptyFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andRightLikeNoEmpty(TestDataUser::getName, "cheng").andRightLikeNoEmpty(TestDataUser::getAccount, null);
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like #{name}%)");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertFalse(sqlExpression.getParams().containsKey("account"));
     }
 
     @Test
     public void andEqNoEmpty() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andEqNoEmpty("name", "cheng").andEqNoEmpty("age", null);
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name=#{name})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertFalse(sqlExpression.getParams().containsKey("age"));
+    }
+
+    @Test
+    public void andEqNoEmptyFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andEqNoEmpty(TestDataUser::getName, "cheng").andEqNoEmpty(TestDataUser::getAccount, null);
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name=#{name})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertFalse(sqlExpression.getParams().containsKey("account"));
     }
 
     @Test
     public void andNotEq() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andNotEq("name", "cheng").andNotEq("age", null);
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name!=#{name}) and (age!=#{age})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertTrue(sqlExpression.getParams().containsKey("age"));
+    }
+
+    @Test
+    public void andNotEqFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andNotEq(TestDataUser::getName, "cheng").andNotEq(TestDataUser::getAccount, null);
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name!=#{name}) and (account!=#{account})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertTrue(sqlExpression.getParams().containsKey("account"));
     }
 
     @Test
     public void andNotLike() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andNotLike("name", "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name not like %#{name}%)");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+    }
+
+    @Test
+    public void andNotLikeFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andNotLike(TestDataUser::getName, "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name not like %#{name}%)");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
     }
 
     @Test
     public void andNotLikeNoEmpty() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andNotLikeNoEmpty("name", "cheng").andNotLikeNoEmpty("age", null);
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name not like %#{name}%)");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertFalse(sqlExpression.getParams().containsKey("age"));
+    }
+
+    @Test
+    public void andNotLikeNoEmptyFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andNotLikeNoEmpty(TestDataUser::getName, "cheng").andNotLikeNoEmpty(TestDataUser::getAccount, null);
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name not like %#{name}%)");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertFalse(sqlExpression.getParams().containsKey("account"));
     }
 
     @Test
     public void andNotEqNoEmpty() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andNotEqNoEmpty("name", "cheng").andNotEqNoEmpty("age", null);
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name!=#{name})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertFalse(sqlExpression.getParams().containsKey("age"));
+
     }
 
     @Test
-    public void testAndEq1() {
-    }
+    public void andNotEqNoEmptyFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andNotEqNoEmpty(TestDataUser::getName, "cheng").andNotEqNoEmpty(TestDataUser::getAccount, null);
 
-    @Test
-    public void testAndEqNoEmpty() {
-    }
-
-    @Test
-    public void testAndNotEq() {
-    }
-
-    @Test
-    public void testAndNotEqNoEmpty() {
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name!=#{name})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertFalse(sqlExpression.getParams().containsKey("account"));
     }
 
     @Test
     public void andMainTableWhere() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.setMainTableAlias("u");
+
+        sqlExpression.select("name,age").from("user").andMainTableWhere("name=#{name}");
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (u.name=#{name})");
     }
 
     @Test
     public void orWhere() {
+        ISqlExpression sqlExpression = getEmptySql();
+
+        sqlExpression.select("name,age").from("user").andEq("name", "cheng").orWhere("age=123");
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name=#{name}) or (age=123)");
     }
 
     @Test
     public void addOrders() {
+        ISqlExpression sqlExpression = getEmptySql();
+
+        sqlExpression.select("name,age").from("user").andEq("name", "cheng").addOrders(OrderEnum.asc, "name", "age");
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name=#{name}) order by name asc,age asc");
     }
 
     @Test

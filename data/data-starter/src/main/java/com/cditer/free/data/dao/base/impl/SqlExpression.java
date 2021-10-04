@@ -12,11 +12,13 @@ import com.cditer.free.data.message.OrderInfo;
 import com.cditer.free.data.message.SqlOperateMode;
 import com.cditer.free.data.utils.ClassAnnotationUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.annotation.ColumnType;
 import tk.mybatis.mapper.mapperhelper.SqlHelper;
 
 import javax.persistence.Column;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -46,7 +48,8 @@ public class SqlExpression implements ISqlExpression {
 
     private StringBuffer bodyBuffer = new StringBuffer();
 
-    private StringBuffer orderBuffer = new StringBuffer();
+    // private StringBuffer orderBuffer = new StringBuffer();
+    private List<String> orderList = new ArrayList<>();
 
     private StringBuffer groupBuffer = new StringBuffer();
 
@@ -109,9 +112,14 @@ public class SqlExpression implements ISqlExpression {
         column = resolveColumnMainTable(column);
         String paramName = resolveColumn(column);
 
-        this.andWhere(column + " like #{" + paramName + "}")
-                .setParam(paramName, "%" + value + "%");
+        this.andWhere(column + " like %#{" + paramName + "}%")
+                .setParam(paramName, value);
         return this;
+    }
+
+    @Override
+    public <T, R> ISqlExpression andLike(SerializableFunction<T, R> column, String value) {
+        return andLike(function2ColumnName(column), value);
     }
 
     @Override
@@ -119,9 +127,14 @@ public class SqlExpression implements ISqlExpression {
         column = resolveColumnMainTable(column);
         String paramName = resolveColumn(column);
 
-        this.andWhere(column + " like #{" + paramName + "}")
-                .setParam(paramName, value + "%");
+        this.andWhere(column + " like #{" + paramName + "}%")
+                .setParam(paramName, value);
         return this;
+    }
+
+    @Override
+    public <T, R> ISqlExpression andRightLike(SerializableFunction<T, R> column, String value) {
+        return andRightLike(function2ColumnName(column), value);
     }
 
     @Override
@@ -133,6 +146,11 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
+    public <T, R> ISqlExpression andLikeNoEmpty(SerializableFunction<T, R> column, String value) {
+        return andLikeNoEmpty(function2ColumnName(column), value);
+    }
+
+    @Override
     public ISqlExpression andRightLikeNoEmpty(String column, String value) {
         if (!StringUtils.isEmpty(value)) {
             return andRightLike(column, value);
@@ -141,11 +159,21 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
+    public <T, R> ISqlExpression andRightLikeNoEmpty(SerializableFunction<T, R> column, String value) {
+        return andRightLikeNoEmpty(function2ColumnName(column), value);
+    }
+
+    @Override
     public ISqlExpression andEqNoEmpty(String column, String value) {
         if (!StringUtils.isEmpty(value)) {
             return andEq(column, value);
         }
         return this;
+    }
+
+    @Override
+    public <T, R> ISqlExpression andEqNoEmpty(SerializableFunction<T, R> column, String value) {
+        return andEqNoEmpty(function2ColumnName(column), value);
     }
 
     @Override
@@ -159,13 +187,23 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
+    public <T, R> ISqlExpression andNotEq(SerializableFunction<T, R> column, String value) {
+        return andNotEq(function2ColumnName(column), value);
+    }
+
+    @Override
     public ISqlExpression andNotLike(String column, String value) {
         column = resolveColumnMainTable(column);
         String paramName = resolveColumn(column);
 
-        this.andWhere(column + " not like #{" + paramName + "}")
-                .setParam(paramName, "%" + value + "%");
+        this.andWhere(column + " not like %#{" + paramName + "}%")
+                .setParam(paramName, value);
         return this;
+    }
+
+    @Override
+    public <T, R> ISqlExpression andNotLike(SerializableFunction<T, R> column, String value) {
+        return andNotLike(function2ColumnName(column), value);
     }
 
     @Override
@@ -177,6 +215,11 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
+    public <T, R> ISqlExpression andNotLikeNoEmpty(SerializableFunction<T, R> column, String value) {
+        return andNotLikeNoEmpty(function2ColumnName(column), value);
+    }
+
+    @Override
     public ISqlExpression andNotEqNoEmpty(String column, String value) {
         if (!StringUtils.isEmpty(value)) {
             return andNotEq(column, value);
@@ -185,8 +228,18 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
+    public <T, R> ISqlExpression andNotEqNoEmpty(SerializableFunction<T, R> column, String value) {
+        return andNotEqNoEmpty(function2ColumnName(column), value);
+    }
+
+    @Override
     public ISqlExpression andEq(String column, int value) {
         return andEq(column, String.valueOf(value));
+    }
+
+    @Override
+    public <T, R> ISqlExpression andEq(SerializableFunction<T, R> column, int value) {
+        return andEq(function2ColumnName(column), value);
     }
 
     @Override
@@ -198,8 +251,18 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
+    public <T, R> ISqlExpression andEqNoEmpty(SerializableFunction<T, R> column, int value) {
+        return andEqNoEmpty(column, value);
+    }
+
+    @Override
     public ISqlExpression andNotEq(String column, int value) {
         return andNotEq(column, String.valueOf(value));
+    }
+
+    @Override
+    public <T, R> ISqlExpression andNotEq(SerializableFunction<T, R> column, int value) {
+        return andNotEq(function2ColumnName(column), value);
     }
 
     @Override
@@ -208,6 +271,11 @@ public class SqlExpression implements ISqlExpression {
             return andNotEq(column, value);
         }
         return this;
+    }
+
+    @Override
+    public <T, R> ISqlExpression andNotEqNoEmpty(SerializableFunction<T, R> column, int value) {
+        return andNotEqNoEmpty(function2ColumnName(column), value);
     }
 
     @Override
@@ -224,27 +292,23 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public ISqlExpression addOrders(OrderEnum order, String... columns) {
-        for (String column : columns) {
-            if (orderBuffer.length() == 0) {
-                orderBuffer.append(" order by ");
-                orderBuffer.append(" " + column + " ");
-            } else {
-                orderBuffer.append(" ," + column + " ");
-            }
-            orderBuffer.append(" " + order.name() + " ");
+        if (columns == null || columns.length <= 0) {
+            return this;
         }
+
+        List<String> orders = Arrays.stream(columns).map(item -> item + " " + order.name()).collect(Collectors.toList());
+        orderList.addAll(orders);
+
         return this;
     }
 
     @Override
     public ISqlExpression addOrder(String column, OrderEnum order) {
-        if (orderBuffer.length() == 0) {
-            orderBuffer.append(" order by ");
-            orderBuffer.append(" " + column + " ");
-        } else {
-            orderBuffer.append(" ," + column + " ");
+        if(!StringUtils.hasText(column)){
+            return this;
         }
-        orderBuffer.append(" " + order.name() + " ");
+
+        orderList.add(column + " " +order.name());
 
         return this;
     }
@@ -347,41 +411,42 @@ public class SqlExpression implements ISqlExpression {
         List<String> result = new ArrayList<>();
         result.add(bodyBuffer.toString());
         if (SqlOperateMode.select.equals(sqlOperateMode)) {
-            if(StringUtils.hasText(fromBuffer.toString())) {
+            if (StringUtils.hasText(fromBuffer.toString())) {
                 result.add(fromBuffer.toString());
             }
 
             String whereSql = getWhereString();
-            if(StringUtils.hasText(whereSql)) {
+            if (StringUtils.hasText(whereSql)) {
                 result.add(whereSql);
             }
-            if(StringUtils.hasText(groupBuffer.toString())) {
+            if (StringUtils.hasText(groupBuffer.toString())) {
                 result.add(groupBuffer.toString());
             }
-            if(StringUtils.hasText(orderBuffer.toString())) {
-                result.add(orderBuffer.toString());
+            if (!CollectionUtils.isEmpty(orderList)) {
+                String orderStr = "order by " + String.join(",", orderList);
+                result.add(orderStr);
             }
-            if(StringUtils.hasText(limitBuffer.toString())) {
+            if (StringUtils.hasText(limitBuffer.toString())) {
                 result.add(limitBuffer.toString());
             }
         } else if (SqlOperateMode.update.equals(sqlOperateMode)) {
-            if(StringUtils.hasText(fromBuffer.toString())) {
+            if (StringUtils.hasText(fromBuffer.toString())) {
                 result.add(fromBuffer.toString());
             }
-            if(StringUtils.hasText(setBuffer.toString())) {
+            if (StringUtils.hasText(setBuffer.toString())) {
                 result.add(setBuffer.toString());
             }
             String whereSql = getWhereString();
-            if(StringUtils.hasText(whereSql)) {
+            if (StringUtils.hasText(whereSql)) {
                 result.add(whereSql);
             }
         } else if (SqlOperateMode.delete.equals(sqlOperateMode)) {
-            if(StringUtils.hasText(fromBuffer.toString())) {
+            if (StringUtils.hasText(fromBuffer.toString())) {
                 result.add(fromBuffer.toString());
             }
 
             String whereSql = getWhereString();
-            if(StringUtils.hasText(whereSql)) {
+            if (StringUtils.hasText(whereSql)) {
                 result.add(whereSql);
             }
         } else if (SqlOperateMode.callFun.equals(sqlOperateMode)) {
@@ -523,21 +588,25 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression select(SerializableFunction<T, R>... bodys) {
-        if(bodys==null||bodys.length<=0){
+        if (bodys == null || bodys.length <= 0) {
             return this;
         }
         List<String> list = Arrays.stream(bodys).map(item -> function2ColumnName(item)).collect(Collectors.toList());
         return select(list.toArray(new String[0]));
     }
 
-    private <T, R> String function2ColumnName(SerializableFunction<T, R> function){
-        Column columnAnno = ReflectUtils.getFieldByAnno(function, Column.class);
-
-        if(columnAnno!=null){
+    @Override
+    public <T, R> String function2ColumnName(SerializableFunction<T, R> function) {
+        Field field = ReflectUtils.getField(function);
+        Column columnAnno = field.getAnnotation(Column.class);
+        if (columnAnno != null) {
             return columnAnno.name();
         }
-        String fieldName = ReflectUtils.getFieldName(function);
-        throw new BizException(String.format("%s @Cloumn is not find", fieldName));
+        ColumnType columnTypeAnno = field.getAnnotation(ColumnType.class);
+        if (columnTypeAnno != null) {
+            return columnTypeAnno.column();
+        }
+        return field.getName();
     }
 
     @Override
