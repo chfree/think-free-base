@@ -138,7 +138,7 @@ public class GlobalExceptionHandler {
         if(atLeastOneNotEmpty.equals(objectError.getCode())){
             if(objects.length==2){
                 String[] fields = (String[])objects[1];
-                return StringHelper.join(fields);
+                return String.join(",",fields);
             }
         }
 

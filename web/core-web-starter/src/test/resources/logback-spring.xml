@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 日志级别从低到高分为TRACE < DEBUG < INFO < WARN < ERROR < FATAL，如果设置为WARN，则低于WARN的信息都不会输出 -->
+<!-- scan:当此属性设置为true时，配置文件如果发生改变，将会被重新加载，默认值为true -->
+<!-- scanPeriod:设置监测配置文件是否有修改的时间间隔，如果没有给出时间单位，默认单位是毫秒。当scan为true时，此属性生效。默认的时间间隔为1分钟。 -->
+<!-- debug:当此属性设置为true时，将打印出logback内部日志信息，实时查看logback运行状态。默认值为false。 -->
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <!--<include resource="org/springframework/boot/logging/logback/base.xml"
+        /> -->
+
+    <contextName>commons-test</contextName>
+
+    <property name="CONSOLE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{48} [TraceNo=%X{bussiness} reqURL=%X{reqUrl}] - %msg%n" />
+
+
+    <!--输出到控制台 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <!-- 设置字符集 -->
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+    <logger name="org.springframework" additivity="false">
+        <level value="ERROR" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="com.zaxxer.hikari" additivity="false">
+        <level value="ERROR" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="tk.mybatis" additivity="false">
+        <level value="ERROR" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="org.mybatis.spring" additivity="false">
+        <level value="ERROR" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="springfox" additivity="false">
+        <level value="ERROR" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="org.hibernate.validator" additivity="false">
+        <level value="ERROR" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="org.quartz.core" additivity="false">
+        <level value="ERROR" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+</configuration>

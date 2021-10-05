@@ -93,4 +93,10 @@ public class ThinkWebConfig {
      */
     @Value("${think.path.template-path:}")
     private String templatePath;
+
+    /**
+     * 是否开启resolveEntity的默认解析
+     */
+    @Value("${think.web.resolve-entity.open-default:true}")
+    private boolean openDefaultResolveEntity;
 }
