@@ -246,6 +246,9 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public ISqlExpression andEqNoEmpty(String column, Integer value) {
+        if (value == null) {
+            return this;
+        }
         return andEq(column, value);
     }
 
@@ -256,13 +259,13 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public ISqlExpression andNotEq(String column, Integer value) {
-        if(value == null){
+        if (value == null) {
             return andNotEq(column, nullStr());
         }
         return andNotEq(column, String.valueOf(value));
     }
 
-    private String nullStr(){
+    private String nullStr() {
         return null;
     }
 
