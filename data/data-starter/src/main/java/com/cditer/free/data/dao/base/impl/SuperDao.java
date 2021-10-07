@@ -4,6 +4,7 @@ import cn.hutool.core.util.ReflectUtil;
 import com.cditer.free.core.enums.ModelStatus;
 import com.cditer.free.core.message.data.ModelBase;
 import com.cditer.free.core.message.data.PagerModel;
+import com.cditer.free.core.util.CommonUtils;
 import com.cditer.free.data.dao.base.*;
 import com.cditer.free.data.dao.base.mapper.SqlMapper;
 import com.cditer.free.data.message.DaoBaseRuntimeException;
@@ -445,13 +446,12 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
             return 0;
         }
         int insertCount = 0;
-        int sumSize = list.size();
-        int repeatCount = sumSize / batchSize + (sumSize % batchSize > 0 ? 1 : 0);
-        for (int i = 0; i < repeatCount; i++) {
-            List<E> currentList = list.stream().skip(i * batchSize).limit(batchSize).collect(Collectors.toList());
 
+        List<List<E>> lists = CommonUtils.listSlice(list, batchSize);
+        for (List<E> currentList : lists) {
             insertCount += mapper.insertListEx(currentList);
         }
+
         return insertCount;
     }
 

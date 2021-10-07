@@ -6,9 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class CommonUtils {
@@ -121,5 +124,20 @@ public class CommonUtils {
             log.warn("getHostName is error", e);
         }
         return hostName;
+    }
+
+    public static <T> List<List<T>> listSlice(List<T> list, int size){
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        List<List<T>> resultList = new ArrayList<>();
+        int sumSize = list.size();
+        int repeatCount = sumSize / size + (sumSize % size > 0 ? 1 : 0);
+        for (int i = 0; i < repeatCount; i++) {
+            List<T> currentList = list.stream().skip(i * size).limit(size).collect(Collectors.toList());
+
+            resultList.add(currentList);
+        }
+        return resultList;
     }
 }

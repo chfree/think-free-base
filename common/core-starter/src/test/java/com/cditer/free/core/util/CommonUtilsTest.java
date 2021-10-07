@@ -1,5 +1,6 @@
 package com.cditer.free.core.util;
 
+import cn.hutool.core.util.RandomUtil;
 import com.cditer.free.core.cache.CachedImpl;
 import com.cditer.free.core.cache.ICached;
 import com.cditer.free.core.util.CommonUtils;
@@ -13,6 +14,8 @@ import org.springframework.util.StringUtils;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 
@@ -133,5 +136,36 @@ public class CommonUtilsTest{
         String uuid = CommonUtils.getShortUUID();
         Assert.assertNotNull(uuid);
         Assert.assertTrue(uuid.length()==32);
+    }
+
+    @Test
+    public void listSliceTest(){
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 35; i++) {
+            list.add(String.valueOf(i));
+        }
+
+        List<List<String>> listSlice = CommonUtils.listSlice(list, 12);
+        Assert.assertTrue(listSlice.size()>0);
+
+        Integer sum = listSlice.stream().map(item -> item.size()).reduce(0, (a, b) -> {
+            return a + b;
+        });
+
+        Assert.assertEquals(list.size(), sum.intValue());
+
+        // 刚好整除
+        list = new ArrayList<>();
+        for (int i = 0; i < 48; i++) {
+            list.add(String.valueOf(i));
+        }
+
+        listSlice = CommonUtils.listSlice(list, 12);
+        Assert.assertTrue(listSlice.size()>0);
+
+        sum = listSlice.stream().map(item -> item.size()).reduce(0, (a, b) -> {
+            return a + b;
+        });
+        Assert.assertEquals(list.size(), sum.intValue());
     }
 }
