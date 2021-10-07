@@ -17,6 +17,10 @@ public class CommonUtils {
         return UUID.randomUUID().toString();
     }
 
+    public static String getShortUUID(){
+        return UUID.randomUUID().toString().replaceAll("-", "");
+    }
+
     public static String repairZero(int num,int length){
         String str = String.format("%0"+length+"d", num);
         return str;

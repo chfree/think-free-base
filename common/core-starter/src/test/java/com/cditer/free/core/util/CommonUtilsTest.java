@@ -127,4 +127,11 @@ public class CommonUtilsTest{
             Assert.assertEquals("UNHST", CommonUtils.getHostName());
         }
     }
+
+    @Test
+    public void getShortUUID() {
+        String uuid = CommonUtils.getShortUUID();
+        Assert.assertNotNull(uuid);
+        Assert.assertTrue(uuid.length()==32);
+    }
 }
