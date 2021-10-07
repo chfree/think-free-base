@@ -232,48 +232,55 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
-    public ISqlExpression andEq(String column, int value) {
-        return andEq(column, String.valueOf(value));
+    public ISqlExpression andEq(String column, Integer value) {
+        if (value == null) {
+            return andEq(column, nullStr());
+        }
+        return andEq(column, String.valueOf(value.intValue()));
     }
 
     @Override
-    public <T, R> ISqlExpression andEq(SerializableFunction<T, R> column, int value) {
+    public <T, R> ISqlExpression andEq(SerializableFunction<T, R> column, Integer value) {
         return andEq(function2ColumnName(column), value);
     }
 
     @Override
-    public ISqlExpression andEqNoEmpty(String column, int value) {
-        if (value > -1) {
-            return andEq(column, value);
+    public ISqlExpression andEqNoEmpty(String column, Integer value) {
+        return andEq(column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andEqNoEmpty(SerializableFunction<T, R> column, Integer value) {
+        return andEqNoEmpty(function2ColumnName(column), value);
+    }
+
+    @Override
+    public ISqlExpression andNotEq(String column, Integer value) {
+        if(value == null){
+            return andNotEq(column, nullStr());
         }
-        return this;
-    }
-
-    @Override
-    public <T, R> ISqlExpression andEqNoEmpty(SerializableFunction<T, R> column, int value) {
-        return andEqNoEmpty(column, value);
-    }
-
-    @Override
-    public ISqlExpression andNotEq(String column, int value) {
         return andNotEq(column, String.valueOf(value));
     }
 
+    private String nullStr(){
+        return null;
+    }
+
     @Override
-    public <T, R> ISqlExpression andNotEq(SerializableFunction<T, R> column, int value) {
+    public <T, R> ISqlExpression andNotEq(SerializableFunction<T, R> column, Integer value) {
         return andNotEq(function2ColumnName(column), value);
     }
 
     @Override
-    public ISqlExpression andNotEqNoEmpty(String column, int value) {
-        if (value > -1) {
-            return andNotEq(column, value);
+    public ISqlExpression andNotEqNoEmpty(String column, Integer value) {
+        if (value == null) {
+            return this;
         }
-        return this;
+        return andNotEq(column, value);
     }
 
     @Override
-    public <T, R> ISqlExpression andNotEqNoEmpty(SerializableFunction<T, R> column, int value) {
+    public <T, R> ISqlExpression andNotEqNoEmpty(SerializableFunction<T, R> column, Integer value) {
         return andNotEqNoEmpty(function2ColumnName(column), value);
     }
 
@@ -303,11 +310,11 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public ISqlExpression addOrder(String column, OrderEnum order) {
-        if(!StringUtils.hasText(column)){
+        if (!StringUtils.hasText(column)) {
             return this;
         }
 
-        orderList.add(column + " " +order.name());
+        orderList.add(column + " " + order.name());
 
         return this;
     }
@@ -559,9 +566,9 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public ISqlExpression select(String body) {
-        if(bodyBuffer.indexOf("select ")>=0) {
+        if (bodyBuffer.indexOf("select ") >= 0) {
             addBody("," + body);
-        }else{
+        } else {
             addBody("select " + body);
         }
         sqlOperateMode = SqlOperateMode.select;
@@ -586,9 +593,9 @@ public class SqlExpression implements ISqlExpression {
         sqlOperateMode = SqlOperateMode.select;
 
         String body = String.join(",", bodys);
-        if(bodyBuffer.indexOf("select ")>=0){
+        if (bodyBuffer.indexOf("select ") >= 0) {
             addBody("," + body);
-        }else{
+        } else {
             addBody("select " + body);
         }
         return this;

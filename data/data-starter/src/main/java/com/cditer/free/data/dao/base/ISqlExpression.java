@@ -64,21 +64,21 @@ public interface ISqlExpression {
 
     <T, R> ISqlExpression andNotEqNoEmpty(SerializableFunction<T, R> column, String value);
 
-    ISqlExpression andEq(String column, int value);
+    ISqlExpression andEq(String column, Integer value);
 
-    <T, R> ISqlExpression andEq(SerializableFunction<T, R> column, int value);
+    <T, R> ISqlExpression andEq(SerializableFunction<T, R> column, Integer value);
 
-    ISqlExpression andEqNoEmpty(String column, int value);
+    ISqlExpression andEqNoEmpty(String column, Integer value);
 
-    <T, R> ISqlExpression andEqNoEmpty(SerializableFunction<T, R> column, int value);
+    <T, R> ISqlExpression andEqNoEmpty(SerializableFunction<T, R> column, Integer value);
 
-    ISqlExpression andNotEq(String column, int value);
+    ISqlExpression andNotEq(String column, Integer value);
 
-    <T, R> ISqlExpression andNotEq(SerializableFunction<T, R> column, int value);
+    <T, R> ISqlExpression andNotEq(SerializableFunction<T, R> column, Integer value);
 
-    ISqlExpression andNotEqNoEmpty(String column, int value);
+    ISqlExpression andNotEqNoEmpty(String column, Integer value);
 
-    <T, R> ISqlExpression andNotEqNoEmpty(SerializableFunction<T, R> column, int value);
+    <T, R> ISqlExpression andNotEqNoEmpty(SerializableFunction<T, R> column, Integer value);
 
     ISqlExpression andMainTableWhere(String value);
 

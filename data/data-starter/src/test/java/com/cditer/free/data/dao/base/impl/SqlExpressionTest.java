@@ -139,17 +139,21 @@ public class SqlExpressionTest {
     @Test
     public void andEqNoEmpty() {
         ISqlExpression sqlExpression = getEmptySql();
-        sqlExpression.select("name,age").from("user").andEqNoEmpty("name", "cheng").andEqNoEmpty("age", null);
+        sqlExpression.select("name,age").from("user").andEqNoEmpty("name", "cheng").andEqNoEmpty("age", nullInteger());
 
         Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name=#{name})");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
         Assert.assertFalse(sqlExpression.getParams().containsKey("age"));
     }
 
+    private Integer nullInteger(){
+        return null;
+    }
+
     @Test
     public void andEqNoEmptyFun() {
         ISqlExpression sqlExpression = getEmptySql();
-        sqlExpression.select("name,age").from("user").andEqNoEmpty(TestDataUser::getName, "cheng").andEqNoEmpty(TestDataUser::getAccount, null);
+        sqlExpression.select("name,age").from("user").andEqNoEmpty(TestDataUser::getName, "cheng").andEqNoEmpty(TestDataUser::getAccount, nullInteger());
 
         Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name=#{name})");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
@@ -159,7 +163,7 @@ public class SqlExpressionTest {
     @Test
     public void andNotEq() {
         ISqlExpression sqlExpression = getEmptySql();
-        sqlExpression.select("name,age").from("user").andNotEq("name", "cheng").andNotEq("age", null);
+        sqlExpression.select("name,age").from("user").andNotEq("name", "cheng").andNotEq("age", nullInteger());
 
         Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name!=#{name}) and (age!=#{age})");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
@@ -169,7 +173,7 @@ public class SqlExpressionTest {
     @Test
     public void andNotEqFun() {
         ISqlExpression sqlExpression = getEmptySql();
-        sqlExpression.select("name,age").from("user").andNotEq(TestDataUser::getName, "cheng").andNotEq(TestDataUser::getAccount, null);
+        sqlExpression.select("name,age").from("user").andNotEq(TestDataUser::getName, "cheng").andNotEq(TestDataUser::getAccount, nullInteger());
 
         Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name!=#{name}) and (account!=#{account})");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
@@ -217,7 +221,7 @@ public class SqlExpressionTest {
     @Test
     public void andNotEqNoEmpty() {
         ISqlExpression sqlExpression = getEmptySql();
-        sqlExpression.select("name,age").from("user").andNotEqNoEmpty("name", "cheng").andNotEqNoEmpty("age", null);
+        sqlExpression.select("name,age").from("user").andNotEqNoEmpty("name", "cheng").andNotEqNoEmpty("age", nullInteger());
 
         Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name!=#{name})");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
@@ -228,7 +232,7 @@ public class SqlExpressionTest {
     @Test
     public void andNotEqNoEmptyFun() {
         ISqlExpression sqlExpression = getEmptySql();
-        sqlExpression.select("name,age").from("user").andNotEqNoEmpty(TestDataUser::getName, "cheng").andNotEqNoEmpty(TestDataUser::getAccount, null);
+        sqlExpression.select("name,age").from("user").andNotEqNoEmpty(TestDataUser::getName, "cheng").andNotEqNoEmpty(TestDataUser::getAccount, nullInteger());
 
         Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name!=#{name})");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
