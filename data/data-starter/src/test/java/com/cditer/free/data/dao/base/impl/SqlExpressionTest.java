@@ -1,6 +1,5 @@
 package com.cditer.free.data.dao.base.impl;
 
-import cn.hutool.db.sql.Order;
 import com.cditer.free.core.enums.OrderEnum;
 import com.cditer.free.core.util.ReflectUtils;
 import com.cditer.free.data.dao.base.ISqlExpression;
@@ -66,7 +65,7 @@ public class SqlExpressionTest {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").andLike("name", "cheng");
 
-        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like %#{name}%)");
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like concat('%',#{name},'%'))");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
     }
 
@@ -75,7 +74,7 @@ public class SqlExpressionTest {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").andLike(TestDataUser::getName, "cheng");
 
-        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like %#{name}%)");
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like concat('%',#{name},'%'))");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
     }
 
@@ -84,7 +83,7 @@ public class SqlExpressionTest {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").andRightLike("name", "cheng");
 
-        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like #{name}%)");
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like concat(#{name},'%'))");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
     }
 
@@ -93,7 +92,7 @@ public class SqlExpressionTest {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").andRightLike(TestDataUser::getName, "cheng");
 
-        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like #{name}%)");
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like concat(#{name},'%'))");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
     }
 
@@ -102,7 +101,7 @@ public class SqlExpressionTest {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").andLikeNoEmpty("name", "cheng").andLikeNoEmpty("age", null);
 
-        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like %#{name}%)");
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like concat('%',#{name},'%'))");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
         Assert.assertFalse(sqlExpression.getParams().containsKey("age"));
     }
@@ -112,7 +111,7 @@ public class SqlExpressionTest {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").andLikeNoEmpty(TestDataUser::getName, "cheng").andLikeNoEmpty(TestDataUser::getAccount, null);
 
-        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like %#{name}%)");
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like concat('%',#{name},'%'))");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
         Assert.assertFalse(sqlExpression.getParams().containsKey("account"));
     }
@@ -122,7 +121,7 @@ public class SqlExpressionTest {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").andRightLikeNoEmpty("name", "cheng").andRightLikeNoEmpty("age", null);
 
-        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like #{name}%)");
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like concat(#{name},'%'))");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
         Assert.assertFalse(sqlExpression.getParams().containsKey("age"));
     }
@@ -132,7 +131,7 @@ public class SqlExpressionTest {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").andRightLikeNoEmpty(TestDataUser::getName, "cheng").andRightLikeNoEmpty(TestDataUser::getAccount, null);
 
-        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like #{name}%)");
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like concat(#{name},'%'))");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
         Assert.assertFalse(sqlExpression.getParams().containsKey("account"));
     }
@@ -182,7 +181,7 @@ public class SqlExpressionTest {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").andNotLike("name", "cheng");
 
-        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name not like %#{name}%)");
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name not like concat('%',#{name},'%'))");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
     }
 
@@ -191,7 +190,7 @@ public class SqlExpressionTest {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").andNotLike(TestDataUser::getName, "cheng");
 
-        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name not like %#{name}%)");
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name not like concat('%',#{name},'%'))");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
     }
 
@@ -200,7 +199,7 @@ public class SqlExpressionTest {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").andNotLikeNoEmpty("name", "cheng").andNotLikeNoEmpty("age", null);
 
-        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name not like %#{name}%)");
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name not like concat('%',#{name},'%'))");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
         Assert.assertFalse(sqlExpression.getParams().containsKey("age"));
     }
@@ -210,7 +209,7 @@ public class SqlExpressionTest {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").andNotLikeNoEmpty(TestDataUser::getName, "cheng").andNotLikeNoEmpty(TestDataUser::getAccount, null);
 
-        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name not like %#{name}%)");
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name not like concat('%',#{name},'%'))");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
         Assert.assertFalse(sqlExpression.getParams().containsKey("account"));
     }

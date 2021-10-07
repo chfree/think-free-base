@@ -111,7 +111,7 @@ public class SqlExpression implements ISqlExpression {
         column = resolveColumnMainTable(column);
         String paramName = resolveColumn(column);
 
-        this.andWhere(column + " like %#{" + paramName + "}%")
+        this.andWhere(column + " like concat('%',#{" + paramName + "},'%')")
                 .setParam(paramName, value);
         return this;
     }
@@ -126,7 +126,7 @@ public class SqlExpression implements ISqlExpression {
         column = resolveColumnMainTable(column);
         String paramName = resolveColumn(column);
 
-        this.andWhere(column + " like #{" + paramName + "}%")
+        this.andWhere(column + " like concat(#{" + paramName + "},'%')")
                 .setParam(paramName, value);
         return this;
     }
@@ -195,7 +195,7 @@ public class SqlExpression implements ISqlExpression {
         column = resolveColumnMainTable(column);
         String paramName = resolveColumn(column);
 
-        this.andWhere(column + " not like %#{" + paramName + "}%")
+        this.andWhere(column + " not like concat('%',#{" + paramName + "},'%')")
                 .setParam(paramName, value);
         return this;
     }
