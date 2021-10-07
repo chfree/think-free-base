@@ -160,6 +160,8 @@ public interface ISuperDao<E extends ModelBase> {
 	
 	int insertListEx(List<E> list);
 
+	int insertListEx(List<E> list, int batchSize);
+
 	int batchInsertList(List<E> list);
 
 	int batchInsertList(List<E> list,int batchSize);
