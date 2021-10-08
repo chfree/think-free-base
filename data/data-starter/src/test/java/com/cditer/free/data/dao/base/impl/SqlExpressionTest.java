@@ -1,6 +1,7 @@
 package com.cditer.free.data.dao.base.impl;
 
 import com.cditer.free.core.enums.OrderEnum;
+import com.cditer.free.core.message.data.PagerModel;
 import com.cditer.free.core.util.ReflectUtils;
 import com.cditer.free.data.dao.base.ISqlExpression;
 import com.cditer.free.data.test.model.TestDataUser;
@@ -368,18 +369,44 @@ public class SqlExpressionTest {
 
     @Test
     public void limit() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").limit(1,20);
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,age from user limit 0,20");
+
+        sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").limit(2,15);
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,age from user limit 15,15");
     }
 
     @Test
     public void testLimit() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").limit(new PagerModel(20,1));
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,age from user limit 0,20");
+
+        sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").limit(new PagerModel(15,2));
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,age from user limit 15,15");
     }
 
     @Test
     public void selectDistinct() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.selectDistinct("name","age").from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select distinct name,age from user");
     }
 
     @Test
     public void testSelectDistinct() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.selectDistinct("name,age").from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select distinct name,age from user");
     }
 
     @Test

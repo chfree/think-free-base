@@ -364,7 +364,7 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public ISqlExpression limit(PagerModel pagerModel) {
-        limitBuffer.append(" limit " + pagerModel.getCurrentSize() + "," + pagerModel.getPageSize());
+        limitBuffer.append("limit " + pagerModel.getCurrentSize() + "," + pagerModel.getPageSize());
         return this;
     }
 
@@ -375,17 +375,20 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public ISqlExpression selectDistinct(String body) {
-        select(" distinct " + body);
+        select("distinct " + body);
         return this;
     }
 
     @Override
     public ISqlExpression selectDistinct(String... bodys) {
-        if (bodys != null && bodys.length > 0) {
-            String body = String.join(",", bodys);
-            addBody("select distinct " + body);
-        }
         sqlOperateMode = SqlOperateMode.select;
+
+        if (bodys == null && bodys.length <= 0) {
+            return this;
+        }
+        String body = String.join(",", bodys);
+        select("distinct " + body);
+
         return this;
     }
 
