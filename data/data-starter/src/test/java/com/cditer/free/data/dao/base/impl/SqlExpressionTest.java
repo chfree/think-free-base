@@ -8,6 +8,8 @@ import com.cditer.free.data.test.model.TestDataUser;
 import com.cditer.free.data.utils.SqlExpressionFactory;
 import org.junit.Assert;
 import org.junit.Test;
+import tk.mybatis.mapper.entity.Config;
+import tk.mybatis.mapper.mapperhelper.EntityHelper;
 
 import javax.persistence.Column;
 import java.util.HashMap;
@@ -526,42 +528,100 @@ public class SqlExpressionTest {
 
     @Test
     public void leftJoin() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("user,age").from("user u").leftJoin("dept d").on("u.id","d.id");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select user,age from user u left join dept d on (u.id=d.id)");
     }
 
     @Test
     public void testLeftJoin() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("user,age").from("user u").leftJoin(TestDataUser.class, "d").on("u.id","d.id");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select user,age from user u left join basic_authority_user d on (u.id=d.id)");
     }
 
     @Test
     public void innerJoin() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("user,age").from("user u").innerJoin("dept d").on("u.id","d.id");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select user,age from user u inner join dept d on (u.id=d.id)");
     }
 
     @Test
     public void testInnerJoin() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("user,age").from("user u").innerJoin(TestDataUser.class, "d").on("u.id","d.id");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select user,age from user u inner join basic_authority_user d on (u.id=d.id)");
     }
 
     @Test
     public void rightJoin() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("user,age").from("user u").rightJoin("dept d").on("u.id","d.id");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select user,age from user u right join dept d on (u.id=d.id)");
     }
 
     @Test
     public void testRightJoin() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("user,age").from("user u").rightJoin(TestDataUser.class, "d").on("u.id","d.id");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select user,age from user u right join basic_authority_user d on (u.id=d.id)");
     }
 
     @Test
     public void on() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("user,age").from("user u").rightJoin("dept d").on("u.id","d.id");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select user,age from user u right join dept d on (u.id=d.id)");
     }
 
     @Test
     public void testOn() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("user,age").from("user u").rightJoin("dept d").on("u.id=d.id");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select user,age from user u right join dept d on (u.id=d.id)");
+    }
+
+    @Test
+    public void testOnFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("user,age").from("user u").rightJoin("dept d").on(TestDataUser::getName, "u",TestDataUser::getAccount,"d");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select user,age from user u right join dept d on (u.name=d.account)");
     }
 
     @Test
     public void selectAllFrom() {
+        // 依赖于@Mapper注解启动，所以暂时先初始化EntityNameMap
+        EntityHelper.initEntityNameMap(TestDataUser.class, new Config());
+
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.selectAllFrom(TestDataUser.class);
+
+
+
+        Assert.assertEquals(sqlExpression.toSql(), "select id,name,account,password,delete_mark,create_date,bu_id from basic_authority_user");
     }
 
     @Test
     public void testSelectAllFrom() {
+        // 依赖于@Mapper注解启动，所以暂时先初始化EntityNameMap
+        EntityHelper.initEntityNameMap(TestDataUser.class, new Config());
+
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.selectAllFrom(TestDataUser.class, "u");
+
+
+
+        Assert.assertEquals(sqlExpression.toSql(), "select u.id,u.name,u.account,u.password,u.delete_mark,u.create_date,u.bu_id from basic_authority_user u");
     }
 
     @Test

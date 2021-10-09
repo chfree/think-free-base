@@ -128,6 +128,8 @@ public interface ISqlExpression {
 
     ISqlExpression on(String left, String right);
 
+    <T, R> ISqlExpression on(SerializableFunction<T, R> left,String leftAlias, SerializableFunction<T, R> right,String rightAlias);
+
     ISqlExpression selectAllFrom(Class<?> tClass);
 
     ISqlExpression selectAllFrom(Class<?> tClass, String alias);

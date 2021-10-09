@@ -564,14 +564,19 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public ISqlExpression on(String body) {
-        fromBuffer.append(" on (" + body + ") ");
+        fromBuffer.append("on (" + body + ")");
         return this;
     }
 
     @Override
     public ISqlExpression on(String left, String right) {
-        fromBuffer.append(" on (" + left + "=" + right + ") ");
+        fromBuffer.append("on (" + left + "=" + right + ")");
         return this;
+    }
+
+    @Override
+    public <T, R> ISqlExpression on(SerializableFunction<T, R> left, String leftAlias, SerializableFunction<T, R> right, String rightAlias) {
+        return on(String.format("%s.%s", leftAlias, function2ColumnName(left)), String.format("%s.%s", rightAlias, function2ColumnName(right)));
     }
 
     @Override
