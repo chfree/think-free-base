@@ -160,6 +160,12 @@ public interface ISqlExpression {
 
     ISqlExpression setColumn(String column, String value);
 
+    <T, R> ISqlExpression setColumn(SerializableFunction<T, R> column, String value);
+
+    ISqlExpression setColumnNoEmpty(String column, String value);
+
+    <T, R> ISqlExpression setColumnNoEmpty(SerializableFunction<T, R> column, String value);
+
     ISqlExpression set(String... columnKeys);
 
     ISqlExpression delete();
@@ -174,9 +180,13 @@ public interface ISqlExpression {
 
     String getMainTableAlias();
 
-    ISqlExpression addGroup(String group);
+    ISqlExpression groupBy(String group);
 
-    ISqlExpression addGroups(String... groups);
+    ISqlExpression groupBys(String... groups);
+
+    <T, R> ISqlExpression groupBy(SerializableFunction<T, R> group);
+
+    <T, R> ISqlExpression groupBys(SerializableFunction<T, R>... groups);
 
     String toSql();
 
@@ -195,6 +205,8 @@ public interface ISqlExpression {
     ISqlExpression limit(int pageIndex, int pageSize);
 
     ISqlExpression selectDistinct(String body);
+
+    <T, R> ISqlExpression selectDistinct(SerializableFunction<T, R>... bodys);
 
     ISqlExpression selectDistinct(String... bodys);
 

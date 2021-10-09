@@ -10,6 +10,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import javax.persistence.Column;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SqlExpressionTest {
     private ISqlExpression getEmptySql() {
@@ -402,6 +404,14 @@ public class SqlExpressionTest {
     }
 
     @Test
+    public void selectDistinctFcn() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.selectDistinct(TestDataUser::getName, TestDataUser::getAccount).from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select distinct name,account from user");
+    }
+
+    @Test
     public void testSelectDistinct() {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.selectDistinct("name,age").from("user");
@@ -411,30 +421,107 @@ public class SqlExpressionTest {
 
     @Test
     public void setColumn() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.update("user").setColumn("name", "cheng").andEq("account", "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(), "update user set name=#{name} where (account=#{account})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertEquals(sqlExpression.getParams().get("account"), "cheng");
+    }
+
+    @Test
+    public void setColumnFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.update("user").setColumn(TestDataUser::getName, "cheng").andEq(TestDataUser::getAccount, "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(), "update user set name=#{name} where (account=#{account})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertEquals(sqlExpression.getParams().get("account"), "cheng");
+    }
+
+    @Test
+    public void setColumnNoEmpty() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.update("user").setColumnNoEmpty("name", "cheng").setColumnNoEmpty("age", null).andEq("account", "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(), "update user set name=#{name} where (account=#{account})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertEquals(sqlExpression.getParams().get("account"), "cheng");
+        Assert.assertNull(sqlExpression.getParams().get("age"));
+    }
+
+    @Test
+    public void setColumnNoEmptyFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.update("user").setColumnNoEmpty(TestDataUser::getName, "cheng").setColumnNoEmpty(TestDataUser::getBuId, null).andEq(TestDataUser::getAccount, "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(), "update user set name=#{name} where (account=#{account})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertEquals(sqlExpression.getParams().get("account"), "cheng");
+        Assert.assertNull(sqlExpression.getParams().get("bu_id"));
     }
 
     @Test
     public void callFunction() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.callFunction("testFun").setFunParam("name", "cheng").setFunParam("age", "18");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select testFun(#{name},#{age})");
     }
 
     @Test
     public void setFunParam() {
-    }
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.callFunction("testFun").setFunParam("name", "cheng").setFunParam("age", "18");
 
-    @Test
-    public void toSql() {
+        Assert.assertEquals(sqlExpression.toSql(), "select testFun(#{name},#{age})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"),"cheng");
+        Assert.assertEquals(sqlExpression.getParams().get("age"),"18");
     }
 
     @Test
     public void setParamAll() {
+        ISqlExpression sqlExpression = getEmptySql();
+
+        Map<String,Object> params = new HashMap<>();
+        params.put("name", "cheng");
+
+        sqlExpression.select("name,age").from("user").andWhere("name=#{name}").setParamAll(params);
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,age from user where (name=#{name})");
+        Assert.assertEquals(params.get("name"), sqlExpression.getParams().get("name"));
     }
 
     @Test
-    public void addGroup() {
+    public void groupBy() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").groupBy("name,age").groupBy("account");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,age from user group by name,age,account");
     }
 
     @Test
-    public void addGroups() {
+    public void groupBys() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").groupBys("name","age").groupBy("account");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,age from user group by name,age,account");
+    }
+
+    @Test
+    public void groupByFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").groupBy(TestDataUser::getName).groupBy(TestDataUser::getAccount);
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,age from user group by name,account");
+    }
+
+    @Test
+    public void groupBysFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").groupBys(TestDataUser::getName,TestDataUser::getAccount);
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,age from user group by name,account");
     }
 
     @Test

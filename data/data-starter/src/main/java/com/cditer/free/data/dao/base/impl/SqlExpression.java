@@ -58,7 +58,7 @@ public class SqlExpression implements ISqlExpression {
 
     private StringBuffer limitBuffer = new StringBuffer();
 
-    private StringBuffer callFunParam = new StringBuffer();
+    private List<String> callFunParam = new ArrayList<>();
 
     public SqlExpression() {
         if (params == null) {
@@ -380,6 +380,15 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
+    public <T, R> ISqlExpression selectDistinct(SerializableFunction<T, R>... bodys) {
+        if (bodys == null || bodys.length <= 0) {
+            return this;
+        }
+        List<String> list = Arrays.stream(bodys).map(item -> function2ColumnName(item)).collect(Collectors.toList());
+        return selectDistinct(list.toArray(new String[0]));
+    }
+
+    @Override
     public ISqlExpression selectDistinct(String... bodys) {
         sqlOperateMode = SqlOperateMode.select;
 
@@ -407,7 +416,7 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public ISqlExpression setFunParam(String funName, String funValue) {
-        callFunParam.append("#{" + funName + "}");
+        callFunParam.add("#{" + funName + "}");
         setParam(funName, funValue);
         return this;
     }
@@ -457,6 +466,8 @@ public class SqlExpression implements ISqlExpression {
             }
         } else if (SqlOperateMode.callFun.equals(sqlOperateMode)) {
             result.add(String.format("(%s)", String.join(",", callFunParam)));
+
+            return String.join("", result);
         }
 
         return String.join(" ", result);
@@ -484,27 +495,35 @@ public class SqlExpression implements ISqlExpression {
 
 
     @Override
-    public ISqlExpression addGroup(String group) {
+    public ISqlExpression groupBy(String group) {
         if (groupBuffer.length() == 0) {
-            groupBuffer.append(" group by ");
-            groupBuffer.append(" " + group + " ");
+            groupBuffer.append(String.format("group by %s", group));
         } else {
-            groupBuffer.append(" ," + group + " ");
+            groupBuffer.append("," + group);
         }
         return this;
     }
 
     @Override
-    public ISqlExpression addGroups(String... groups) {
-        for (String group : groups) {
-            if (groupBuffer.length() == 0) {
-                groupBuffer.append(" group by ");
-                groupBuffer.append(" " + group + " ");
-            } else {
-                groupBuffer.append(" ," + group + " ");
-            }
+    public ISqlExpression groupBys(String... groups) {
+        if (groups == null || groups.length <= 0) {
+            return this;
         }
-        return this;
+        return groupBy(String.join(",", groups));
+    }
+
+    @Override
+    public <T, R> ISqlExpression groupBy(SerializableFunction<T, R> group) {
+        return groupBy(function2ColumnName(group));
+    }
+
+    @Override
+    public <T, R> ISqlExpression groupBys(SerializableFunction<T, R>... groups) {
+        if (groups == null || groups.length <= 0) {
+            return this;
+        }
+        List<String> list = Arrays.stream(groups).map(item -> function2ColumnName(item)).collect(Collectors.toList());
+        return groupBys(list.toArray(new String[0]));
     }
 
     @Override
@@ -675,7 +694,7 @@ public class SqlExpression implements ISqlExpression {
     @Override
     public ISqlExpression set(String column, String columnKey) {
         if (setBuffer.length() == 0) {
-            setBuffer.append(" set ");
+            setBuffer.append("set ");
             setBuffer.append(column + "=#{" + columnKey + "}");
         } else {
             setBuffer.append("," + column + "=#{" + columnKey + "}");
@@ -686,7 +705,7 @@ public class SqlExpression implements ISqlExpression {
     @Override
     public ISqlExpression setValue(String column, String value) {
         if (setBuffer.length() == 0) {
-            setBuffer.append(" set ");
+            setBuffer.append("set ");
             setBuffer.append(column + "=" + value);
         } else {
             setBuffer.append("," + column + "=" + value);
@@ -701,11 +720,32 @@ public class SqlExpression implements ISqlExpression {
         return this;
     }
 
+    @Override
+    public <T, R> ISqlExpression setColumn(SerializableFunction<T, R> column, String value) {
+        return setColumn(function2ColumnName(column), value);
+    }
+
+    @Override
+    public ISqlExpression setColumnNoEmpty(String column, String value) {
+        if (!StringUtils.hasText(value)) {
+            return this;
+        }
+        return setColumn(column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression setColumnNoEmpty(SerializableFunction<T, R> column, String value) {
+        if (!StringUtils.hasText(value)) {
+            return this;
+        }
+        return setColumn(column, value);
+    }
+
     public ISqlExpression set(String... columnKeys) {
         if (columnKeys != null && columnKeys.length > 0) {
             String sets = String.join(",", columnKeys);
             if (setBuffer.length() == 0) {
-                setBuffer.append(" set ");
+                setBuffer.append("set ");
                 setBuffer.append(sets);
             } else {
                 setBuffer.append("," + sets);
