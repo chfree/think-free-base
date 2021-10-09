@@ -54,6 +54,8 @@ public class DataDemoApp implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        List<LoginUser> loginUsers = loginUserService.querySelectAll();
+        System.out.println(loginUsers.size());
 //        String ids = loginUserService.queryAllParentDeptById("4291cb5a-baba-11e9-ba9d-bfe43b78a9e4");
 //        System.out.println(ids);
 //        LoginUser loginUser = new LoginUser();
@@ -85,12 +87,12 @@ public class DataDemoApp implements CommandLineRunner {
 //            System.out.println(SnowFlakeIdUtils.nextId());
 //        }
 //
-        int count = loginUserService.queryCount();
-
-        System.out.println("count:" + count);
-
-        List<LoginUser> loginUsers = loginUserService.queryList(new PagerModel(5, 1));
-        System.out.println(loginUsers.size());
+//        int count = loginUserService.queryCount();
+//
+//        System.out.println("count:" + count);
+//
+//        List<LoginUser> loginUsers = loginUserService.queryList(new PagerModel(5, 1));
+//        System.out.println(loginUsers.size());
 //
 //
 //

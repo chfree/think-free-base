@@ -24,4 +24,6 @@ public interface ILoginUserService extends ISuperDao<LoginUser> {
 
     String queryAllParentDeptById(String id);
 
+    List<LoginUser> querySelectAll();
+
 }

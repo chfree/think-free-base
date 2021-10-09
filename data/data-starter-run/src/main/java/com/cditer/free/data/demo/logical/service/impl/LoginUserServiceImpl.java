@@ -76,4 +76,12 @@ public class LoginUserServiceImpl extends SuperDao<LoginUser> implements ILoginU
 
         return queryScalar(sqlExpression);
     }
+
+    @Override
+    public List<LoginUser> querySelectAll() {
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.selectAllFrom(LoginUser.class);
+
+        return queryList(sqlExpression);
+    }
 }
