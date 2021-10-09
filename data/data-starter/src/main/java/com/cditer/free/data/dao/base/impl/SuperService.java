@@ -28,16 +28,6 @@ public abstract class SuperService<E extends ModelBase> implements ISuperService
         return superDao;
     }
 
-    @SuppressWarnings("unused")
-    private Class<E> entityClass;
-
-    @SuppressWarnings("unchecked")
-    public SuperService() {
-        Type genType = this.getClass().getGenericSuperclass();
-        Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
-        this.entityClass = (Class<E>) params[0];
-    }
-
     @Override
     public String getModelName() {
         return getSuperDao().getModelName();
@@ -150,6 +140,11 @@ public abstract class SuperService<E extends ModelBase> implements ISuperService
 
     public int insertListEx(List<E> list) {
         return getSuperDao().insertListEx(list);
+    }
+
+    @Override
+    public int insertListEx(List<E> list, int batchSize) {
+        return getSuperDao().insertListEx(list, batchSize);
     }
 
     @Override

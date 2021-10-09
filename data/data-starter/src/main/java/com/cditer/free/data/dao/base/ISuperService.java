@@ -54,7 +54,7 @@ public interface ISuperService<E extends ModelBase> {
 
     int deleteByIds(List<String> ids);
 
-    int deleteByIds(String ...ids);
+    int deleteByIds(String... ids);
 
     int deleteByIds(String ids);
 
@@ -64,15 +64,17 @@ public interface ISuperService<E extends ModelBase> {
 
     int insertListEx(List<E> list);
 
+    int insertListEx(List<E> list, int batchSize);
+
     int batchInsertList(List<E> list);
 
-    int batchInsertList(List<E> list,int batchSize);
+    int batchInsertList(List<E> list, int batchSize);
 
     int batchUpdateList(List<E> list);
 
     int batchInsertSelectiveList(List<E> list);
 
-    int batchInsertSelectiveList(List<E> list,int batchSize);
+    int batchInsertSelectiveList(List<E> list, int batchSize);
 
     int batchUpdateSelectiveList(List<E> list);
 }
