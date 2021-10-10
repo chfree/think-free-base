@@ -146,7 +146,11 @@ public class GlobalExceptionHandler {
     }
 
     private void fillTraceInfo(HttpServletRequest request,BaseResponse response,Exception e){
-        String traceId = request.getAttribute("traceId").toString();
+        Object traceIdObj = request.getAttribute("traceId");
+        String traceId = null;
+        if(traceIdObj!=null){
+            traceId = traceIdObj.toString();
+        }
         log.error("exceptionHandler:【"+traceId+"】"+e.getMessage(), e);
 
         response.setTraceId(traceId);
