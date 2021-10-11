@@ -51,7 +51,7 @@ public abstract class AbstractCheckHelper implements ICheckHelper {
             String name = parameterNames.nextElement();
             result.add(name+"="+request.getParameter(name));
         }
-        return StringHelper.join(result,"&");
+        return String.join("&", result);
     }
 
     private boolean isJson(ServletRequest request) {

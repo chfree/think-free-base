@@ -1,10 +1,9 @@
 package com.cditer.free.quartz.logical.viewmodel;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import org.junit.Test;
+
+import java.util.Date;
 
 /**
  * @author      auto build code by think
