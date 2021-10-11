@@ -611,11 +611,6 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
-    public <T, R> ISqlExpression appendSelect(SerializableFunction<T, R> column) {
-        return appendSelect(function2ColumnName(column));
-    }
-
-    @Override
     public ISqlExpression select(String... bodys) {
         if (bodys == null && bodys.length <= 0) {
             return this;
@@ -664,15 +659,41 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
+    public <T, R> ISqlExpression appendSelect(SerializableFunction<T, R>... bodys) {
+        if (bodys == null || bodys.length <= 0) {
+            return this;
+        }
+        List<String> list = Arrays.stream(bodys).map(item -> function2ColumnName(item)).collect(Collectors.toList());
+        return appendSelect(list.toArray(new String[0]));
+
+    }
+
+    @Override
     public ISqlExpression selectCount() {
-        select("count(1) as c ");
+        select("count(1) as count");
         return this;
     }
 
     @Override
     public ISqlExpression selectCount(String column) {
-        select("count(" + column + ") as c ");
+        selectCount(column, "count");
         return this;
+    }
+
+    @Override
+    public <T, R> ISqlExpression selectCount(SerializableFunction<T, R> column) {
+        return selectCount(function2ColumnName(column));
+    }
+
+    @Override
+    public ISqlExpression selectCount(String column, String alias) {
+        select(String.format("count(%s) as %s", column, alias));
+        return this;
+    }
+
+    @Override
+    public <T, R> ISqlExpression selectCount(SerializableFunction<T, R> column, String alias) {
+        return selectCount(function2ColumnName(column), alias);
     }
 
     @Override

@@ -138,17 +138,23 @@ public interface ISqlExpression {
 
     ISqlExpression appendSelect(String body);
 
-    <T, R> ISqlExpression appendSelect(SerializableFunction<T, R> column);
-
     ISqlExpression selectCount();
 
     ISqlExpression selectCount(String column);
+
+    <T, R> ISqlExpression selectCount(SerializableFunction<T, R> column);
+
+    ISqlExpression selectCount(String column,String alias);
+
+    <T, R> ISqlExpression selectCount(SerializableFunction<T, R> column,String alias);
 
     ISqlExpression select(String... bodys);
 
     <T, R> ISqlExpression select(SerializableFunction<T, R>... bodys);
 
     ISqlExpression appendSelect(String... bodys);
+
+    <T, R> ISqlExpression appendSelect(SerializableFunction<T, R>... bodys);
 
     ISqlExpression update(String body);
 

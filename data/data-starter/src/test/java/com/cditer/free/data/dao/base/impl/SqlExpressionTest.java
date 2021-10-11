@@ -642,26 +642,92 @@ public class SqlExpressionTest {
 
     @Test
     public void appendSelect() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name").appendSelect("age").from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,age from user");
+    }
+
+    @Test
+    public void appendSelectFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name").appendSelect(TestDataUser::getAccount).from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,account from user");
     }
 
     @Test
     public void testSelect() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name","age").from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,age from user");
     }
 
     @Test
     public void testAppendSelect() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name").appendSelect("age", "account").from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,age,account from user");
+    }
+
+    @Test
+    public void testAppendSelectFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name").appendSelect(TestDataUser::getAccount,TestDataUser::getBuId).from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,account,bu_id from user");
     }
 
     @Test
     public void selectCount() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.selectCount().from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select count(1) as count from user");
     }
 
     @Test
     public void testSelectCount() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.selectCount("id").from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select count(id) as count from user");
+    }
+
+    @Test
+    public void testSelectCountAlias() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.selectCount("id", "idCount").from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select count(id) as idCount from user");
+    }
+
+    @Test
+    public void testSelectCountFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.selectCount(TestDataUser::getId).from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select count(id) as count from user");
+    }
+
+    @Test
+    public void testSelectCountAliasFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.selectCount(TestDataUser::getId, "idCount").from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select count(id) as idCount from user");
     }
 
     @Test
     public void update() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.update("user").set("name=#{name}").andEq("id", "123").setParam("name", "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(), "update user set name=#{name} where (id=#{id})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertEquals(sqlExpression.getParams().get("id"), "123");
     }
 
     @Test
