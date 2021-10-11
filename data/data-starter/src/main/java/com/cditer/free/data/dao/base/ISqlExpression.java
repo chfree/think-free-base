@@ -162,7 +162,7 @@ public interface ISqlExpression {
 
     ISqlExpression update(Class<?> tClass, String alias);
 
-    ISqlExpression set(String column, String columnKey);
+    ISqlExpression setColumnKey(String column, String columnKey);
 
     ISqlExpression setValue(String column, String value);
 
@@ -192,9 +192,7 @@ public interface ISqlExpression {
 
     ISqlExpression groupBys(String... groups);
 
-    <T, R> ISqlExpression groupBy(SerializableFunction<T, R> group);
-
-    <T, R> ISqlExpression groupBys(SerializableFunction<T, R>... groups);
+    <T, R> ISqlExpression groupBy(SerializableFunction<T, R>... groups);
 
     String toSql();
 

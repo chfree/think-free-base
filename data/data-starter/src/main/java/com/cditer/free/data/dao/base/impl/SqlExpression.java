@@ -1,12 +1,10 @@
 package com.cditer.free.data.dao.base.impl;
 
-import com.cditer.free.core.exception.BizException;
+import com.cditer.free.core.enums.OrderEnum;
 import com.cditer.free.core.message.data.OrderByEnum;
 import com.cditer.free.core.message.data.PagerModel;
-import com.cditer.free.core.enums.OrderEnum;
 import com.cditer.free.core.util.ReflectUtils;
 import com.cditer.free.core.util.SerializableFunction;
-import com.cditer.free.core.util.StringHelper;
 import com.cditer.free.data.dao.base.ISqlExpression;
 import com.cditer.free.data.message.OrderInfo;
 import com.cditer.free.data.message.SqlOperateMode;
@@ -384,7 +382,9 @@ public class SqlExpression implements ISqlExpression {
         if (bodys == null || bodys.length <= 0) {
             return this;
         }
-        List<String> list = Arrays.stream(bodys).map(item -> function2ColumnName(item)).collect(Collectors.toList());
+
+        String mainTableAlias = getMainTableAlias();
+        List<String> list = Arrays.stream(bodys).map(item -> mainTableAlias + function2ColumnName(item)).collect(Collectors.toList());
         return selectDistinct(list.toArray(new String[0]));
     }
 
@@ -513,16 +513,12 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
-    public <T, R> ISqlExpression groupBy(SerializableFunction<T, R> group) {
-        return groupBy(function2ColumnName(group));
-    }
-
-    @Override
-    public <T, R> ISqlExpression groupBys(SerializableFunction<T, R>... groups) {
+    public <T, R> ISqlExpression groupBy(SerializableFunction<T, R>... groups) {
         if (groups == null || groups.length <= 0) {
             return this;
         }
-        List<String> list = Arrays.stream(groups).map(item -> function2ColumnName(item)).collect(Collectors.toList());
+        String mainTableAlias = getMainTableAlias();
+        List<String> list = Arrays.stream(groups).map(item -> mainTableAlias + function2ColumnName(item)).collect(Collectors.toList());
         return groupBys(list.toArray(new String[0]));
     }
 
@@ -582,7 +578,6 @@ public class SqlExpression implements ISqlExpression {
     @Override
     public ISqlExpression selectAllFrom(Class<?> tClass) {
         return select(SqlHelper.getAllColumns(tClass)).from(tClass);
-
     }
 
     @Override
@@ -631,7 +626,8 @@ public class SqlExpression implements ISqlExpression {
         if (bodys == null || bodys.length <= 0) {
             return this;
         }
-        List<String> list = Arrays.stream(bodys).map(item -> function2ColumnName(item)).collect(Collectors.toList());
+        String mainTableAlias = getMainTableAlias();
+        List<String> list = Arrays.stream(bodys).map(item -> mainTableAlias + function2ColumnName(item)).collect(Collectors.toList());
         return select(list.toArray(new String[0]));
     }
 
@@ -663,7 +659,8 @@ public class SqlExpression implements ISqlExpression {
         if (bodys == null || bodys.length <= 0) {
             return this;
         }
-        List<String> list = Arrays.stream(bodys).map(item -> function2ColumnName(item)).collect(Collectors.toList());
+        String mainTableAlias = getMainTableAlias();
+        List<String> list = Arrays.stream(bodys).map(item -> mainTableAlias + function2ColumnName(item)).collect(Collectors.toList());
         return appendSelect(list.toArray(new String[0]));
 
     }
@@ -682,7 +679,8 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression selectCount(SerializableFunction<T, R> column) {
-        return selectCount(function2ColumnName(column));
+        String mainTableAlias = getMainTableAlias();
+        return selectCount(mainTableAlias + function2ColumnName(column));
     }
 
     @Override
@@ -693,7 +691,8 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression selectCount(SerializableFunction<T, R> column, String alias) {
-        return selectCount(function2ColumnName(column), alias);
+        String mainTableAlias = getMainTableAlias();
+        return selectCount(mainTableAlias + function2ColumnName(column), alias);
     }
 
     @Override
@@ -718,12 +717,11 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
-    public ISqlExpression set(String column, String columnKey) {
+    public ISqlExpression setColumnKey(String column, String columnKey) {
         if (setBuffer.length() == 0) {
-            setBuffer.append("set ");
-            setBuffer.append(column + "=#{" + columnKey + "}");
+            setBuffer.append(String.format("set %s=#{%s}", column, columnKey));
         } else {
-            setBuffer.append("," + column + "=#{" + columnKey + "}");
+            setBuffer.append(String.format(",%s=#{%s}", column, columnKey));
         }
         return this;
     }
@@ -741,14 +739,15 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public ISqlExpression setColumn(String column, String value) {
-        this.set(column, column)
+        this.setColumnKey(column, column)
                 .setParam(column, value);
         return this;
     }
 
     @Override
     public <T, R> ISqlExpression setColumn(SerializableFunction<T, R> column, String value) {
-        return setColumn(function2ColumnName(column), value);
+        String mainTableAlias = getMainTableAlias();
+        return setColumn(mainTableAlias + function2ColumnName(column), value);
     }
 
     @Override
@@ -814,13 +813,13 @@ public class SqlExpression implements ISqlExpression {
 
     public String getMainTableAlias() {
         // 如果设置的mainTableAlias为空，则取一次from的时候设置的mainTableAlias
-        if (StringUtils.isEmpty(mainTableAlias)) {
-            mainTableAlias = this.fromMainTableAlias;
-        }
-        if (!StringUtils.isEmpty(mainTableAlias)) {
+        if (StringUtils.hasText(mainTableAlias)) {
             return mainTableAlias + ".";
         }
-        return mainTableAlias;
+        if (StringUtils.hasText(fromMainTableAlias)) {
+            return fromMainTableAlias + ".";
+        }
+        return "";
     }
 
     @Override
@@ -998,8 +997,9 @@ public class SqlExpression implements ISqlExpression {
 
     // 如果有maintable的别名设置，并且列没有指定表别名，则默认为主表别名
     private String resolveColumnMainTable(String column) {
-        if (!StringUtils.isEmpty(mainTableAlias) && column.indexOf(".") < 0) {
-            column = mainTableAlias + "." + column;
+        String mainTableAlias = getMainTableAlias();
+        if (StringUtils.hasText(mainTableAlias) && column.indexOf(".") < 0) {
+            column = mainTableAlias + column;
         }
         return column;
     }

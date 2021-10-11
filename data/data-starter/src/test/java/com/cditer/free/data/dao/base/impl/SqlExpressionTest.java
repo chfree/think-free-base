@@ -285,8 +285,8 @@ public class SqlExpressionTest {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.addBody("select name,age").from(TestDataUser.class, "u").andEq(TestDataUser::getName, "cheng");
 
-        Assert.assertEquals(sqlExpression.toSql(),"select name,age from basic_authority_user u where (name=#{name})");
-        Assert.assertEquals("cheng", sqlExpression.getParams().get("name"));
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from basic_authority_user u where (u.name=#{u_name})");
+        Assert.assertEquals("cheng", sqlExpression.getParams().get("u_name"));
     }
 
     @Test
@@ -521,7 +521,7 @@ public class SqlExpressionTest {
     @Test
     public void groupBysFun() {
         ISqlExpression sqlExpression = getEmptySql();
-        sqlExpression.select("name,age").from("user").groupBys(TestDataUser::getName,TestDataUser::getAccount);
+        sqlExpression.select("name,age").from("user").groupBy(TestDataUser::getName,TestDataUser::getAccount);
 
         Assert.assertEquals(sqlExpression.toSql(), "select name,age from user group by name,account");
     }
@@ -618,8 +618,6 @@ public class SqlExpressionTest {
 
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.selectAllFrom(TestDataUser.class, "u");
-
-
 
         Assert.assertEquals(sqlExpression.toSql(), "select u.id,u.name,u.account,u.password,u.delete_mark,u.create_date,u.bu_id from basic_authority_user u");
     }
@@ -732,50 +730,107 @@ public class SqlExpressionTest {
 
     @Test
     public void testUpdate() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.update(TestDataUser.class).set("name=#{name}").andEq("id", "123").setParam("name", "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(), "update basic_authority_user set name=#{name} where (id=#{id})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertEquals(sqlExpression.getParams().get("id"), "123");
     }
 
     @Test
     public void testUpdate1() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.update(TestDataUser.class, "u").set("name=#{name}").andEq("id", "123").setParam("name", "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(), "update basic_authority_user u set name=#{name} where (id=#{id})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertEquals(sqlExpression.getParams().get("id"), "123");
     }
 
     @Test
     public void set() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.update("user").set("name=#{name}").set("age=#{age}").andEq("id", "123").setParam("name", "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(), "update user set name=#{name},age=#{age} where (id=#{id})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertEquals(sqlExpression.getParams().get("id"), "123");
     }
 
     @Test
     public void setValue() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.update("user").setValue("name", "(select name from user top 1)").andEq("id", "123");
+
+        Assert.assertEquals(sqlExpression.toSql(), "update user set name=(select name from user top 1) where (id=#{id})");
+        Assert.assertEquals(sqlExpression.getParams().get("id"), "123");
     }
 
     @Test
     public void testSetColumn() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.update("user").setColumn("name", "cheng").andEq("id", "123");
+
+        Assert.assertEquals(sqlExpression.toSql(), "update user set name=#{name} where (id=#{id})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertEquals(sqlExpression.getParams().get("id"), "123");
     }
 
     @Test
     public void testSet() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.update("user").set("name=#{name}", "age=#{age}").andEq("id", "123").setParam("name", "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(), "update user set name=#{name},age=#{age} where (id=#{id})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertEquals(sqlExpression.getParams().get("id"), "123");
     }
 
     @Test
     public void delete() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.delete().from("user").andEq("name", "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(), "delete from user where (name=#{name})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
     }
 
-    @Test
-    public void from() {
-    }
 
     @Test
     public void testFrom() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("age").from(TestDataUser.class).andEq("name", "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select age from basic_authority_user where (name=#{name})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
     }
 
     @Test
     public void testFrom1() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("age").from(TestDataUser.class, "u").andEq("name", "cheng").andEq("u.account", "123");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select age from basic_authority_user u where (u.name=#{u_name}) and (u.account=#{u_account})");
+        Assert.assertEquals(sqlExpression.getParams().get("u_name"), "cheng");
+        Assert.assertEquals(sqlExpression.getParams().get("u_account"), "123");
     }
 
     @Test
     public void setMainTableAlias() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.setMainTableAlias("user").select(TestDataUser::getName).from(TestDataUser.class, "user").andEq("account", "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select user.name from basic_authority_user user where (user.account=#{user_account})");
+        Assert.assertEquals(sqlExpression.getParams().get("user_account"), "cheng");
     }
 
     @Test
     public void getMainTableAlias() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.setMainTableAlias("user");
+
+        Assert.assertEquals(sqlExpression.getMainTableAlias(), "user.");
     }
 
     @Test
