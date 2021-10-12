@@ -86,6 +86,10 @@ public interface ISqlExpression {
 
     ISqlExpression andWhereIn(String column, List<Object> values);
 
+    <T, R> ISqlExpression andWhereIn(SerializableFunction<T, R> column, ISqlExpression sqlExpression);
+
+    <T, R> ISqlExpression andWhereIn(SerializableFunction<T, R> column, List<Object> values);
+
     ISqlExpression andWhereInString(String column, List<String> values);
 
     ISqlExpression andWhereInString(String column, String... values);

@@ -4,6 +4,7 @@ import com.cditer.free.core.enums.OrderEnum;
 import com.cditer.free.core.message.data.PagerModel;
 import com.cditer.free.core.util.ReflectUtils;
 import com.cditer.free.data.dao.base.ISqlExpression;
+import com.cditer.free.data.message.OrderInfo;
 import com.cditer.free.data.test.model.TestDataUser;
 import com.cditer.free.data.utils.SqlExpressionFactory;
 import org.junit.Assert;
@@ -12,7 +13,9 @@ import tk.mybatis.mapper.entity.Config;
 import tk.mybatis.mapper.mapperhelper.EntityHelper;
 
 import javax.persistence.Column;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SqlExpressionTest {
@@ -267,17 +270,17 @@ public class SqlExpressionTest {
     public void addOrders() {
         ISqlExpression sqlExpression = getEmptySql();
 
-        sqlExpression.select("name,age").from("user").andEq("name", "cheng").addOrders(OrderEnum.asc, "name", "age");
+        sqlExpression.select("name,age").from("user").andEq("name", "cheng").addOrders(OrderEnum.ASC, "name", "age");
 
-        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name=#{name}) order by name asc,age asc");
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name=#{name}) order by name ASC,age ASC");
     }
 
     @Test
     public void addOrder() {
         ISqlExpression sqlExpression = getEmptySql();
-        sqlExpression.select("name,age").from("user").andEq("name", "cheng").addOrder("name", OrderEnum.asc).addOrder("age", OrderEnum.desc);
+        sqlExpression.select("name,age").from("user").andEq("name", "cheng").addOrder("name", OrderEnum.ASC).addOrder("age", OrderEnum.DESC);
 
-        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name=#{name}) order by name asc,age desc");
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name=#{name}) order by name ASC,age DESC");
     }
 
     @Test
@@ -835,14 +838,43 @@ public class SqlExpressionTest {
 
     @Test
     public void addOrderInfoList() {
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setOrderBy(OrderEnum.DESC);
+        orderInfo.setProperty("name");
+
+        List<OrderInfo> list = new ArrayList<>();
+        list.add(orderInfo);
+
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name").from("user").addOrderInfoList(list);
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name from user order by name DESC");
     }
 
     @Test
     public void andWhereIn() {
+        List<Object> list = new ArrayList<>();
+        list.add("cheng");
+        list.add(123);
+
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name").from("user").andWhereIn(TestDataUser::getAccount, list);
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name from user where (account in (#{account0},#{account1}))");
+        Assert.assertEquals(sqlExpression.getParams().get("account0"), "cheng");
+        Assert.assertEquals(sqlExpression.getParams().get("account1"), 123);
     }
 
     @Test
     public void testAndWhereIn() {
+        ISqlExpression inSql = getEmptySql();
+        inSql.select("account").from("user").andLike("account", "cheng");
+
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name").from("user").andWhereIn(TestDataUser::getAccount, inSql);
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name from user where (account in (select account from user where (account like concat('%',#{account},'%'))))");
+        Assert.assertEquals(sqlExpression.getParams().get("account"), "cheng");
     }
 
     @Test

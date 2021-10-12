@@ -1,7 +1,6 @@
 package com.cditer.free.data.dao.base.impl;
 
 import com.cditer.free.core.enums.OrderEnum;
-import com.cditer.free.core.message.data.OrderByEnum;
 import com.cditer.free.core.message.data.PagerModel;
 import com.cditer.free.core.util.ReflectUtils;
 import com.cditer.free.core.util.SerializableFunction;
@@ -826,11 +825,7 @@ public class SqlExpression implements ISqlExpression {
     public ISqlExpression addOrderInfoList(List<OrderInfo> orderInfos) {
         if (orderInfos != null) {
             for (OrderInfo orderInfo : orderInfos) {
-                OrderEnum or = OrderEnum.asc;
-                if (OrderByEnum.DESC.equals(orderInfo.getOrderBy().toUpperCase())) {
-                    or = OrderEnum.desc;
-                }
-                this.addOrder(orderInfo.getProperty(), or);
+                this.addOrder(orderInfo.getProperty(), orderInfo.getOrderBy());
             }
         }
         return this;
@@ -858,8 +853,20 @@ public class SqlExpression implements ISqlExpression {
         return andWhereIn("in", column, values);
     }
 
+    @Override
+    public <T, R> ISqlExpression andWhereIn(SerializableFunction<T, R> column, ISqlExpression sqlExpression) {
+        String mainTableAlias = getMainTableAlias();
+        return andWhereIn(mainTableAlias + function2ColumnName(column), sqlExpression);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andWhereIn(SerializableFunction<T, R> column, List<Object> values) {
+        String mainTableAlias = getMainTableAlias();
+        return andWhereIn(mainTableAlias + function2ColumnName(column), values);
+    }
+
     private ISqlExpression andWhereIn(String inOrNotIn, String column, List<Object> values) {
-        if (values == null || values.size() <= 0) {
+        if (CollectionUtils.isEmpty(values)) {
             return this;
         }
         column = resolveColumnMainTable(column);
