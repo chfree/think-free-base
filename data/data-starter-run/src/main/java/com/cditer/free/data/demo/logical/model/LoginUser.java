@@ -1,7 +1,6 @@
 package com.cditer.free.data.demo.logical.model;
 
 import com.cditer.free.core.message.data.ModelBase;
-import com.cditer.free.core.message.data.OrderByEnum;
 import lombok.Data;
 import org.apache.ibatis.type.Alias;
 

@@ -1,5 +1,6 @@
 package com.cditer.free.data.test.model;
 
+import com.cditer.free.core.enums.OrderEnum;
 import com.cditer.free.core.message.data.OrderByEnum;
 import lombok.Data;
 
@@ -30,7 +31,7 @@ public class TestDataUser {
     @Column(name="delete_mark")
     private Integer deleteMark;
 
-    @OrderBy(value= OrderByEnum.DESC)
+    @OrderBy(value= OrderByEnum.ASC)
     @Column(name="create_date")
     private Date createDate;
 

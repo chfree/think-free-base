@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import com.cditer.free.core.message.data.OrderByEnum;
+import com.cditer.free.core.enums.OrderEnum;
 import com.cditer.free.data.message.OrderInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
@@ -156,13 +156,15 @@ public class ClassAnnotationUtils {
 		Method[] methods= eClass.getMethods();
 		for (Method method : methods) {
 			OrderBy orderBy= method.getAnnotation(OrderBy.class);
-			if(orderBy!=null){
-				String methodName= method.getName().substring(3);
-				String fieldName= methodName.substring(0,1).toLowerCase()+methodName.substring(1);
-				
-				orderInfo=new OrderInfo(fieldName,StringUtils.isEmpty(orderBy.value())? OrderByEnum.ASC:orderBy.value());
-				orderInfoList.add(orderInfo);
+			if(orderBy==null) {
+				continue;
 			}
+
+			String methodName= method.getName().substring(3);
+			String fieldName= methodName.substring(0,1).toLowerCase()+methodName.substring(1);
+
+			orderInfo=new OrderInfo(fieldName,StringUtils.hasText(orderBy.value())? OrderEnum.parseByText(orderBy.value().toLowerCase()): OrderEnum.ASC);
+			orderInfoList.add(orderInfo);
 		}
 		return orderInfoList;
 	}
@@ -174,11 +176,14 @@ public class ClassAnnotationUtils {
 		Field[] fields=eClass.getDeclaredFields();
 	    for (Field field : fields) {
 	    	OrderBy orderBy=field.getAnnotation(OrderBy.class);
-	    	if(orderBy!=null){
-	    		String fieldName= field.getName();
-	    		orderInfo=new OrderInfo(fieldName,StringUtils.isEmpty(orderBy.value())?OrderByEnum.ASC:orderBy.value());
-				orderInfoList.add(orderInfo);
-	    	}
+
+	    	if(orderBy==null) {
+	    		continue;
+			}
+
+			String fieldName= field.getName();
+			orderInfo=new OrderInfo(fieldName,StringUtils.hasText(orderBy.value())? OrderEnum.parseByText(orderBy.value().toLowerCase()): OrderEnum.ASC);
+			orderInfoList.add(orderInfo);
 		}
 	    return orderInfoList;
 	}

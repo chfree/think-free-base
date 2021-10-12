@@ -1,6 +1,7 @@
 package com.cditer.free.data.message;
 
-import com.cditer.free.core.message.data.OrderByEnum;
+import com.cditer.free.core.enums.OrderEnum;
+import lombok.Data;
 
 /**
  * @author      chenghuan
@@ -8,35 +9,21 @@ import com.cditer.free.core.message.data.OrderByEnum;
  * @createtime  2016年5月6日 下午2:36:28
  * @comment 
  */
+@Data
 public class OrderInfo {
 	private String property;
 	
-	private String orderBy;
+	private OrderEnum orderBy;
 
-	public String getProperty() {
-		return property;
-	}
-
-	public void setProperty(String property) {
-		this.property = property;
-	}
-
-	public String getOrderBy() {
-		return orderBy;
-	}
-
-	public void setOrderBy(String orderBy) {
-		this.orderBy = orderBy;
-	}
 	
 	public OrderInfo(){}
 	
 	public OrderInfo(String property){
 		this.property=property;
-		this.orderBy= OrderByEnum.ASC;
+		this.orderBy= OrderEnum.ASC;
 	}
 	
-	public OrderInfo(String property,String orderBy){
+	public OrderInfo(String property,OrderEnum orderBy){
 		this.property=property;
 		this.orderBy=orderBy;
 	}
