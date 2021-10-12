@@ -879,22 +879,66 @@ public class SqlExpressionTest {
 
     @Test
     public void andWhereInString() {
+        List<String> list = new ArrayList<>();
+        list.add("cheng");
+        list.add("123");
+
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name").from("user").andWhereInString(TestDataUser::getAccount, list);
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name from user where (account in (#{account0},#{account1}))");
+        Assert.assertEquals(sqlExpression.getParams().get("account0"), "cheng");
+        Assert.assertEquals(sqlExpression.getParams().get("account1"), "123");
     }
 
     @Test
     public void testAndWhereInString() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name").from("user").andWhereInString(TestDataUser::getAccount, "cheng", "123");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name from user where (account in (#{account0},#{account1}))");
+        Assert.assertEquals(sqlExpression.getParams().get("account0"), "cheng");
+        Assert.assertEquals(sqlExpression.getParams().get("account1"), "123");
     }
 
     @Test
     public void testAndWhereInString1() {
+        List<String> list = new ArrayList<>();
+        list.add("cheng");
+        list.add("123");
+
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name").from("user").andWhereInString(list, "and", TestDataUser::getName, TestDataUser::getAccount);
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name from user where (name in (#{name0},#{name1}) and account in (#{name0},#{name1}))");
+        Assert.assertEquals(sqlExpression.getParams().get("name0"), "cheng");
+        Assert.assertEquals(sqlExpression.getParams().get("name1"), "123");
     }
 
     @Test
     public void andWhereNotIn() {
+        List<Object> list = new ArrayList<>();
+        list.add("cheng");
+        list.add(123);
+
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name").from("user").andWhereNotIn(TestDataUser::getAccount, list);
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name from user where (account not in (#{account0},#{account1}))");
+        Assert.assertEquals(sqlExpression.getParams().get("account0"), "cheng");
+        Assert.assertEquals(sqlExpression.getParams().get("account1"), 123);
     }
 
     @Test
     public void testAndWhereNotIn() {
+        ISqlExpression inSql = getEmptySql();
+        inSql.select("account").from("user").andLike("account", "cheng");
+
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name").from("user").andWhereNotIn(TestDataUser::getAccount, inSql);
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name from user where (account not in (select account from user where (account like concat('%',#{account},'%'))))");
+        Assert.assertEquals(sqlExpression.getParams().get("account"), "cheng");
     }
 
     @Test

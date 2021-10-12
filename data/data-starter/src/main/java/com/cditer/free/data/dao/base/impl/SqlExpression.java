@@ -476,10 +476,13 @@ public class SqlExpression implements ISqlExpression {
         if (wheres.size() == 0) {
             return "";
         }
-        String defaultWhere = "where ";
-        String firstWhere = wheres.get(0).replace("and ", "").replace("or ", "");
-        wheres.set(0, firstWhere);
 
+        if(wheres.get(0).indexOf("and ")==0||wheres.get(0).indexOf("or ")==0) {
+            String firstWhere = wheres.get(0).replaceFirst("and ", "").replaceFirst("or ", "");
+            wheres.set(0, firstWhere);
+        }
+
+        String defaultWhere = "where ";
         return defaultWhere + String.join(" ", wheres);
     }
 
@@ -895,6 +898,12 @@ public class SqlExpression implements ISqlExpression {
         return andWhereInString("in", column, values);
     }
 
+    @Override
+    public <T, R> ISqlExpression andWhereInString(SerializableFunction<T, R> column, List<String> values) {
+        String mainTableAlias = getMainTableAlias();
+        return andWhereInString(mainTableAlias + function2ColumnName(column), values);
+    }
+
     private ISqlExpression andWhereInString(String inOrNotIn, String column, List<String> values) {
         if (values == null || values.size() <= 0) {
             return this;
@@ -927,8 +936,22 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
+    public <T, R> ISqlExpression andWhereInString(SerializableFunction<T, R> column, String... values) {
+        String mainTableAlias = getMainTableAlias();
+        return andWhereInString(mainTableAlias + function2ColumnName(column), values);
+    }
+
+    @Override
     public ISqlExpression andWhereInString(List<String> values, String join, String... columns) {
         return andWhereInString("in", values, join, columns);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andWhereInString(List<String> values, String join, SerializableFunction<T, R>... columns) {
+        String mainTableAlias = getMainTableAlias();
+        List<String> list = Arrays.stream(columns).map(item -> mainTableAlias + function2ColumnName(item)).collect(Collectors.toList());
+
+        return andWhereInString(values, join, list.toArray(new String[0]));
     }
 
     private ISqlExpression andWhereInString(String inOrNotIn, List<String> values, String join, String... columns) {
@@ -939,23 +962,22 @@ public class SqlExpression implements ISqlExpression {
             return this;
         }
         StringBuffer sbWheres = new StringBuffer();
-        String inWhereId = "";
+        String inWhereColumn = "";
         Map<String, Object> inWhereMap = new HashMap<String, Object>();
         for (String column : columns) {
             column = resolveColumnMainTable(column);
             if (sbWheres.length() > 0) {
                 sbWheres.append(" " + join + " ");
             }
-            if (StringUtils.isEmpty(inWhereId)) {
-
-                inWhereId = resolveColumn(column);
+            if (StringUtils.isEmpty(inWhereColumn)) {
+                inWhereColumn = resolveColumn(column);
             }
             sbWheres.append(column + " " + inOrNotIn + " (");
             for (int i = 0; i < values.size(); i++) {
                 if (i == values.size() - 1) {
-                    sbWheres.append("#{" + inWhereId + i + "}");
+                    sbWheres.append("#{" + inWhereColumn + i + "}");
                 } else {
-                    sbWheres.append("#{" + inWhereId + i + "},");
+                    sbWheres.append("#{" + inWhereColumn + i + "},");
                 }
 
                 if (inWhereMap.isEmpty()) {
@@ -979,7 +1001,19 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public ISqlExpression andWhereNotIn(String column, List<Object> values) {
-        return andWhereIn(column, values);
+        return andWhereIn("not in", column, values);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andWhereNotIn(SerializableFunction<T, R> column, ISqlExpression sqlExpression) {
+        String mainTableAlias = getMainTableAlias();
+        return andWhereNotIn(mainTableAlias + function2ColumnName(column), sqlExpression);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andWhereNotIn(SerializableFunction<T, R> column, List<Object> values) {
+        String mainTableAlias = getMainTableAlias();
+        return andWhereNotIn(mainTableAlias + function2ColumnName(column), values);
     }
 
     @Override

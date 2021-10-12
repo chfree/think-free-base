@@ -92,13 +92,23 @@ public interface ISqlExpression {
 
     ISqlExpression andWhereInString(String column, List<String> values);
 
+    <T, R> ISqlExpression andWhereInString(SerializableFunction<T, R> column, List<String> values);
+
     ISqlExpression andWhereInString(String column, String... values);
 
+    <T, R> ISqlExpression andWhereInString(SerializableFunction<T, R> column, String... values);
+
     ISqlExpression andWhereInString(List<String> values, String join, String... columns);
+
+    <T, R> ISqlExpression andWhereInString(List<String> values, String join, SerializableFunction<T, R>... columns);
 
     ISqlExpression andWhereNotIn(String column, ISqlExpression sqlExpression);
 
     ISqlExpression andWhereNotIn(String column, List<Object> values);
+
+    <T, R> ISqlExpression andWhereNotIn(SerializableFunction<T, R> column, ISqlExpression sqlExpression);
+
+    <T, R> ISqlExpression andWhereNotIn(SerializableFunction<T, R> column, List<Object> values);
 
     ISqlExpression andWhereNotInString(String column, List<String> values);
 
