@@ -1031,6 +1031,26 @@ public class SqlExpression implements ISqlExpression {
         return andWhereInString("not in", values, join, columns);
     }
 
+    @Override
+    public <T, R> ISqlExpression andWhereNotInString(SerializableFunction<T, R> column, List<String> values) {
+        String mainTableAlias = getMainTableAlias();
+        return andWhereNotInString(mainTableAlias + function2ColumnName(column), values);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andWhereNotInString(SerializableFunction<T, R> column, String... values) {
+        String mainTableAlias = getMainTableAlias();
+        return andWhereNotInString(mainTableAlias + function2ColumnName(column), values);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andWhereNotInString(List<String> values, String join, SerializableFunction<T, R>... columns) {
+        String mainTableAlias = getMainTableAlias();
+        List<String> list = Arrays.stream(columns).map(item -> mainTableAlias + function2ColumnName(item)).collect(Collectors.toList());
+
+        return andWhereNotInString(values, join, list.toArray(new String[0]));
+    }
+
     private String resolveColumn(String column) {
 
         return column.replaceAll("\\.", "_");

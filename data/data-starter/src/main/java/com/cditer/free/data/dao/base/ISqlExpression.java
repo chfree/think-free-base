@@ -116,6 +116,12 @@ public interface ISqlExpression {
 
     ISqlExpression andWhereNotInString(List<String> values, String join, String... columns);
 
+    <T, R> ISqlExpression andWhereNotInString(SerializableFunction<T, R> column, List<String> values);
+
+    <T, R> ISqlExpression andWhereNotInString(SerializableFunction<T, R> column, String... values);
+
+    <T, R> ISqlExpression andWhereNotInString(List<String> values, String join, SerializableFunction<T, R>... columns);
+
     ISqlExpression orWhere(String value);
 
     ISqlExpression addOrder(String column, OrderEnum order);
