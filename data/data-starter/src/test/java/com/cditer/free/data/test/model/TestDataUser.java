@@ -1,6 +1,5 @@
 package com.cditer.free.data.test.model;
 
-import com.cditer.free.core.enums.OrderEnum;
 import com.cditer.free.core.message.data.OrderByEnum;
 import lombok.Data;
 
@@ -13,7 +12,7 @@ import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "basic_authority_user")
+@Table(name = "test_authority_user")
 public class TestDataUser {
     @Id
     @Column(name="id")
