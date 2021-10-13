@@ -12,9 +12,9 @@ public class DataBootConfig {
     /**
      * sql语句执行时长超过时间 默认1000ms
      */
-    // @Value("${think.data.sql.exec-max-time:1000}")
+    @Value("${think.data.sql.exec-max-time:1000}")
     private long sqlExecMaxTime;
 
-    // @Value("${think.data.sql.print:true}")
+    @Value("${think.data.sql.print:true}")
     private boolean printSql;
 }

@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class DataTestApp implements CommandLineRunner {
 
     public static void main(String[] args) {
-        SpringApplication.run(DataTestApp.class, args);
+        SpringApplication.run(DataApp.class, args);
     }
 
     @Override
