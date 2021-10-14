@@ -988,4 +988,14 @@ public class SqlExpressionTest {
 
         Assert.assertEquals(sqlExpression.toSql(), String.format("select name,account,bu_id from test_authority_user"));
     }
+
+    @Test
+    public void testInsert(){
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.insert(TestDataUser.class).insertColumn(TestDataUser::getName, "cheng").insertColumn("age", "123");
+
+        Assert.assertEquals(sqlExpression.toSql(), "insert into test_authority_user(name,age) values(#{name},#{age})");
+        Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+        Assert.assertEquals(sqlExpression.getParams().get("age"), "123");
+    }
 }

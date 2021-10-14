@@ -243,4 +243,10 @@ public interface ISqlExpression {
     ISqlExpression setFunParam(String funName, String funValue);
 
     <T, R> String function2ColumnName(SerializableFunction<T, R> function);
+
+    ISqlExpression insert(Class<?> tClass);
+
+    ISqlExpression insertColumn(String column, String value);
+
+    <T, R> ISqlExpression insertColumn(SerializableFunction<T, R> column, String value);
 }

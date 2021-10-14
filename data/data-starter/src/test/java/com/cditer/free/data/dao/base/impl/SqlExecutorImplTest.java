@@ -70,10 +70,24 @@ public class SqlExecutorImplTest extends BaseTest {
 
     @Test
     public void delete() {
+        List<TestDataUser> list = testDataUserMapper.select(null);
+        TestDataUser testDataUser = list.get(0);
+
+        ISqlExpression delSql = SqlExpressionFactory.createExpression();
+        delSql.delete().from(TestDataUser.class).andEqNoEmpty(TestDataUser::getId, testDataUser.getId());
+
+        int delete = sqlExecutor.delete(delSql);
+
+        Assert.assertTrue(delete==1);
     }
 
     @Test
     public void insert() {
+        List<TestDataUser> list = testDataUserMapper.select(null);
+        TestDataUser testDataUser = list.get(0);
+
+        ISqlExpression insertSql = SqlExpressionFactory.createExpression();
+
     }
 
     @Test

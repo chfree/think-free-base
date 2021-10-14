@@ -57,6 +57,8 @@ public class SqlExpression implements ISqlExpression {
 
     private List<String> callFunParam = new ArrayList<>();
 
+    private Map<String, String> insertMap = null;
+
     public SqlExpression() {
         if (params == null) {
             params = new HashMap<String, Object>();
@@ -463,6 +465,11 @@ public class SqlExpression implements ISqlExpression {
             if (StringUtils.hasText(whereSql)) {
                 result.add(whereSql);
             }
+        } else if (SqlOperateMode.insert.equals(sqlOperateMode)) {
+            String keys = String.join(",", insertMap.keySet());
+            String vals = String.join(",", insertMap.values());
+
+            return String.format("%s(%s) values(%s)", String.join(",", result), keys, vals);
         } else if (SqlOperateMode.callFun.equals(sqlOperateMode)) {
             result.add(String.format("(%s)", String.join(",", callFunParam)));
 
@@ -477,7 +484,7 @@ public class SqlExpression implements ISqlExpression {
             return "";
         }
 
-        if(wheres.get(0).indexOf("and ")==0||wheres.get(0).indexOf("or ")==0) {
+        if (wheres.get(0).indexOf("and ") == 0 || wheres.get(0).indexOf("or ") == 0) {
             String firstWhere = wheres.get(0).replaceFirst("and ", "").replaceFirst("or ", "");
             wheres.set(0, firstWhere);
         }
@@ -645,6 +652,32 @@ public class SqlExpression implements ISqlExpression {
             return columnTypeAnno.column();
         }
         return field.getName();
+    }
+
+    @Override
+    public ISqlExpression insert(Class<?> tClass) {
+        sqlOperateMode = SqlOperateMode.insert;
+        bodyBuffer.append(String.format("insert into %s", ClassAnnotationUtils.getTableName(tClass)));
+
+        return this;
+    }
+
+    @Override
+    public ISqlExpression insertColumn(String column, String value) {
+        if (insertMap == null) {
+            insertMap = new HashMap<>();
+        }
+        String columnParam = String.format("#{%s}", column);
+        insertMap.put(column, columnParam);
+
+        setParam(column, value);
+
+        return this;
+    }
+
+    @Override
+    public <T, R> ISqlExpression insertColumn(SerializableFunction<T, R> column, String value) {
+        return insertColumn(function2ColumnName(column), value);
     }
 
     @Override
