@@ -655,15 +655,20 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
-    public ISqlExpression insert(Class<?> tClass) {
+    public ISqlExpression insert(String tableName) {
         sqlOperateMode = SqlOperateMode.insert;
-        bodyBuffer.append(String.format("insert into %s", ClassAnnotationUtils.getTableName(tClass)));
+        bodyBuffer.append(String.format("insert into %s", tableName));
 
         return this;
     }
 
     @Override
-    public ISqlExpression insertColumn(String column, String value) {
+    public ISqlExpression insert(Class<?> tClass) {
+        return insert(ClassAnnotationUtils.getTableName(tClass));
+    }
+
+    @Override
+    public ISqlExpression insertColumn(String column, Object value) {
         if (insertMap == null) {
             insertMap = new HashMap<>();
         }
@@ -676,7 +681,7 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
-    public <T, R> ISqlExpression insertColumn(SerializableFunction<T, R> column, String value) {
+    public <T, R> ISqlExpression insertColumn(SerializableFunction<T, R> column, Object value) {
         return insertColumn(function2ColumnName(column), value);
     }
 

@@ -11,6 +11,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -49,7 +50,7 @@ public class SqlExecutorImpl implements ISqlExecutor {
         List<Map<String, Object>> list;
         try {
             list = selectList(sqlExpression);
-            if (list == null || list.size() == 0) {
+            if (CollectionUtils.isEmpty(list)) {
                 return null;
             }
             Map<String, Object> map = list.get(0);

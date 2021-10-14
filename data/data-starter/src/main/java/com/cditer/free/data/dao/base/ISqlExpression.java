@@ -244,9 +244,11 @@ public interface ISqlExpression {
 
     <T, R> String function2ColumnName(SerializableFunction<T, R> function);
 
+    ISqlExpression insert(String tableName);
+
     ISqlExpression insert(Class<?> tClass);
 
-    ISqlExpression insertColumn(String column, String value);
+    ISqlExpression insertColumn(String column, Object value);
 
-    <T, R> ISqlExpression insertColumn(SerializableFunction<T, R> column, String value);
+    <T, R> ISqlExpression insertColumn(SerializableFunction<T, R> column, Object value);
 }

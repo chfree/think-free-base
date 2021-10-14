@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SqlExecutorImplTest extends BaseTest {
 
@@ -26,13 +27,13 @@ public class SqlExecutorImplTest extends BaseTest {
     ITestDataUserMapper testDataUserMapper;
 
     @Before
-    public void initTestData(){
+    public void initTestData() {
         List<TestDataUser> list = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
             TestDataUser testDataUser = new TestDataUser();
-            testDataUser.setId("TEST_"+ CommonUtils.getShortUUID());
-            testDataUser.setName("test"+i);
+            testDataUser.setId("TEST_" + CommonUtils.getShortUUID());
+            testDataUser.setName("test" + i);
             testDataUser.setPassword("000000");
             testDataUser.setAccount("cheng");
             testDataUser.setCreateDate(DateUtil.date());
@@ -45,7 +46,7 @@ public class SqlExecutorImplTest extends BaseTest {
     }
 
     @After
-    public void destroyTestData(){
+    public void destroyTestData() {
         ISqlExpression delSql = SqlExpressionFactory.createExpression();
         delSql.delete().from(TestDataUser.class).andRightLikeNoEmpty(TestDataUser::getId, "TEST_");
 
@@ -78,28 +79,53 @@ public class SqlExecutorImplTest extends BaseTest {
 
         int delete = sqlExecutor.delete(delSql);
 
-        Assert.assertTrue(delete==1);
+        Assert.assertTrue(delete == 1);
     }
 
     @Test
     public void insert() {
-        List<TestDataUser> list = testDataUserMapper.select(null);
-        TestDataUser testDataUser = list.get(0);
-
         ISqlExpression insertSql = SqlExpressionFactory.createExpression();
 
+        insertSql.insert(TestDataUser.class)
+                .insertColumn(TestDataUser::getId, "TEST_" + CommonUtils.getShortUUID())
+                .insertColumn(TestDataUser::getName, "cheng")
+                .insertColumn(TestDataUser::getPassword, "000000")
+                .insertColumn(TestDataUser::getCreateDate, DateUtil.date())
+                .insertColumn(TestDataUser::getAccount, "cheng");
+
+        int insert = sqlExecutor.insert(insertSql);
+
+        Assert.assertTrue(insert==1);
     }
 
     @Test
     public void queryScalar() {
+        ISqlExpression scalarSql = SqlExpressionFactory.createExpression();
+        scalarSql.select(TestDataUser::getName).from(TestDataUser.class).andEq(TestDataUser::getName, "test0");
+
+        String scalarVal = sqlExecutor.queryScalar(scalarSql);
+
+        Assert.assertEquals(scalarVal, "test0");
     }
 
     @Test
     public void queryScalarInt() {
+        ISqlExpression scalarSql = SqlExpressionFactory.createExpression();
+        scalarSql.selectCount().from(TestDataUser.class).andEq(TestDataUser::getName, "test0");
+
+        int scalarVal = sqlExecutor.queryScalarInt(scalarSql);
+
+        Assert.assertEquals(scalarVal, 1);
     }
 
     @Test
     public void selectList() {
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.selectAllFrom(TestDataUser.class).andEq(TestDataUser::getName, "test0");;
+
+        List<Map<String, Object>> maps = sqlExecutor.selectList(sqlExpression);
+
+        Assert.assertEquals(maps.get(0).get("name"), "test0");
     }
 
     @Test
@@ -168,7 +194,7 @@ public class SqlExecutorImplTest extends BaseTest {
         sqlExpression.selectCount().from(TestDataUser.class);
         int i = sqlExecutor.queryCount(sqlExpression);
 
-        Assert.assertTrue(i>0);
+        Assert.assertTrue(i > 0);
     }
 
     @Test
