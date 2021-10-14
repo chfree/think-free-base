@@ -1,13 +1,71 @@
 package com.cditer.free.data.dao.base.impl;
 
+import cn.hutool.core.date.DateUtil;
+import com.cditer.free.core.util.CommonUtils;
+import com.cditer.free.data.BaseTest;
+import com.cditer.free.data.dao.base.ISqlExecutor;
+import com.cditer.free.data.dao.base.ISqlExpression;
+import com.cditer.free.data.test.mapper.ITestDataUserMapper;
+import com.cditer.free.data.test.model.TestDataUser;
+import com.cditer.free.data.utils.SqlExpressionFactory;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class SqlExecutorImplTest {
+public class SqlExecutorImplTest extends BaseTest {
+
+    @Autowired
+    ISqlExecutor sqlExecutor;
+
+    @Autowired
+    ITestDataUserMapper testDataUserMapper;
+
+    @Before
+    public void initTestData(){
+        List<TestDataUser> list = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+            TestDataUser testDataUser = new TestDataUser();
+            testDataUser.setId("TEST_"+ CommonUtils.getShortUUID());
+            testDataUser.setName("test"+i);
+            testDataUser.setPassword("000000");
+            testDataUser.setAccount("cheng");
+            testDataUser.setCreateDate(DateUtil.date());
+
+            list.add(testDataUser);
+        }
+
+
+        testDataUserMapper.insertListEx(list);
+    }
+
+    @After
+    public void destroyTestData(){
+        ISqlExpression delSql = SqlExpressionFactory.createExpression();
+        delSql.delete().from(TestDataUser.class).andRightLikeNoEmpty(TestDataUser::getId, "TEST_");
+
+        sqlExecutor.delete(delSql);
+    }
 
     @Test
     public void update() {
+        List<TestDataUser> list = testDataUserMapper.select(null);
+        TestDataUser testDataUser = list.get(0);
+
+        ISqlExpression updateSql = SqlExpressionFactory.createExpression();
+        updateSql.update(TestDataUser.class).setColumn(TestDataUser::getAccount, "CH").andEq("id", testDataUser.getId());
+
+        sqlExecutor.update(updateSql);
+
+        TestDataUser testDataUserOfDb = testDataUserMapper.selectByPrimaryKey(testDataUser.getId());
+
+        Assert.assertEquals(testDataUserOfDb.getAccount(), "CH");
+
     }
 
     @Test
@@ -92,6 +150,11 @@ public class SqlExecutorImplTest {
 
     @Test
     public void queryCount() {
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.selectCount().from(TestDataUser.class);
+        int i = sqlExecutor.queryCount(sqlExpression);
+
+        Assert.assertTrue(i>0);
     }
 
     @Test

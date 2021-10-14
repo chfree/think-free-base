@@ -1,3 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.cditer.free.data.boot.autoconfig.mybatis.MapperAutoConfiguration,\
 com.cditer.free.data.boot.autoconfig.DataAutoConfiguration
+
 
