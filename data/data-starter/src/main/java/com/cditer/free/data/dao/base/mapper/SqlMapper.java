@@ -169,6 +169,9 @@ public class SqlMapper {
 	public List<Map<String, Object>> selectListEx(String sql, Object value,RowBounds rowBounds) {
 		Class<?> parameterType = value != null ? value.getClass() : null;
 		String msId = msUtils.selectDynamic(sql, parameterType);
+		if(rowBounds ==null){
+			return sqlSession.selectList(msId, value);
+		}
 		return sqlSession.selectList(msId, value,rowBounds);
 	}
 	

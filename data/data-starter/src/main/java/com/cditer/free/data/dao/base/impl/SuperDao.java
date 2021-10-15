@@ -247,7 +247,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public List<Map<String, Object>> selectList(String sql) throws DaoBaseRuntimeException {
-        return sqlExecutor.selectList(sql);
+        return sqlExecutor.selectListEx(sql);
     }
 
     @Override
@@ -257,7 +257,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public List<Map<String, Object>> selectList(String sql, Object value) throws DaoBaseRuntimeException {
-        return sqlExecutor.selectList(sql, value);
+        return sqlExecutor.selectListEx(sql, value);
     }
 
     @Override
@@ -272,7 +272,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public Map<String, Object> selectOne(String sql) throws DaoBaseRuntimeException {
-        return sqlExecutor.selectOne(sql);
+        return sqlExecutor.selectOneEx(sql);
     }
 
     @Override
@@ -282,7 +282,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public Map<String, Object> selectOne(String sql, Object value) throws DaoBaseRuntimeException {
-        return sqlExecutor.selectOne(sql, value);
+        return sqlExecutor.selectOneEx(sql, value);
     }
 
     @Override
@@ -316,7 +316,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public int queryCount(String sql, Object value) throws DaoBaseRuntimeException {
-        return sqlExecutor.queryCount(sql, value);
+        return sqlExecutor.selectCount(sql, value);
     }
 
     // 自定义
@@ -332,7 +332,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public <T> T queryModel(ISqlExpression sqlExpression, Class<T> resultType) {
-        return sqlExecutor.queryModel(sqlExpression, resultType);
+        return sqlExecutor.selectModel(sqlExpression, resultType);
     }
 
     @Override
@@ -347,7 +347,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public <T> List<T> queryList(ISqlExpression sqlExpression, Class<T> resultType) {
-        return sqlExecutor.queryList(sqlExpression, resultType);
+        return sqlExecutor.selectList(sqlExpression, resultType);
     }
 
     @Override
@@ -367,17 +367,17 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public List<Map<String, Object>> queryListEx(ISqlExpression sqlExpression, PagerModel pagerModel) {
-        return sqlExecutor.queryListEx(sqlExpression, pagerModel);
+        return sqlExecutor.selectListEx(sqlExpression, pagerModel);
     }
 
     @Override
     public <T> List<T> queryList(ISqlExpression sqlExpression, PagerModel pagerModel, Class<T> resultType) {
-        return sqlExecutor.queryList(sqlExpression, pagerModel, resultType);
+        return sqlExecutor.selectList(sqlExpression, pagerModel, resultType);
     }
 
     @Override
     public int queryCount(ISqlExpression sqlExpression) {
-        return sqlExecutor.queryCount(sqlExpression);
+        return sqlExecutor.selectCount(sqlExpression);
     }
 
     @Override
@@ -419,17 +419,17 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public double queryScalarDouble(ISqlExpression sqlExpression) {
-        return sqlExecutor.queryScalarDouble(sqlExpression);
+        return sqlExecutor.selectScalarDouble(sqlExpression);
     }
 
     @Override
     public int queryScalarInt(ISqlExpression sqlExpression) {
-        return sqlExecutor.queryScalarInt(sqlExpression);
+        return sqlExecutor.selectScalarInt(sqlExpression);
     }
 
     @Override
     public String queryScalar(ISqlExpression sqlExpression) {
-        return sqlExecutor.queryScalar(sqlExpression);
+        return sqlExecutor.selectScalar(sqlExpression);
     }
 
     @Override

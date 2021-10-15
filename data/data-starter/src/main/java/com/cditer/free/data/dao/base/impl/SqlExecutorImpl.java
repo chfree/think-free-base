@@ -46,10 +46,10 @@ public class SqlExecutorImpl implements ISqlExecutor {
     }
 
     @Override
-    public String queryScalar(ISqlExpression sqlExpression) {
+    public String selectScalar(ISqlExpression sqlExpression) {
         List<Map<String, Object>> list;
         try {
-            list = selectList(sqlExpression);
+            list = selectListEx(sqlExpression);
             if (CollectionUtils.isEmpty(list)) {
                 return null;
             }
@@ -58,30 +58,28 @@ public class SqlExecutorImpl implements ISqlExecutor {
                 return null;
             }
             return map.get(map.keySet().toArray()[0]).toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new DaoBaseRuntimeException(e);
+        } catch (Exception e) {;
+            throw e;
         }
     }
 
     @Override
-    public int queryScalarInt(ISqlExpression sqlExpression) {
-        String scalar = queryScalar(sqlExpression);
-        if(StringUtils.isEmpty(scalar)){
+    public int selectScalarInt(ISqlExpression sqlExpression) {
+        String scalar = selectScalar(sqlExpression);
+        if(!StringUtils.hasText(scalar)){
             return 0;
         }
         return Integer.parseInt(scalar);
     }
 
     @Override
-    public List<Map<String, Object>> selectList(ISqlExpression sqlExpression) {
+    public List<Map<String, Object>> selectListEx(ISqlExpression sqlExpression) {
         SqlSession session = sqlSessionFactory.openSession(true);
         try {
             SqlMapper mapper = new SqlMapper(session);
             return mapper.selectList(sqlExpression.toSql(), sqlExpression.getParams());
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new DaoBaseRuntimeException(e);
+            throw e;
         } finally {
             session.close();
         }
@@ -102,8 +100,7 @@ public class SqlExecutorImpl implements ISqlExecutor {
             }
             return mapper.update(sql, params);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new DaoBaseRuntimeException(e);
+            throw e;
         } finally {
             session.close();
         }
@@ -124,8 +121,7 @@ public class SqlExecutorImpl implements ISqlExecutor {
             }
             return mapper.delete(sql, params);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new DaoBaseRuntimeException(e);
+            throw e;
         } finally {
             session.close();
         }
@@ -146,53 +142,35 @@ public class SqlExecutorImpl implements ISqlExecutor {
             }
             return mapper.insert(sql,params);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new DaoBaseRuntimeException(e);
+            throw e;
         } finally {
             session.close();
         }
     }
 
     @Override
-    public List<Map<String, Object>> selectList(String sql) {
-        SqlSession session = sqlSessionFactory.openSession(true);
-        try {
-            SqlMapper mapper = new SqlMapper(session);
-            return mapper.selectList(sql);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new DaoBaseRuntimeException(e);
-        } finally {
-            session.close();
-        }
+    public List<Map<String, Object>> selectListEx(String sql) {
+        return selectListEx(sql, null);
     }
 
     @Override
     public <T> List<T> selectList(String sql, Class<T> resultType) {
-        SqlSession session = sqlSessionFactory.openSession(true);
-        try {
-            SqlMapper mapper = new SqlMapper(session);
-            return mapper.selectList(sql, resultType);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new DaoBaseRuntimeException(e);
-        } finally {
-            session.close();
-        }
+        return selectList(sql, null, resultType);
     }
 
     @Override
-    public List<Map<String, Object>> selectList(String sql, Object value) {
-        SqlSession session = sqlSessionFactory.openSession(true);
-        try {
-            SqlMapper mapper = new SqlMapper(session);
-            return mapper.selectList(sql, value);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new DaoBaseRuntimeException(e);
-        } finally {
-            session.close();
-        }
+    public <T> List<T> selectList(ISqlExpression sql, Class<T> resultType) {
+        return selectList(sql.toSql(), sql.getParams(), resultType);
+    }
+
+    @Override
+    public <T> List<T> selectList(ISqlExpression sql, RowBounds rowBounds, Class<T> resultType) {
+        return selectList(sql.toSql(), sql.getParams(), rowBounds, resultType);
+    }
+
+    @Override
+    public List<Map<String, Object>> selectListEx(String sql, Object value) {
+        return selectListEx(sql, value, null);
     }
 
     @Override
@@ -202,8 +180,7 @@ public class SqlExecutorImpl implements ISqlExecutor {
             SqlMapper mapper = new SqlMapper(session);
             return mapper.selectListEx(sql, value, rowBounds);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new DaoBaseRuntimeException(e);
+            throw e;
         } finally {
             session.close();
         }
@@ -211,30 +188,12 @@ public class SqlExecutorImpl implements ISqlExecutor {
 
     @Override
     public <T> List<T> selectList(String sql, Object value, Class<T> resultType) {
-        SqlSession session = sqlSessionFactory.openSession(true);
-        try {
-            SqlMapper mapper = new SqlMapper(session);
-            return mapper.selectList(sql, value, resultType);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new DaoBaseRuntimeException(e);
-        } finally {
-            session.close();
-        }
+        return selectList(sql, value,null, resultType);
     }
 
     @Override
-    public Map<String, Object> selectOne(String sql) {
-        SqlSession session = sqlSessionFactory.openSession(true);
-        try {
-            SqlMapper mapper = new SqlMapper(session);
-            return mapper.selectOne(sql);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new DaoBaseRuntimeException(e);
-        } finally {
-            session.close();
-        }
+    public Map<String, Object> selectOneEx(String sql) {
+        return selectOneEx(sql, null);
     }
 
     @Override
@@ -244,25 +203,33 @@ public class SqlExecutorImpl implements ISqlExecutor {
             SqlMapper mapper = new SqlMapper(session);
             return mapper.selectOne(sql, resultType);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new DaoBaseRuntimeException(e);
+            throw e;
         } finally {
             session.close();
         }
     }
 
     @Override
-    public Map<String, Object> selectOne(String sql, Object value) {
+    public Map<String, Object> selectOneEx(String sql, Object value) {
         SqlSession session = sqlSessionFactory.openSession(true);
         try {
             SqlMapper mapper = new SqlMapper(session);
             return mapper.selectOne(sql, value);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new DaoBaseRuntimeException(e);
+            throw e;
         } finally {
             session.close();
         }
+    }
+
+    @Override
+    public Map<String, Object> selectOneEx(ISqlExpression sqlExpression) {
+        return selectOneEx(sqlExpression.toSql(), sqlExpression.getParams());
+    }
+
+    @Override
+    public <T> T selectOne(ISqlExpression sqlExpression, Class<T> resultType) {
+        return selectOne(sqlExpression.toSql(), sqlExpression.getParams(), resultType);
     }
 
     @Override
@@ -272,22 +239,20 @@ public class SqlExecutorImpl implements ISqlExecutor {
             SqlMapper mapper = new SqlMapper(session);
             return mapper.selectOne(sql, value, resultType);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new DaoBaseRuntimeException(e);
+            throw e;
         } finally {
             session.close();
         }
     }
 
     @Override
-    public int queryCount(String sql, Object value) {
+    public int selectCount(String sql, Object value) {
         SqlSession session = sqlSessionFactory.openSession(true);
         try {
             SqlMapper mapper = new SqlMapper(session);
             return mapper.queryCount(sql, value);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new DaoBaseRuntimeException(e);
+            throw e;
         } finally {
             session.close();
         }
@@ -295,16 +260,7 @@ public class SqlExecutorImpl implements ISqlExecutor {
 
     @Override
     public <T> List<T> selectList(String sql, RowBounds rowBounds, Class<T> resultType) {
-        SqlSession session = sqlSessionFactory.openSession(true);
-        try {
-            SqlMapper mapper = new SqlMapper(session);
-            return mapper.selectList(sql, rowBounds, resultType);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new DaoBaseRuntimeException(e);
-        } finally {
-            session.close();
-        }
+       return selectList(sql, null, rowBounds, resultType);
     }
 
     @Override
@@ -312,44 +268,42 @@ public class SqlExecutorImpl implements ISqlExecutor {
         SqlSession session = sqlSessionFactory.openSession(true);
         try {
             SqlMapper mapper = new SqlMapper(session);
+            if(rowBounds==null){
+                return mapper.selectList(sql, value, resultType);
+            }
             return mapper.selectList(sql, value, rowBounds, resultType);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new DaoBaseRuntimeException(e);
+            throw e;
         } finally {
             session.close();
         }
     }
 
     @Override
-    public <T> T queryModel(ISqlExpression sqlExpression, Class<T> resultType) {
+    public <T> T selectModel(ISqlExpression sqlExpression, Class<T> resultType) {
         return selectOne(sqlExpression.toSql(), sqlExpression.getParams(), resultType);
     }
 
-    @Override
-    public <T> List<T> queryList(ISqlExpression sqlExpression, Class<T> resultType) {
-        return selectList(sqlExpression.toSql(), sqlExpression.getParams(), resultType);
-    }
 
     @Override
-    public List<Map<String, Object>> queryListEx(ISqlExpression sqlExpression, PagerModel pagerModel) {
+    public List<Map<String, Object>> selectListEx(ISqlExpression sqlExpression, PagerModel pagerModel) {
         return selectListEx(sqlExpression.toSql(), sqlExpression.getParams(), Pager2RowBounds.getRowBounds(pagerModel));
     }
 
     @Override
-    public <T> List<T> queryList(ISqlExpression sqlExpression, PagerModel pagerModel, Class<T> resultType) {
+    public <T> List<T> selectList(ISqlExpression sqlExpression, PagerModel pagerModel, Class<T> resultType) {
         return selectList(sqlExpression.toSql(), sqlExpression.getParams(), Pager2RowBounds.getRowBounds(pagerModel), resultType);
     }
 
     @Override
-    public int queryCount(ISqlExpression sqlExpression) {
-        return queryCount(sqlExpression.toSql(), sqlExpression.getParams());
+    public int selectCount(ISqlExpression sqlExpression) {
+        return selectCount(sqlExpression.toSql(), sqlExpression.getParams());
     }
 
     @Override
-    public double queryScalarDouble(ISqlExpression sqlExpression) {
-        String scalar = queryScalar(sqlExpression);
-        if(StringUtils.isEmpty(scalar)){
+    public double selectScalarDouble(ISqlExpression sqlExpression) {
+        String scalar = selectScalar(sqlExpression);
+        if(!StringUtils.hasText(scalar)){
             return Double.NaN;
         }
         return Double.parseDouble(scalar);
