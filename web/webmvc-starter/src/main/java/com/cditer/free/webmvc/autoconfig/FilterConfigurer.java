@@ -8,10 +8,12 @@ import com.cditer.free.webmvc.filter.TraceIdFilter;
 import com.cditer.free.webmvc.filter.checkhelper.ICheckHelper;
 import com.cditer.free.webmvc.filter.checkhelper.MacCheckHelper;
 import com.cditer.free.webmvc.filter.checkhelper.TimestampCheckHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.util.StringUtils;
 import org.springframework.web.cors.CorsConfiguration;
@@ -24,7 +26,9 @@ import java.util.Collections;
 import java.util.List;
 
 
+@Slf4j
 @Import({ThinkWebConfig.class, CheckMacConfig.class})
+@Configuration
 public class FilterConfigurer implements WebMvcConfigurer {
 
     @Autowired
@@ -55,6 +59,7 @@ public class FilterConfigurer implements WebMvcConfigurer {
     public AjaxCorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         if(webConfig.isCorsEnabled()){
+            log.info("cors enabled is true");
             source.registerCorsConfiguration(webConfig.getCorsPath(), buildConfig());
         }
         return new AjaxCorsFilter(source);
