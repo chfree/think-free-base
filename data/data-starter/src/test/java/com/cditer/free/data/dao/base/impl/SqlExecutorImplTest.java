@@ -1,13 +1,16 @@
 package com.cditer.free.data.dao.base.impl;
 
 import cn.hutool.core.date.DateUtil;
+import com.cditer.free.core.message.data.PagerModel;
 import com.cditer.free.core.util.CommonUtils;
 import com.cditer.free.data.BaseTest;
 import com.cditer.free.data.dao.base.ISqlExecutor;
 import com.cditer.free.data.dao.base.ISqlExpression;
 import com.cditer.free.data.test.mapper.ITestDataUserMapper;
 import com.cditer.free.data.test.model.TestDataUser;
+import com.cditer.free.data.utils.Pager2RowBounds;
 import com.cditer.free.data.utils.SqlExpressionFactory;
+import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -103,7 +106,7 @@ public class SqlExecutorImplTest extends BaseTest {
         ISqlExpression scalarSql = SqlExpressionFactory.createExpression();
         scalarSql.select(TestDataUser::getName).from(TestDataUser.class).andEq(TestDataUser::getName, "test0");
 
-        String scalarVal = sqlExecutor.queryScalar(scalarSql);
+        String scalarVal = sqlExecutor.selectScalar(scalarSql);
 
         Assert.assertEquals(scalarVal, "test0");
     }
@@ -113,67 +116,63 @@ public class SqlExecutorImplTest extends BaseTest {
         ISqlExpression scalarSql = SqlExpressionFactory.createExpression();
         scalarSql.selectCount().from(TestDataUser.class).andEq(TestDataUser::getName, "test0");
 
-        int scalarVal = sqlExecutor.queryScalarInt(scalarSql);
+        int scalarVal = sqlExecutor.selectScalarInt(scalarSql);
 
         Assert.assertEquals(scalarVal, 1);
     }
 
     @Test
-    public void selectList() {
+    public void selectListEx() {
         ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
         sqlExpression.selectAllFrom(TestDataUser.class).andEq(TestDataUser::getName, "test0");;
 
-        List<Map<String, Object>> maps = sqlExecutor.selectList(sqlExpression);
+        List<Map<String, Object>> maps = sqlExecutor.selectListEx(sqlExpression);
 
         Assert.assertEquals(maps.get(0).get("name"), "test0");
     }
 
     @Test
-    public void testUpdate() {
-    }
+    public void selectList() {
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.selectAllFrom(TestDataUser.class).andEq(TestDataUser::getName, "test0");
 
-    @Test
-    public void testUpdate1() {
-    }
+        List<TestDataUser> testDataUsers = sqlExecutor.selectList(sqlExpression, TestDataUser.class);
+        Assert.assertTrue(testDataUsers.size()==1);
 
-    @Test
-    public void testDelete() {
-    }
-
-    @Test
-    public void testDelete1() {
-    }
-
-    @Test
-    public void testInsert() {
-    }
-
-    @Test
-    public void testInsert1() {
-    }
-
-    @Test
-    public void testSelectList() {
-    }
-
-    @Test
-    public void testSelectList1() {
-    }
-
-    @Test
-    public void testSelectList2() {
-    }
-
-    @Test
-    public void selectListEx() {
+        Assert.assertEquals(testDataUsers.get(0).getName(), "test0");
     }
 
     @Test
     public void testSelectList3() {
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.selectAllFrom(TestDataUser.class);
+
+        PagerModel pagerModel = new PagerModel(1,1);
+        List<TestDataUser> testDataUsers = sqlExecutor.selectList(sqlExpression, Pager2RowBounds.getRowBounds(pagerModel), TestDataUser.class);
+
+        Assert.assertTrue(testDataUsers.size()==1);
     }
 
     @Test
     public void selectOne() {
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.selectAllFrom(TestDataUser.class);
+
+        Assert.assertThrows(TooManyResultsException.class, ()->{
+            sqlExecutor.selectOneEx(sqlExpression);
+        });
+
+        Assert.assertThrows(TooManyResultsException.class, ()->{
+            sqlExecutor.selectOne(sqlExpression, TestDataUser.class);
+        });
+
+        sqlExpression.andEq(TestDataUser::getName, "test0");
+
+        Map<String, Object> stringObjectMap = sqlExecutor.selectOneEx(sqlExpression);
+        Assert.assertEquals(stringObjectMap.get("name"), "test0");
+
+        TestDataUser testDataUser = sqlExecutor.selectOne(sqlExpression, TestDataUser.class);
+        Assert.assertEquals(testDataUser.getName(), "test0");
     }
 
     @Test
@@ -189,10 +188,10 @@ public class SqlExecutorImplTest extends BaseTest {
     }
 
     @Test
-    public void queryCount() {
+    public void selectCount() {
         ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
         sqlExpression.selectCount().from(TestDataUser.class);
-        int i = sqlExecutor.queryCount(sqlExpression);
+        int i = sqlExecutor.selectCount(sqlExpression);
 
         Assert.assertTrue(i > 0);
     }

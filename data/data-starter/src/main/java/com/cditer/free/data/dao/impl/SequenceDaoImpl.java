@@ -25,6 +25,6 @@ public class SequenceDaoImpl implements ISequenceDao {
         ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
         sqlExpression.callFunction("nextval").setFunParam("seqName", seqName);
 
-        return sqlExecutor.queryScalarInt(sqlExpression);
+        return sqlExecutor.selectScalarInt(sqlExpression);
     }
 }

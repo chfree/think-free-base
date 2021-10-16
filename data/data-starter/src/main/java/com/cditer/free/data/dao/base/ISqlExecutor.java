@@ -20,11 +20,11 @@ public interface ISqlExecutor {
 
     int insert(ISqlExpression sqlExpression);
 
-    String queryScalar(ISqlExpression sqlExpression);
+    String selectScalar(ISqlExpression sqlExpression);
 
-    int queryScalarInt(ISqlExpression sqlExpression);
+    int selectScalarInt(ISqlExpression sqlExpression);
 
-    List<Map<String, Object>> selectList(ISqlExpression sqlExpression);
+    List<Map<String, Object>> selectListEx(ISqlExpression sqlExpression);
 
 
     int update(String sql);
@@ -39,39 +39,45 @@ public interface ISqlExecutor {
 
     int insert(String sql,Object params);
 
-    List<Map<String, Object>> selectList(String sql);
+    List<Map<String, Object>> selectListEx(String sql);
 
     <T> List<T> selectList(String sql, Class<T> resultType);
 
-    List<Map<String, Object>> selectList(String sql, Object value);
+    <T> List<T> selectList(ISqlExpression sql, Class<T> resultType);
+
+    <T> List<T> selectList(ISqlExpression sql,RowBounds rowBounds, Class<T> resultType);
+
+    List<Map<String, Object>> selectListEx(String sql, Object value);
 
     List<Map<String, Object>> selectListEx(String sql, Object value, RowBounds rowBounds);
 
     <T> List<T> selectList(String sql, Object value, Class<T> resultType);
 
-    Map<String, Object> selectOne(String sql);
+    Map<String, Object> selectOneEx(String sql);
 
     <T> T selectOne(String sql, Class<T> resultType);
 
-    Map<String, Object> selectOne(String sql, Object value);
+    Map<String, Object> selectOneEx(String sql, Object value);
+
+    Map<String, Object> selectOneEx(ISqlExpression sqlExpression);
+
+    <T> T selectOne(ISqlExpression sqlExpression, Class<T> resultType);
 
     <T> T selectOne(String sql, Object value, Class<T> resultType);
 
-    int queryCount(String sql, Object value);
+    int selectCount(String sql, Object value);
 
     <T> List<T> selectList(String sql,RowBounds rowBounds, Class<T> resultType);
 
     <T> List<T> selectList(String sql, Object value,RowBounds rowBounds,Class<T> resultType);
 
-    <T> T queryModel(ISqlExpression sqlExpression,Class<T> resultType);
+    <T> T selectModel(ISqlExpression sqlExpression,Class<T> resultType);
 
-    <T> List<T> queryList(ISqlExpression sqlExpression,Class<T> resultType);
+    List<Map<String, Object>> selectListEx(ISqlExpression sqlExpression, PagerModel pagerModel);
 
-    List<Map<String, Object>> queryListEx(ISqlExpression sqlExpression, PagerModel pagerModel);
+    <T> List<T> selectList(ISqlExpression sqlExpression,PagerModel pagerModel,Class<T> resultType);
 
-    <T> List<T> queryList(ISqlExpression sqlExpression,PagerModel pagerModel,Class<T> resultType);
+    int selectCount(ISqlExpression sqlExpression);
 
-    int queryCount(ISqlExpression sqlExpression);
-
-    double queryScalarDouble(ISqlExpression sqlExpression);
+    double selectScalarDouble(ISqlExpression sqlExpression);
 }

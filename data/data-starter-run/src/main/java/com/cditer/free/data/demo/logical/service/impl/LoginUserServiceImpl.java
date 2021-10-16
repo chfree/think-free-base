@@ -66,7 +66,7 @@ public class LoginUserServiceImpl extends SuperDao<LoginUser> implements ILoginU
         ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
         sqlExpression.addBody("select nextval('"+seqName+"')");
 
-        return sqlExecutor.queryScalarInt(sqlExpression);
+        return sqlExecutor.selectScalarInt(sqlExpression);
     }
 
     @Override
