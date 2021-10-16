@@ -2,4 +2,5 @@
 */.settings/
 .idea
 *.iml
-*/target/*
+**/target/
+
