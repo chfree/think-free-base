@@ -176,18 +176,6 @@ public class SqlExecutorImplTest extends BaseTest {
     }
 
     @Test
-    public void testSelectOne() {
-    }
-
-    @Test
-    public void testSelectOne1() {
-    }
-
-    @Test
-    public void testSelectOne2() {
-    }
-
-    @Test
     public void selectCount() {
         ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
         sqlExpression.selectCount().from(TestDataUser.class);
@@ -198,33 +186,49 @@ public class SqlExecutorImplTest extends BaseTest {
 
     @Test
     public void testSelectList4() {
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.selectAllFrom(TestDataUser.class).andEq(TestDataUser::getName, "test0");
+
+        List<TestDataUser> testDataUsers = sqlExecutor.selectList(sqlExpression, TestDataUser.class);
+
+        Assert.assertTrue(testDataUsers.size()==1);
+        Assert.assertEquals(testDataUsers.get(0).getName(), "test0");
     }
 
     @Test
     public void testSelectList5() {
-    }
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.selectAllFrom(TestDataUser.class);
 
-    @Test
-    public void queryModel() {
-    }
+        PagerModel pagerModel = new PagerModel(5,1);
 
-    @Test
-    public void queryList() {
+        List<TestDataUser> testDataUsers = sqlExecutor.selectList(sqlExpression, pagerModel, TestDataUser.class);
+
+        Assert.assertTrue(testDataUsers.size()==5);
+        Assert.assertNotNull(testDataUsers.get(0).getName());
     }
 
     @Test
     public void queryListEx() {
-    }
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.selectAllFrom(TestDataUser.class);
 
-    @Test
-    public void testQueryList() {
-    }
+        PagerModel pagerModel = new PagerModel(5,1);
+        List<Map<String, Object>> maps = sqlExecutor.selectListEx(sqlExpression, pagerModel);
 
-    @Test
-    public void testQueryCount() {
+        Assert.assertTrue(maps.size()==5);
+        Assert.assertNotNull(maps.get(0).get("name"));
+
     }
 
     @Test
     public void queryScalarDouble() {
+        ISqlExpression scalarSql = SqlExpressionFactory.createExpression();
+        scalarSql.selectCount().from(TestDataUser.class).andEq(TestDataUser::getName, "test0");
+
+        Double scalarVal = sqlExecutor.selectScalarDouble(scalarSql);
+        Double result = 1.0;
+
+        Assert.assertEquals(scalarVal, result);
     }
 }

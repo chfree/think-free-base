@@ -109,8 +109,6 @@ public interface ISuperDao<E extends ModelBase> {
 	
 	Map<String, Object> selectOne(String sql) throws DaoBaseRuntimeException;
 	
-	<T> T selectOne(String sql, Class<T> resultType) throws DaoBaseRuntimeException;
-	
 	Map<String, Object> selectOne(String sql, Object value) throws DaoBaseRuntimeException;
 	
 	<T> T selectOne(String sql, Object value, Class<T> resultType) throws DaoBaseRuntimeException;

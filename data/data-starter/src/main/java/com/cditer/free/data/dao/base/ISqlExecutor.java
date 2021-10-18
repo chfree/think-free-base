@@ -55,8 +55,6 @@ public interface ISqlExecutor {
 
     Map<String, Object> selectOneEx(String sql);
 
-    <T> T selectOne(String sql, Class<T> resultType);
-
     Map<String, Object> selectOneEx(String sql, Object value);
 
     Map<String, Object> selectOneEx(ISqlExpression sqlExpression);
@@ -70,8 +68,6 @@ public interface ISqlExecutor {
     <T> List<T> selectList(String sql,RowBounds rowBounds, Class<T> resultType);
 
     <T> List<T> selectList(String sql, Object value,RowBounds rowBounds,Class<T> resultType);
-
-    <T> T selectModel(ISqlExpression sqlExpression,Class<T> resultType);
 
     List<Map<String, Object>> selectListEx(ISqlExpression sqlExpression, PagerModel pagerModel);
 

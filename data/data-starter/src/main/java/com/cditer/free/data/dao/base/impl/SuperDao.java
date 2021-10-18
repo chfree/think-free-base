@@ -276,11 +276,6 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
     }
 
     @Override
-    public <T> T selectOne(String sql, Class<T> resultType) throws DaoBaseRuntimeException {
-        return sqlExecutor.selectOne(sql, resultType);
-    }
-
-    @Override
     public Map<String, Object> selectOne(String sql, Object value) throws DaoBaseRuntimeException {
         return sqlExecutor.selectOneEx(sql, value);
     }
@@ -332,7 +327,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public <T> T queryModel(ISqlExpression sqlExpression, Class<T> resultType) {
-        return sqlExecutor.selectModel(sqlExpression, resultType);
+        return sqlExecutor.selectOne(sqlExpression, resultType);
     }
 
     @Override

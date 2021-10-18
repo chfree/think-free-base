@@ -197,19 +197,6 @@ public class SqlExecutorImpl implements ISqlExecutor {
     }
 
     @Override
-    public <T> T selectOne(String sql, Class<T> resultType) {
-        SqlSession session = sqlSessionFactory.openSession(true);
-        try {
-            SqlMapper mapper = new SqlMapper(session);
-            return mapper.selectOne(sql, resultType);
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            session.close();
-        }
-    }
-
-    @Override
     public Map<String, Object> selectOneEx(String sql, Object value) {
         SqlSession session = sqlSessionFactory.openSession(true);
         try {
@@ -278,12 +265,6 @@ public class SqlExecutorImpl implements ISqlExecutor {
             session.close();
         }
     }
-
-    @Override
-    public <T> T selectModel(ISqlExpression sqlExpression, Class<T> resultType) {
-        return selectOne(sqlExpression.toSql(), sqlExpression.getParams(), resultType);
-    }
-
 
     @Override
     public List<Map<String, Object>> selectListEx(ISqlExpression sqlExpression, PagerModel pagerModel) {
