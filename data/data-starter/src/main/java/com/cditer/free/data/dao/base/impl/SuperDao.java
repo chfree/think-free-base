@@ -81,7 +81,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public List<E> queryListByIds(String ids) throws DaoBaseRuntimeException {
-        if (StringUtils.isEmpty(ids)) {
+        if (!StringUtils.hasText(ids)) {
             return null;
         }
         return queryListByIds(Arrays.asList(ids.split(",")));
@@ -156,16 +156,6 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
         return getMapper().updateByPrimaryKeySelective(e) > 0;
     }
 
-//	@Override
-//	public int updateModelByExample(E e, Object example) throws DaoBaseRuntimeException {
-//		return getMapper().updateByExample(e, example);
-//	}
-//
-//	@Override
-//	public int updateModelSelectiveByExample(E e, Object example) throws DaoBaseRuntimeException {
-//		return getMapper().updateByExampleSelective(e, example);
-//	}
-
     @Override
     public boolean deleteModel(String key) throws DaoBaseRuntimeException {
         return getMapper().deleteByPrimaryKey(key) > 0;
@@ -175,11 +165,6 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
     public int deleteModel(E e) throws DaoBaseRuntimeException {
         return getMapper().delete(e);
     }
-
-//	@Override
-//	public int deleteModelByExample(Object example) throws DaoBaseRuntimeException {
-//		return getMapper().deleteByExample(example);
-//	}
 
     @Override
     public boolean applyChange(E e) throws DaoBaseRuntimeException {
@@ -287,16 +272,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public List<E> selectList(String sql, Object value, RowBounds rowBounds) throws DaoBaseRuntimeException {
-        SqlSession session = getSqlSessionFactory().openSession(ExecutorType.SIMPLE, true);
-        try {
-            SqlMapper mapper = new SqlMapper(session);
-            return mapper.selectList(sql, value, rowBounds);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new DaoBaseRuntimeException(e);
-        } finally {
-            session.close();
-        }
+        return sqlExecutor.selectList(sql, value, rowBounds, getEntityClass());
     }
 
     @Override

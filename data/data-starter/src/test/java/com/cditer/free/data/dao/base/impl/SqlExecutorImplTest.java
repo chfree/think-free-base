@@ -11,50 +11,21 @@ import com.cditer.free.data.test.model.TestDataUser;
 import com.cditer.free.data.utils.Pager2RowBounds;
 import com.cditer.free.data.utils.SqlExpressionFactory;
 import org.apache.ibatis.exceptions.TooManyResultsException;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class SqlExecutorImplTest extends BaseTest {
+public class SqlExecutorImplTest extends TestDataUserBase {
 
     @Autowired
     ISqlExecutor sqlExecutor;
 
     @Autowired
-    ITestDataUserMapper testDataUserMapper;
+    private ITestDataUserMapper testDataUserMapper;
 
-    @Before
-    public void initTestData() {
-        List<TestDataUser> list = new ArrayList<>();
-
-        for (int i = 0; i < 10; i++) {
-            TestDataUser testDataUser = new TestDataUser();
-            testDataUser.setId("TEST_" + CommonUtils.getShortUUID());
-            testDataUser.setName("test" + i);
-            testDataUser.setPassword("000000");
-            testDataUser.setAccount("cheng");
-            testDataUser.setCreateDate(DateUtil.date());
-
-            list.add(testDataUser);
-        }
-
-
-        testDataUserMapper.insertListEx(list);
-    }
-
-    @After
-    public void destroyTestData() {
-        ISqlExpression delSql = SqlExpressionFactory.createExpression();
-        delSql.delete().from(TestDataUser.class).andRightLikeNoEmpty(TestDataUser::getId, "TEST_");
-
-        sqlExecutor.delete(delSql);
-    }
 
     @Test
     public void update() {
