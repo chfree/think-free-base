@@ -5,6 +5,7 @@ import com.cditer.free.core.message.data.PagerModel;
 import com.cditer.free.core.util.ReflectUtils;
 import com.cditer.free.data.dao.base.ISqlExpression;
 import com.cditer.free.data.message.OrderInfo;
+import com.cditer.free.data.test.model.TestDataDept;
 import com.cditer.free.data.test.model.TestDataUser;
 import com.cditer.free.data.utils.SqlExpressionFactory;
 import org.junit.Assert;
@@ -598,9 +599,9 @@ public class SqlExpressionTest {
     @Test
     public void testOnFun() {
         ISqlExpression sqlExpression = getEmptySql();
-        sqlExpression.select("user,age").from("user u").rightJoin("dept d").on(TestDataUser::getName, "u",TestDataUser::getAccount,"d");
+        sqlExpression.select("user,age").from("user u").rightJoin("dept d").on(TestDataUser::getName, "u", TestDataDept::getId,"d");
 
-        Assert.assertEquals(sqlExpression.toSql(), "select user,age from user u right join dept d on (u.name=d.account)");
+        Assert.assertEquals(sqlExpression.toSql(), "select user,age from user u right join dept d on (u.name=d.id)");
     }
 
     @Test

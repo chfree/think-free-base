@@ -688,7 +688,7 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
-    public <T, R> ISqlExpression on(SerializableFunction<T, R> left, String leftAlias, SerializableFunction<T, R> right, String rightAlias) {
+    public <T, P, R> ISqlExpression on(SerializableFunction<T, R> left, String leftAlias, SerializableFunction<P, R> right, String rightAlias) {
         return on(String.format("%s.%s", leftAlias, function2ColumnName(left)), String.format("%s.%s", rightAlias, function2ColumnName(right)));
     }
 
@@ -744,7 +744,7 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
-    public <T, R> ISqlExpression select(String tblAlias, String columnAlias, SerializableFunction<T, R> column) {
+    public <T, R> ISqlExpression select(String tblAlias, SerializableFunction<T, R> column, String columnAlias) {
         tblAlias = tblAlaisFormat(tblAlias);
 
         return select(String.format("%s%s as %s", tblAlias, function2ColumnName(column), columnAlias));
@@ -838,8 +838,15 @@ public class SqlExpression implements ISqlExpression {
         return appendSelect(list.toArray(new String[0]));
     }
 
+//    @Override
+//    public <T, R> ISqlExpression appendSelect(String tblAlias,String columnAlias, SerializableFunction<T, R> column) {
+//        tblAlias = tblAlaisFormat(tblAlias);
+//
+//        return appendSelect("%s%s as %s", tblAlias, function2ColumnName(column), columnAlias);
+//    }
+
     @Override
-    public <T, R> ISqlExpression appendSelect(String tblAlias,String columnAlias, SerializableFunction<T, R> column) {
+    public <T, R> ISqlExpression appendSelect(String tblAlias, SerializableFunction<T, R> column, String columnAlias) {
         tblAlias = tblAlaisFormat(tblAlias);
 
         return appendSelect("%s%s as %s", tblAlias, function2ColumnName(column), columnAlias);

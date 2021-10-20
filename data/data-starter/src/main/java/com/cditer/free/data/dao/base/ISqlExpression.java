@@ -196,7 +196,7 @@ public interface ISqlExpression {
 
     ISqlExpression on(String left, String right);
 
-    <T, R> ISqlExpression on(SerializableFunction<T, R> left, String leftAlias, SerializableFunction<T, R> right, String rightAlias);
+    <T, P, R> ISqlExpression on(SerializableFunction<T, R> left, String leftAlias, SerializableFunction<P, R> right, String rightAlias);
 
     ISqlExpression selectAllFrom(Class<?> tClass);
 
@@ -226,7 +226,7 @@ public interface ISqlExpression {
 
     <T, R> ISqlExpression select(String tblAlias, SerializableFunction<T, R>... bodys);
 
-    <T, R> ISqlExpression select(String tblAlias, String columnAlias, SerializableFunction<T, R> column);
+    <T, R> ISqlExpression select(String tblAlias, SerializableFunction<T, R> column, String columnAlias);
 
     ISqlExpression appendSelect(String... bodys);
 
@@ -234,7 +234,7 @@ public interface ISqlExpression {
 
     <T, R> ISqlExpression appendSelect(String tblAlias, SerializableFunction<T, R>... bodys);
 
-    <T, R> ISqlExpression appendSelect(String tblAlias,String columnAlias, SerializableFunction<T, R> column);
+    <T, R> ISqlExpression appendSelect(String tblAlias,SerializableFunction<T, R> column, String columnAlias);
 
     ISqlExpression update(String body);
 
