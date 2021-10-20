@@ -28,57 +28,85 @@ public interface ISqlExpression {
 
     <T, R> ISqlExpression andEq(SerializableFunction<T, R> column, String value);
 
+    <T, R> ISqlExpression andEq(String tblAlias, SerializableFunction<T, R> column, String value);
+
     ISqlExpression andLike(String column, String value);
 
     <T, R> ISqlExpression andLike(SerializableFunction<T, R> column, String value);
+
+    <T, R> ISqlExpression andLike(String tblAlias, SerializableFunction<T, R> column, String value);
 
     ISqlExpression andRightLike(String column, String value);
 
     <T, R> ISqlExpression andRightLike(SerializableFunction<T, R> column, String value);
 
+    <T, R> ISqlExpression andRightLike(String tblAlias, SerializableFunction<T, R> column, String value);
+
     ISqlExpression andLikeNoEmpty(String column, String value);
 
     <T, R> ISqlExpression andLikeNoEmpty(SerializableFunction<T, R> column, String value);
+
+    <T, R> ISqlExpression andLikeNoEmpty(String tblAlias, SerializableFunction<T, R> column, String value);
 
     ISqlExpression andRightLikeNoEmpty(String column, String value);
 
     <T, R> ISqlExpression andRightLikeNoEmpty(SerializableFunction<T, R> column, String value);
 
+    <T, R> ISqlExpression andRightLikeNoEmpty(String tblAlias, SerializableFunction<T, R> column, String value);
+
     ISqlExpression andEqNoEmpty(String column, String value);
 
     <T, R> ISqlExpression andEqNoEmpty(SerializableFunction<T, R> column, String value);
+
+    <T, R> ISqlExpression andEqNoEmpty(String tblAlias, SerializableFunction<T, R> column, String value);
 
     ISqlExpression andNotEq(String column, String value);
 
     <T, R> ISqlExpression andNotEq(SerializableFunction<T, R> column, String value);
 
+    <T, R> ISqlExpression andNotEq(String tblAlias, SerializableFunction<T, R> column, String value);
+
     ISqlExpression andNotLike(String column, String value);
 
     <T, R> ISqlExpression andNotLike(SerializableFunction<T, R> column, String value);
+
+    <T, R> ISqlExpression andNotLike(String tblAlias, SerializableFunction<T, R> column, String value);
 
     ISqlExpression andNotLikeNoEmpty(String column, String value);
 
     <T, R> ISqlExpression andNotLikeNoEmpty(SerializableFunction<T, R> column, String value);
 
+    <T, R> ISqlExpression andNotLikeNoEmpty(String tblAlias, SerializableFunction<T, R> column, String value);
+
     ISqlExpression andNotEqNoEmpty(String column, String value);
 
     <T, R> ISqlExpression andNotEqNoEmpty(SerializableFunction<T, R> column, String value);
+
+    <T, R> ISqlExpression andNotEqNoEmpty(String tblAlias, SerializableFunction<T, R> column, String value);
 
     ISqlExpression andEq(String column, Integer value);
 
     <T, R> ISqlExpression andEq(SerializableFunction<T, R> column, Integer value);
 
+    <T, R> ISqlExpression andEq(String tblAlias, SerializableFunction<T, R> column, Integer value);
+
     ISqlExpression andEqNoEmpty(String column, Integer value);
 
     <T, R> ISqlExpression andEqNoEmpty(SerializableFunction<T, R> column, Integer value);
+
+    <T, R> ISqlExpression andEqNoEmpty(String tblAlias, SerializableFunction<T, R> column, Integer value);
 
     ISqlExpression andNotEq(String column, Integer value);
 
     <T, R> ISqlExpression andNotEq(SerializableFunction<T, R> column, Integer value);
 
+    <T, R> ISqlExpression andNotEq(String tblAlias, SerializableFunction<T, R> column, Integer value);
+
     ISqlExpression andNotEqNoEmpty(String column, Integer value);
 
     <T, R> ISqlExpression andNotEqNoEmpty(SerializableFunction<T, R> column, Integer value);
+
+    <T, R> ISqlExpression andNotEqNoEmpty(String tblAlias, SerializableFunction<T, R> column, Integer value);
 
     ISqlExpression andMainTableWhere(String value);
 
@@ -198,11 +226,15 @@ public interface ISqlExpression {
 
     <T, R> ISqlExpression select(String tblAlias, SerializableFunction<T, R>... bodys);
 
+    <T, R> ISqlExpression select(String tblAlias, String columnAlias, SerializableFunction<T, R> column);
+
     ISqlExpression appendSelect(String... bodys);
 
     <T, R> ISqlExpression appendSelect(SerializableFunction<T, R>... bodys);
 
     <T, R> ISqlExpression appendSelect(String tblAlias, SerializableFunction<T, R>... bodys);
+
+    <T, R> ISqlExpression appendSelect(String tblAlias,String columnAlias, SerializableFunction<T, R> column);
 
     ISqlExpression update(String body);
 

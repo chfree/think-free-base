@@ -102,7 +102,14 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andEq(SerializableFunction<T, R> column, String value) {
-        return andEq(function2ColumnName(column), value);
+        return andEq(null, column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andEq(String tblAlias, SerializableFunction<T, R> column, String value) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return andEq(tblAlias + function2ColumnName(column), value);
     }
 
     @Override
@@ -117,7 +124,14 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andLike(SerializableFunction<T, R> column, String value) {
-        return andLike(function2ColumnName(column), value);
+        return andLike(null, column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andLike(String tblAlias, SerializableFunction<T, R> column, String value) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return andLike(tblAlias + function2ColumnName(column), value);
     }
 
     @Override
@@ -132,12 +146,19 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andRightLike(SerializableFunction<T, R> column, String value) {
-        return andRightLike(function2ColumnName(column), value);
+        return andRightLike(null, column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andRightLike(String tblAlias, SerializableFunction<T, R> column, String value) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return andRightLike(tblAlias + function2ColumnName(column), value);
     }
 
     @Override
     public ISqlExpression andLikeNoEmpty(String column, String value) {
-        if (!StringUtils.isEmpty(value)) {
+        if (StringUtils.hasText(value)) {
             return andLike(column, value);
         }
         return this;
@@ -145,12 +166,19 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andLikeNoEmpty(SerializableFunction<T, R> column, String value) {
-        return andLikeNoEmpty(function2ColumnName(column), value);
+        return andLikeNoEmpty(null, column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andLikeNoEmpty(String tblAlias, SerializableFunction<T, R> column, String value) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return andLikeNoEmpty(tblAlias + function2ColumnName(column), value);
     }
 
     @Override
     public ISqlExpression andRightLikeNoEmpty(String column, String value) {
-        if (!StringUtils.isEmpty(value)) {
+        if (StringUtils.hasText(value)) {
             return andRightLike(column, value);
         }
         return this;
@@ -158,12 +186,19 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andRightLikeNoEmpty(SerializableFunction<T, R> column, String value) {
-        return andRightLikeNoEmpty(function2ColumnName(column), value);
+        return andRightLikeNoEmpty(null, column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andRightLikeNoEmpty(String tblAlias, SerializableFunction<T, R> column, String value) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return andRightLikeNoEmpty(tblAlias + function2ColumnName(column), value);
     }
 
     @Override
     public ISqlExpression andEqNoEmpty(String column, String value) {
-        if (!StringUtils.isEmpty(value)) {
+        if (StringUtils.hasText(value)) {
             return andEq(column, value);
         }
         return this;
@@ -171,7 +206,14 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andEqNoEmpty(SerializableFunction<T, R> column, String value) {
-        return andEqNoEmpty(function2ColumnName(column), value);
+        return andEqNoEmpty(null, column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andEqNoEmpty(String tblAlias, SerializableFunction<T, R> column, String value) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return andEqNoEmpty(tblAlias + function2ColumnName(column), value);
     }
 
     @Override
@@ -186,7 +228,14 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andNotEq(SerializableFunction<T, R> column, String value) {
-        return andNotEq(function2ColumnName(column), value);
+        return andNotEq(null, column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andNotEq(String tblAlias, SerializableFunction<T, R> column, String value) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return andNotEq(tblAlias + function2ColumnName(column), value);
     }
 
     @Override
@@ -201,12 +250,19 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andNotLike(SerializableFunction<T, R> column, String value) {
-        return andNotLike(function2ColumnName(column), value);
+        return andNotLike(null, column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andNotLike(String tblAlias, SerializableFunction<T, R> column, String value) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return andNotLike(tblAlias + function2ColumnName(column), value);
     }
 
     @Override
     public ISqlExpression andNotLikeNoEmpty(String column, String value) {
-        if (!StringUtils.isEmpty(value)) {
+        if (StringUtils.hasText(value)) {
             return andNotLike(column, value);
         }
         return this;
@@ -214,12 +270,19 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andNotLikeNoEmpty(SerializableFunction<T, R> column, String value) {
-        return andNotLikeNoEmpty(function2ColumnName(column), value);
+        return andNotLikeNoEmpty(null, column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andNotLikeNoEmpty(String tblAlias, SerializableFunction<T, R> column, String value) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return andNotLikeNoEmpty(tblAlias + function2ColumnName(column), value);
     }
 
     @Override
     public ISqlExpression andNotEqNoEmpty(String column, String value) {
-        if (!StringUtils.isEmpty(value)) {
+        if (StringUtils.hasText(value)) {
             return andNotEq(column, value);
         }
         return this;
@@ -227,6 +290,12 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andNotEqNoEmpty(SerializableFunction<T, R> column, String value) {
+        return andNotEqNoEmpty(null, column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andNotEqNoEmpty(String tblAlias, SerializableFunction<T, R> column, String value) {
+        tblAlias = tblAlaisFormat(tblAlias);
         return andNotEqNoEmpty(function2ColumnName(column), value);
     }
 
@@ -240,7 +309,14 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andEq(SerializableFunction<T, R> column, Integer value) {
-        return andEq(function2ColumnName(column), value);
+        return andEq(null, column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andEq(String tblAlias, SerializableFunction<T, R> column, Integer value) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return andEq(tblAlias + function2ColumnName(column), value);
     }
 
     @Override
@@ -253,7 +329,14 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andEqNoEmpty(SerializableFunction<T, R> column, Integer value) {
-        return andEqNoEmpty(function2ColumnName(column), value);
+        return andEqNoEmpty(null, column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andEqNoEmpty(String tblAlias, SerializableFunction<T, R> column, Integer value) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return andEqNoEmpty(tblAlias + function2ColumnName(column), value);
     }
 
     @Override
@@ -270,7 +353,14 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andNotEq(SerializableFunction<T, R> column, Integer value) {
-        return andNotEq(function2ColumnName(column), value);
+        return andNotEq(null, column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andNotEq(String tblAlias, SerializableFunction<T, R> column, Integer value) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return andNotEq(tblAlias + function2ColumnName(column), value);
     }
 
     @Override
@@ -283,7 +373,14 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andNotEqNoEmpty(SerializableFunction<T, R> column, Integer value) {
-        return andNotEqNoEmpty(function2ColumnName(column), value);
+        return andNotEqNoEmpty(null, column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andNotEqNoEmpty(String tblAlias, SerializableFunction<T, R> column, Integer value) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return andNotEqNoEmpty(tblAlias + function2ColumnName(column), value);
     }
 
     @Override
@@ -647,6 +744,13 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
+    public <T, R> ISqlExpression select(String tblAlias, String columnAlias, SerializableFunction<T, R> column) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return select(String.format("%s%s as %s", tblAlias, function2ColumnName(column), columnAlias));
+    }
+
+    @Override
     public <T, R> ISqlExpression select(String tblAlias, SerializableFunction<T, R>... bodys) {
         if (bodys == null || bodys.length <= 0) {
             return this;
@@ -732,6 +836,13 @@ public class SqlExpression implements ISqlExpression {
 
         List<String> list = Arrays.stream(bodys).map(item -> finalTblAlias + function2ColumnName(item)).collect(Collectors.toList());
         return appendSelect(list.toArray(new String[0]));
+    }
+
+    @Override
+    public <T, R> ISqlExpression appendSelect(String tblAlias,String columnAlias, SerializableFunction<T, R> column) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return appendSelect("%s%s as %s", tblAlias, function2ColumnName(column), columnAlias);
     }
 
     @Override
