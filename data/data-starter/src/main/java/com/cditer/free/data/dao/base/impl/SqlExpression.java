@@ -380,12 +380,17 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression selectDistinct(SerializableFunction<T, R>... bodys) {
+        return selectDistinct(null, bodys);
+    }
+
+    @Override
+    public <T, R> ISqlExpression selectDistinct(String tblAlias, SerializableFunction<T, R>... bodys) {
         if (bodys == null || bodys.length <= 0) {
             return this;
         }
+        final String finalTblAlias = tblAlaisFormat(tblAlias);
 
-        String mainTableAlias = getMainTableAlias();
-        List<String> list = Arrays.stream(bodys).map(item -> mainTableAlias + function2ColumnName(item)).collect(Collectors.toList());
+        List<String> list = Arrays.stream(bodys).map(item -> finalTblAlias + function2ColumnName(item)).collect(Collectors.toList());
         return selectDistinct(list.toArray(new String[0]));
     }
 
@@ -523,11 +528,17 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression groupBy(SerializableFunction<T, R>... groups) {
+        return groupBy(null, groups);
+    }
+
+    @Override
+    public <T, R> ISqlExpression groupBy(String tblAlias, SerializableFunction<T, R>... groups) {
         if (groups == null || groups.length <= 0) {
             return this;
         }
-        String mainTableAlias = getMainTableAlias();
-        List<String> list = Arrays.stream(groups).map(item -> mainTableAlias + function2ColumnName(item)).collect(Collectors.toList());
+        final String fianlTblAlias = tblAlaisFormat(tblAlias);
+
+        List<String> list = Arrays.stream(groups).map(item -> fianlTblAlias + function2ColumnName(item)).collect(Collectors.toList());
         return groupBys(list.toArray(new String[0]));
     }
 
@@ -632,11 +643,17 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression select(SerializableFunction<T, R>... bodys) {
+        return select(null, bodys);
+    }
+
+    @Override
+    public <T, R> ISqlExpression select(String tblAlias, SerializableFunction<T, R>... bodys) {
         if (bodys == null || bodys.length <= 0) {
             return this;
         }
-        String mainTableAlias = getMainTableAlias();
-        List<String> list = Arrays.stream(bodys).map(item -> mainTableAlias + function2ColumnName(item)).collect(Collectors.toList());
+        final String finalTblAlias = tblAlaisFormat(tblAlias);
+
+        List<String> list = Arrays.stream(bodys).map(item -> finalTblAlias + function2ColumnName(item)).collect(Collectors.toList());
         return select(list.toArray(new String[0]));
     }
 
@@ -682,7 +699,14 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression insertColumn(SerializableFunction<T, R> column, Object value) {
-        return insertColumn(function2ColumnName(column), value);
+        return insertColumn(null, column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression insertColumn(String tblAlias, SerializableFunction<T, R> column, Object value) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return insertColumn(tblAlias + function2ColumnName(column), value);
     }
 
     @Override
@@ -696,13 +720,18 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression appendSelect(SerializableFunction<T, R>... bodys) {
+        return appendSelect(null, bodys);
+    }
+
+    @Override
+    public <T, R> ISqlExpression appendSelect(String tblAlias, SerializableFunction<T, R>... bodys) {
         if (bodys == null || bodys.length <= 0) {
             return this;
         }
-        String mainTableAlias = getMainTableAlias();
-        List<String> list = Arrays.stream(bodys).map(item -> mainTableAlias + function2ColumnName(item)).collect(Collectors.toList());
-        return appendSelect(list.toArray(new String[0]));
+        final String finalTblAlias = tblAlaisFormat(tblAlias);
 
+        List<String> list = Arrays.stream(bodys).map(item -> finalTblAlias + function2ColumnName(item)).collect(Collectors.toList());
+        return appendSelect(list.toArray(new String[0]));
     }
 
     @Override
@@ -719,8 +748,14 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression selectCount(SerializableFunction<T, R> column) {
-        String mainTableAlias = getMainTableAlias();
-        return selectCount(mainTableAlias + function2ColumnName(column));
+        return selectCount(null, column);
+    }
+
+    @Override
+    public <T, R> ISqlExpression selectCount(String tblAlias, SerializableFunction<T, R> column) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return selectCount(tblAlias + function2ColumnName(column));
     }
 
     @Override
@@ -730,9 +765,15 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
-    public <T, R> ISqlExpression selectCount(SerializableFunction<T, R> column, String alias) {
-        String mainTableAlias = getMainTableAlias();
-        return selectCount(mainTableAlias + function2ColumnName(column), alias);
+    public <T, R> ISqlExpression selectCount(SerializableFunction<T, R> column, String columnAlias) {
+        return selectCount(null, column, columnAlias);
+    }
+
+    @Override
+    public <T, R> ISqlExpression selectCount(String tblAlias, SerializableFunction<T, R> column, String columnAlias) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return selectCount(tblAlias + function2ColumnName(column), columnAlias);
     }
 
     @Override
@@ -786,8 +827,14 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression setColumn(SerializableFunction<T, R> column, String value) {
-        String mainTableAlias = getMainTableAlias();
-        return setColumn(mainTableAlias + function2ColumnName(column), value);
+        return setColumn(null, column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression setColumn(String tblAlias, SerializableFunction<T, R> column, String value) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return setColumn(tblAlias + function2ColumnName(column), value);
     }
 
     @Override
@@ -804,6 +851,14 @@ public class SqlExpression implements ISqlExpression {
             return this;
         }
         return setColumn(column, value);
+    }
+
+    @Override
+    public <T, R> ISqlExpression setColumnNoEmpty(String tblAlias, SerializableFunction<T, R> column, String value) {
+        if (!StringUtils.hasText(value)) {
+            return this;
+        }
+        return setColumn(tblAlias, column, value);
     }
 
     public ISqlExpression set(String... columnKeys) {
@@ -896,14 +951,24 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andWhereIn(SerializableFunction<T, R> column, ISqlExpression sqlExpression) {
-        String mainTableAlias = getMainTableAlias();
-        return andWhereIn(mainTableAlias + function2ColumnName(column), sqlExpression);
+        return andWhereIn(null, column, sqlExpression);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andWhereIn(String tblAlias, SerializableFunction<T, R> column, ISqlExpression sqlExpression) {
+        tblAlias = tblAlaisFormat(tblAlias);
+        return andWhereIn(tblAlias + function2ColumnName(column), sqlExpression);
     }
 
     @Override
     public <T, R> ISqlExpression andWhereIn(SerializableFunction<T, R> column, List<Object> values) {
-        String mainTableAlias = getMainTableAlias();
-        return andWhereIn(mainTableAlias + function2ColumnName(column), values);
+        return andWhereIn(null, column, values);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andWhereIn(String tblAlias, SerializableFunction<T, R> column, List<Object> values) {
+        tblAlias = tblAlaisFormat(tblAlias);
+        return andWhereIn(tblAlias + function2ColumnName(column), values);
     }
 
     private ISqlExpression andWhereIn(String inOrNotIn, String column, List<Object> values) {
@@ -938,8 +1003,14 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andWhereInString(SerializableFunction<T, R> column, List<String> values) {
-        String mainTableAlias = getMainTableAlias();
-        return andWhereInString(mainTableAlias + function2ColumnName(column), values);
+        return andWhereInString(null, column, values);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andWhereInString(String tblAlias, SerializableFunction<T, R> column, List<String> values) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return andWhereInString(tblAlias + function2ColumnName(column), values);
     }
 
     private ISqlExpression andWhereInString(String inOrNotIn, String column, List<String> values) {
@@ -975,8 +1046,13 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andWhereInString(SerializableFunction<T, R> column, String... values) {
-        String mainTableAlias = getMainTableAlias();
-        return andWhereInString(mainTableAlias + function2ColumnName(column), values);
+        return andWhereInString(null, column, values);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andWhereInString(String tblAlias, SerializableFunction<T, R> column, String... values) {
+        tblAlias = tblAlaisFormat(tblAlias);
+        return andWhereInString(tblAlias + function2ColumnName(column), values);
     }
 
     @Override
@@ -986,8 +1062,14 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andWhereInString(List<String> values, String join, SerializableFunction<T, R>... columns) {
-        String mainTableAlias = getMainTableAlias();
-        List<String> list = Arrays.stream(columns).map(item -> mainTableAlias + function2ColumnName(item)).collect(Collectors.toList());
+        return andWhereInString(values, join, null, columns);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andWhereInString(List<String> values, String join, String tblAlias, SerializableFunction<T, R>... columns) {
+        final String finalTblAlias = tblAlaisFormat(tblAlias);
+
+        List<String> list = Arrays.stream(columns).map(item -> finalTblAlias + function2ColumnName(item)).collect(Collectors.toList());
 
         return andWhereInString(values, join, list.toArray(new String[0]));
     }
@@ -1044,14 +1126,26 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andWhereNotIn(SerializableFunction<T, R> column, ISqlExpression sqlExpression) {
-        String mainTableAlias = getMainTableAlias();
-        return andWhereNotIn(mainTableAlias + function2ColumnName(column), sqlExpression);
+        return andWhereNotIn(null, column, sqlExpression);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andWhereNotIn(String tblAlias, SerializableFunction<T, R> column, ISqlExpression sqlExpression) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return andWhereNotIn(tblAlias + function2ColumnName(column), sqlExpression);
     }
 
     @Override
     public <T, R> ISqlExpression andWhereNotIn(SerializableFunction<T, R> column, List<Object> values) {
-        String mainTableAlias = getMainTableAlias();
-        return andWhereNotIn(mainTableAlias + function2ColumnName(column), values);
+        return andWhereNotIn(null, column, values);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andWhereNotIn(String tblAlias, SerializableFunction<T, R> column, List<Object> values) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return andWhereNotIn(tblAlias + function2ColumnName(column), values);
     }
 
     @Override
@@ -1071,14 +1165,26 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public <T, R> ISqlExpression andWhereNotInString(SerializableFunction<T, R> column, List<String> values) {
-        String mainTableAlias = getMainTableAlias();
-        return andWhereNotInString(mainTableAlias + function2ColumnName(column), values);
+        return andWhereNotInString(null, column, values);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andWhereNotInString(String tblAlias, SerializableFunction<T, R> column, List<String> values) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return andWhereNotInString(tblAlias + function2ColumnName(column), values);
     }
 
     @Override
     public <T, R> ISqlExpression andWhereNotInString(SerializableFunction<T, R> column, String... values) {
-        String mainTableAlias = getMainTableAlias();
-        return andWhereNotInString(mainTableAlias + function2ColumnName(column), values);
+        return andWhereNotInString(null, column, values);
+    }
+
+    @Override
+    public <T, R> ISqlExpression andWhereNotInString(String tblAlias, SerializableFunction<T, R> column, String... values) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return andWhereNotInString(tblAlias + function2ColumnName(column), values);
     }
 
     @Override
@@ -1087,6 +1193,26 @@ public class SqlExpression implements ISqlExpression {
         List<String> list = Arrays.stream(columns).map(item -> mainTableAlias + function2ColumnName(item)).collect(Collectors.toList());
 
         return andWhereNotInString(values, join, list.toArray(new String[0]));
+    }
+
+    @Override
+    public <T, R> ISqlExpression andWhereNotInString(List<String> values, String join, String tblAlias, SerializableFunction<T, R>... columns) {
+        final String finalTblAlias = tblAlaisFormat(tblAlias);
+
+        List<String> list = Arrays.stream(columns).map(item -> finalTblAlias + function2ColumnName(item)).collect(Collectors.toList());
+
+        return andWhereNotInString(values, join, list.toArray(new String[0]));
+    }
+
+    private String tblAlaisFormat(String tblAlias) {
+        if (!StringUtils.hasText(tblAlias)) {
+            tblAlias = getMainTableAlias();
+        } else {
+            if (tblAlias.indexOf(".") < 0) {
+                tblAlias += ".";
+            }
+        }
+        return tblAlias;
     }
 
     private String resolveColumn(String column) {

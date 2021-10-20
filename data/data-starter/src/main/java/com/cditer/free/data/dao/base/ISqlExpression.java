@@ -88,19 +88,29 @@ public interface ISqlExpression {
 
     <T, R> ISqlExpression andWhereIn(SerializableFunction<T, R> column, ISqlExpression sqlExpression);
 
+    <T, R> ISqlExpression andWhereIn(String tblAlias, SerializableFunction<T, R> column, ISqlExpression sqlExpression);
+
     <T, R> ISqlExpression andWhereIn(SerializableFunction<T, R> column, List<Object> values);
+
+    <T, R> ISqlExpression andWhereIn(String tblAlias, SerializableFunction<T, R> column, List<Object> values);
 
     ISqlExpression andWhereInString(String column, List<String> values);
 
     <T, R> ISqlExpression andWhereInString(SerializableFunction<T, R> column, List<String> values);
 
+    <T, R> ISqlExpression andWhereInString(String tblAlias, SerializableFunction<T, R> column, List<String> values);
+
     ISqlExpression andWhereInString(String column, String... values);
 
     <T, R> ISqlExpression andWhereInString(SerializableFunction<T, R> column, String... values);
 
+    <T, R> ISqlExpression andWhereInString(String tblAlias, SerializableFunction<T, R> column, String... values);
+
     ISqlExpression andWhereInString(List<String> values, String join, String... columns);
 
     <T, R> ISqlExpression andWhereInString(List<String> values, String join, SerializableFunction<T, R>... columns);
+
+    <T, R> ISqlExpression andWhereInString(List<String> values, String join, String tblAlias, SerializableFunction<T, R>... columns);
 
     ISqlExpression andWhereNotIn(String column, ISqlExpression sqlExpression);
 
@@ -108,7 +118,11 @@ public interface ISqlExpression {
 
     <T, R> ISqlExpression andWhereNotIn(SerializableFunction<T, R> column, ISqlExpression sqlExpression);
 
+    <T, R> ISqlExpression andWhereNotIn(String tblAlias, SerializableFunction<T, R> column, ISqlExpression sqlExpression);
+
     <T, R> ISqlExpression andWhereNotIn(SerializableFunction<T, R> column, List<Object> values);
+
+    <T, R> ISqlExpression andWhereNotIn(String tblAlias, SerializableFunction<T, R> column, List<Object> values);
 
     ISqlExpression andWhereNotInString(String column, List<String> values);
 
@@ -118,9 +132,15 @@ public interface ISqlExpression {
 
     <T, R> ISqlExpression andWhereNotInString(SerializableFunction<T, R> column, List<String> values);
 
+    <T, R> ISqlExpression andWhereNotInString(String tblAlias, SerializableFunction<T, R> column, List<String> values);
+
     <T, R> ISqlExpression andWhereNotInString(SerializableFunction<T, R> column, String... values);
 
+    <T, R> ISqlExpression andWhereNotInString(String tblAlias, SerializableFunction<T, R> column, String... values);
+
     <T, R> ISqlExpression andWhereNotInString(List<String> values, String join, SerializableFunction<T, R>... columns);
+
+    <T, R> ISqlExpression andWhereNotInString(List<String> values, String join, String tblAlias, SerializableFunction<T, R>... columns);
 
     ISqlExpression orWhere(String value);
 
@@ -148,7 +168,7 @@ public interface ISqlExpression {
 
     ISqlExpression on(String left, String right);
 
-    <T, R> ISqlExpression on(SerializableFunction<T, R> left,String leftAlias, SerializableFunction<T, R> right,String rightAlias);
+    <T, R> ISqlExpression on(SerializableFunction<T, R> left, String leftAlias, SerializableFunction<T, R> right, String rightAlias);
 
     ISqlExpression selectAllFrom(Class<?> tClass);
 
@@ -164,17 +184,25 @@ public interface ISqlExpression {
 
     <T, R> ISqlExpression selectCount(SerializableFunction<T, R> column);
 
-    ISqlExpression selectCount(String column,String alias);
+    <T, R> ISqlExpression selectCount(String tblAlias, SerializableFunction<T, R> column);
 
-    <T, R> ISqlExpression selectCount(SerializableFunction<T, R> column,String alias);
+    ISqlExpression selectCount(String column, String alias);
+
+    <T, R> ISqlExpression selectCount(SerializableFunction<T, R> column, String columnAlias);
+
+    <T, R> ISqlExpression selectCount(String tblAlias, SerializableFunction<T, R> column, String columnAlias);
 
     ISqlExpression select(String... bodys);
 
     <T, R> ISqlExpression select(SerializableFunction<T, R>... bodys);
 
+    <T, R> ISqlExpression select(String tblAlias, SerializableFunction<T, R>... bodys);
+
     ISqlExpression appendSelect(String... bodys);
 
     <T, R> ISqlExpression appendSelect(SerializableFunction<T, R>... bodys);
+
+    <T, R> ISqlExpression appendSelect(String tblAlias, SerializableFunction<T, R>... bodys);
 
     ISqlExpression update(String body);
 
@@ -190,9 +218,13 @@ public interface ISqlExpression {
 
     <T, R> ISqlExpression setColumn(SerializableFunction<T, R> column, String value);
 
+    <T, R> ISqlExpression setColumn(String tblAlias, SerializableFunction<T, R> column, String value);
+
     ISqlExpression setColumnNoEmpty(String column, String value);
 
     <T, R> ISqlExpression setColumnNoEmpty(SerializableFunction<T, R> column, String value);
+
+    <T, R> ISqlExpression setColumnNoEmpty(String tblAlias, SerializableFunction<T, R> column, String value);
 
     ISqlExpression set(String... columnKeys);
 
@@ -214,6 +246,8 @@ public interface ISqlExpression {
 
     <T, R> ISqlExpression groupBy(SerializableFunction<T, R>... groups);
 
+    <T, R> ISqlExpression groupBy(String tblAlias, SerializableFunction<T, R>... groups);
+
     String toSql();
 
     Map<String, Object> getParams();
@@ -234,6 +268,8 @@ public interface ISqlExpression {
 
     <T, R> ISqlExpression selectDistinct(SerializableFunction<T, R>... bodys);
 
+    <T, R> ISqlExpression selectDistinct(String tblAlias, SerializableFunction<T, R>... bodys);
+
     ISqlExpression selectDistinct(String... bodys);
 
     ISqlExpression setColumn(String column, ISqlExpression sqlExpression);
@@ -251,4 +287,6 @@ public interface ISqlExpression {
     ISqlExpression insertColumn(String column, Object value);
 
     <T, R> ISqlExpression insertColumn(SerializableFunction<T, R> column, Object value);
+
+    <T, R> ISqlExpression insertColumn(String tblAlias, SerializableFunction<T, R> column, Object value);
 }
