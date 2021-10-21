@@ -71,6 +71,17 @@ public class SqlExpressionTest {
     }
 
     @Test
+    public void testAndEqFun() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from(TestDataUser.class).andEq("user",TestDataUser::getName, "cheng");
+
+        Column fieldByAnno = ReflectUtils.getFieldByAnno(TestDataUser::getName, Column.class);
+
+        Assert.assertEquals(sqlExpression.toSql(), String.format("select name,age from test_authority_user where (user.%s=#{user_name})", fieldByAnno.name()));
+        Assert.assertEquals(sqlExpression.getParams().get("user_name"), "cheng");
+    }
+
+    @Test
     public void andLike() {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").andLike("name", "cheng");
@@ -89,6 +100,15 @@ public class SqlExpressionTest {
     }
 
     @Test
+    public void andLikeFun1() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andLike("user", TestDataUser::getName, "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (user.name like concat('%',#{user_name},'%'))");
+        Assert.assertEquals(sqlExpression.getParams().get("user_name"), "cheng");
+    }
+
+    @Test
     public void andRightLike() {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").andRightLike("name", "cheng");
@@ -104,6 +124,15 @@ public class SqlExpressionTest {
 
         Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like concat(#{name},'%'))");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+    }
+
+    @Test
+    public void andRightLikeFun1() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andRightLike("user", TestDataUser::getName, "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (user.name like concat(#{user_name},'%'))");
+        Assert.assertEquals(sqlExpression.getParams().get("user_name"), "cheng");
     }
 
     @Test
@@ -127,6 +156,16 @@ public class SqlExpressionTest {
     }
 
     @Test
+    public void andLikeNoEmptyFun1() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andLikeNoEmpty("user",TestDataUser::getName, "cheng").andLikeNoEmpty("user",TestDataUser::getAccount, null);
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (user.name like concat('%',#{user_name},'%'))");
+        Assert.assertEquals(sqlExpression.getParams().get("user_name"), "cheng");
+        Assert.assertFalse(sqlExpression.getParams().containsKey("user_account"));
+    }
+
+    @Test
     public void andRightLikeNoEmpty() {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").andRightLikeNoEmpty("name", "cheng").andRightLikeNoEmpty("age", null);
@@ -144,6 +183,16 @@ public class SqlExpressionTest {
         Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name like concat(#{name},'%'))");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
         Assert.assertFalse(sqlExpression.getParams().containsKey("account"));
+    }
+
+    @Test
+    public void andRightLikeNoEmptyFun1() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andRightLikeNoEmpty("user",TestDataUser::getName, "cheng").andRightLikeNoEmpty("user",TestDataUser::getAccount, null);
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (user.name like concat(#{user_name},'%'))");
+        Assert.assertEquals(sqlExpression.getParams().get("user_name"), "cheng");
+        Assert.assertFalse(sqlExpression.getParams().containsKey("user_account"));
     }
 
     @Test
@@ -171,6 +220,16 @@ public class SqlExpressionTest {
     }
 
     @Test
+    public void andEqNoEmptyFun1() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andEqNoEmpty("user",TestDataUser::getName, "cheng").andEqNoEmpty("user",TestDataUser::getAccount, nullInteger());
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (user.name=#{user_name})");
+        Assert.assertEquals(sqlExpression.getParams().get("user_name"), "cheng");
+        Assert.assertFalse(sqlExpression.getParams().containsKey("user_account"));
+    }
+
+    @Test
     public void andNotEq() {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").andNotEq("name", "cheng").andNotEq("age", nullInteger());
@@ -191,6 +250,16 @@ public class SqlExpressionTest {
     }
 
     @Test
+    public void andNotEqFun1() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andNotEq("user", TestDataUser::getName, "cheng").andNotEq("user", TestDataUser::getAccount, nullInteger());
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (user.name!=#{user_name}) and (user.account!=#{user_account})");
+        Assert.assertEquals(sqlExpression.getParams().get("user_name"), "cheng");
+        Assert.assertTrue(sqlExpression.getParams().containsKey("user_account"));
+    }
+
+    @Test
     public void andNotLike() {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").andNotLike("name", "cheng");
@@ -206,6 +275,15 @@ public class SqlExpressionTest {
 
         Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name not like concat('%',#{name},'%'))");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
+    }
+
+    @Test
+    public void andNotLikeFun1() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andNotLike("user",TestDataUser::getName, "cheng");
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (user.name not like concat('%',#{user_name},'%'))");
+        Assert.assertEquals(sqlExpression.getParams().get("user_name"), "cheng");
     }
 
     @Test
@@ -229,6 +307,16 @@ public class SqlExpressionTest {
     }
 
     @Test
+    public void andNotLikeNoEmptyFun1() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andNotLikeNoEmpty("user", TestDataUser::getName, "cheng").andNotLikeNoEmpty("user", TestDataUser::getAccount, null);
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (user.name not like concat('%',#{user_name},'%'))");
+        Assert.assertEquals(sqlExpression.getParams().get("user_name"), "cheng");
+        Assert.assertFalse(sqlExpression.getParams().containsKey("user_account"));
+    }
+
+    @Test
     public void andNotEqNoEmpty() {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").andNotEqNoEmpty("name", "cheng").andNotEqNoEmpty("account", "ch").andNotEqNoEmpty("age", nullInteger());
@@ -248,6 +336,16 @@ public class SqlExpressionTest {
         Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (name!=#{name})");
         Assert.assertEquals(sqlExpression.getParams().get("name"), "cheng");
         Assert.assertFalse(sqlExpression.getParams().containsKey("account"));
+    }
+
+    @Test
+    public void andNotEqNoEmptyFun1() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").andNotEqNoEmpty("user", TestDataUser::getName, "cheng").andNotEqNoEmpty("user", TestDataUser::getAccount, nullInteger());
+
+        Assert.assertEquals(sqlExpression.toSql(),"select name,age from user where (user.name!=#{user_name})");
+        Assert.assertEquals(sqlExpression.getParams().get("user_name"), "cheng");
+        Assert.assertFalse(sqlExpression.getParams().containsKey("user_account"));
     }
 
     @Test
@@ -420,6 +518,30 @@ public class SqlExpressionTest {
     }
 
     @Test
+    public void selectDistinctFcn1() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.selectDistinct("user", TestDataUser::getName, TestDataUser::getAccount).from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select distinct user.name,user.account from user");
+    }
+
+    @Test
+    public void selectDistinctFcn2() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.selectDistinct("user", TestDataUser::getName).from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select distinct user.name from user");
+    }
+
+    @Test
+    public void selectDistinctFcn3() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.selectDistinct("user", TestDataUser::getName, "userName").from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select distinct user.name as userName from user");
+    }
+
+    @Test
     public void testSelectDistinct() {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.selectDistinct("name,age").from("user");
@@ -525,11 +647,27 @@ public class SqlExpressionTest {
     }
 
     @Test
+    public void groupByFun1() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").groupBy("user", TestDataUser::getName).groupBy("user", TestDataUser::getAccount);
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,age from user group by user.name,user.account");
+    }
+
+    @Test
     public void groupBysFun() {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name,age").from("user").groupBy(TestDataUser::getName,TestDataUser::getAccount);
 
         Assert.assertEquals(sqlExpression.toSql(), "select name,age from user group by name,account");
+    }
+
+    @Test
+    public void groupBysFun1() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name,age").from("user").groupBy("user", TestDataUser::getName,TestDataUser::getAccount);
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,age from user group by user.name,user.account");
     }
 
     @Test
@@ -612,8 +750,6 @@ public class SqlExpressionTest {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.selectAllFrom(TestDataUser.class);
 
-
-
         Assert.assertEquals(sqlExpression.toSql(), "select id,name,account,password,delete_mark,create_date,bu_id from test_authority_user");
     }
 
@@ -645,6 +781,22 @@ public class SqlExpressionTest {
     }
 
     @Test
+    public void selectFun2() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("user",TestDataUser::getName).select("user", TestDataUser::getAccount, "ac").from(TestDataUser.class);
+
+        Assert.assertEquals(sqlExpression.toSql(), "select user.name,user.account as ac from test_authority_user");
+    }
+
+    @Test
+    public void selectFun1() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("user",TestDataUser::getName, "name").select("tt", TestDataUser::getAccount, "ac").from(TestDataUser.class);
+
+        Assert.assertEquals(sqlExpression.toSql(), "select user.name as name,tt.account as ac from test_authority_user");
+    }
+
+    @Test
     public void appendSelect() {
         ISqlExpression sqlExpression = getEmptySql();
         sqlExpression.select("name").appendSelect("age").from("user");
@@ -658,6 +810,14 @@ public class SqlExpressionTest {
         sqlExpression.select("name").appendSelect(TestDataUser::getAccount).from("user");
 
         Assert.assertEquals(sqlExpression.toSql(), "select name,account from user");
+    }
+
+    @Test
+    public void appendSelectFun1() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name").appendSelect("user", TestDataUser::getAccount, "ac").from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,user.account as ac from user");
     }
 
     @Test
@@ -682,6 +842,14 @@ public class SqlExpressionTest {
         sqlExpression.select("name").appendSelect(TestDataUser::getAccount,TestDataUser::getBuId).from("user");
 
         Assert.assertEquals(sqlExpression.toSql(), "select name,account,bu_id from user");
+    }
+
+    @Test
+    public void testAppendSelectFun1() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name").appendSelect("user", TestDataUser::getAccount,TestDataUser::getBuId).from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name,user.account,user.bu_id from user");
     }
 
     @Test
@@ -714,6 +882,14 @@ public class SqlExpressionTest {
         sqlExpression.selectCount(TestDataUser::getId).from("user");
 
         Assert.assertEquals(sqlExpression.toSql(), "select count(id) as count from user");
+    }
+
+    @Test
+    public void testSelectCountFun1() {
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.selectCount("user", TestDataUser::getId, "cc").from("user");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select count(user.id) as cc from user");
     }
 
     @Test

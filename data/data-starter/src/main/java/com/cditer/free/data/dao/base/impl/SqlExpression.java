@@ -296,7 +296,7 @@ public class SqlExpression implements ISqlExpression {
     @Override
     public <T, R> ISqlExpression andNotEqNoEmpty(String tblAlias, SerializableFunction<T, R> column, String value) {
         tblAlias = tblAlaisFormat(tblAlias);
-        return andNotEqNoEmpty(function2ColumnName(column), value);
+        return andNotEqNoEmpty(tblAlias + function2ColumnName(column), value);
     }
 
     @Override
@@ -478,6 +478,25 @@ public class SqlExpression implements ISqlExpression {
     @Override
     public <T, R> ISqlExpression selectDistinct(SerializableFunction<T, R>... bodys) {
         return selectDistinct(null, bodys);
+    }
+
+    @Override
+    public <T, R> ISqlExpression selectDistinct(SerializableFunction<T, R> column) {
+        return selectDistinct(null, column);
+    }
+
+    @Override
+    public <T, R> ISqlExpression selectDistinct(String tblAlias, SerializableFunction<T, R> column) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return selectDistinct(tblAlias + function2ColumnName(column));
+    }
+
+    @Override
+    public <T, R> ISqlExpression selectDistinct(String tblAlias, SerializableFunction<T, R> column, String columnAlias) {
+        tblAlias = tblAlaisFormat(tblAlias);
+
+        return selectDistinct(String.format("%s%s as %s", tblAlias, function2ColumnName(column), columnAlias));
     }
 
     @Override
@@ -838,18 +857,11 @@ public class SqlExpression implements ISqlExpression {
         return appendSelect(list.toArray(new String[0]));
     }
 
-//    @Override
-//    public <T, R> ISqlExpression appendSelect(String tblAlias,String columnAlias, SerializableFunction<T, R> column) {
-//        tblAlias = tblAlaisFormat(tblAlias);
-//
-//        return appendSelect("%s%s as %s", tblAlias, function2ColumnName(column), columnAlias);
-//    }
-
     @Override
     public <T, R> ISqlExpression appendSelect(String tblAlias, SerializableFunction<T, R> column, String columnAlias) {
         tblAlias = tblAlaisFormat(tblAlias);
 
-        return appendSelect("%s%s as %s", tblAlias, function2ColumnName(column), columnAlias);
+        return appendSelect(String.format("%s%s as %s", tblAlias, function2ColumnName(column), columnAlias));
     }
 
     @Override
