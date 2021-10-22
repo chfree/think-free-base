@@ -481,18 +481,6 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
-    public <T, R> ISqlExpression selectDistinct(SerializableFunction<T, R> column) {
-        return selectDistinct(null, column);
-    }
-
-    @Override
-    public <T, R> ISqlExpression selectDistinct(String tblAlias, SerializableFunction<T, R> column) {
-        tblAlias = tblAlaisFormat(tblAlias);
-
-        return selectDistinct(tblAlias + function2ColumnName(column));
-    }
-
-    @Override
     public <T, R> ISqlExpression selectDistinct(String tblAlias, SerializableFunction<T, R> column, String columnAlias) {
         tblAlias = tblAlaisFormat(tblAlias);
 
@@ -950,8 +938,11 @@ public class SqlExpression implements ISqlExpression {
 
     @Override
     public ISqlExpression setColumn(String column, String value) {
-        this.setColumnKey(column, column)
-                .setParam(column, value);
+
+        String paramName = resolveColumn(column);
+
+        this.setColumnKey(column, paramName)
+                .setParam(paramName, value);
         return this;
     }
 

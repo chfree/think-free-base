@@ -300,10 +300,6 @@ public interface ISqlExpression {
 
     <T, R> ISqlExpression selectDistinct(SerializableFunction<T, R>... bodys);
 
-    <T, R> ISqlExpression selectDistinct(SerializableFunction<T, R> column);
-
-    <T, R> ISqlExpression selectDistinct(String tblAlias, SerializableFunction<T, R> column);
-
     <T, R> ISqlExpression selectDistinct(String tblAlias, SerializableFunction<T, R> column, String columnAlias);
 
     <T, R> ISqlExpression selectDistinct(String tblAlias, SerializableFunction<T, R>... bodys);
