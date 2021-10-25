@@ -78,7 +78,7 @@ public interface ISuperDao<E extends ModelBase> {
 	
 	boolean deleteModel(String key) throws DaoBaseRuntimeException;
 	
-	int deleteModel(E e) throws DaoBaseRuntimeException;
+	boolean deleteModel(E e) throws DaoBaseRuntimeException;
 	
 	boolean applyChange(E e) throws DaoBaseRuntimeException;
 	

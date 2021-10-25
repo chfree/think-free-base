@@ -138,32 +138,32 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public boolean addModel(E e) throws DaoBaseRuntimeException {
-        return getMapper().insert(e) > 0;
+        return getMapper().insert(e) == 1;
     }
 
     @Override
     public boolean addModelSelective(E e) throws DaoBaseRuntimeException {
-        return getMapper().insertSelective(e) > 0;
+        return getMapper().insertSelective(e) == 1;
     }
 
     @Override
     public boolean updateModel(E e) throws DaoBaseRuntimeException {
-        return getMapper().updateByPrimaryKey(e) > 0;
+        return getMapper().updateByPrimaryKey(e) == 1;
     }
 
     @Override
     public boolean updateModelSelective(E e) throws DaoBaseRuntimeException {
-        return getMapper().updateByPrimaryKeySelective(e) > 0;
+        return getMapper().updateByPrimaryKeySelective(e) == 1;
     }
 
     @Override
     public boolean deleteModel(String key) throws DaoBaseRuntimeException {
-        return getMapper().deleteByPrimaryKey(key) > 0;
+        return getMapper().deleteByPrimaryKey(key) == 1;
     }
 
     @Override
-    public int deleteModel(E e) throws DaoBaseRuntimeException {
-        return getMapper().delete(e);
+    public boolean deleteModel(E e) throws DaoBaseRuntimeException {
+        return getMapper().delete(e) == 1;
     }
 
     @Override
@@ -173,7 +173,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
         } else if (ModelStatus.update.equals(e.getModelStatus())) {
             return updateModelSelective(e);
         } else if (ModelStatus.delete.equals(e.getModelStatus())) {
-            return deleteModel(e) == 1;
+            return deleteModel(e);
         }
         return false;
     }
@@ -191,7 +191,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
             } else if (ModelStatus.update.equals(e.getModelStatus())) {
                 result = updateModelSelective(e);
             } else if (ModelStatus.delete.equals(e.getModelStatus())) {
-                result = deleteModel(e) == 1;
+                result = deleteModel(e);
             }
         }
         if (insertList.size() > 0) {

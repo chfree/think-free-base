@@ -1,13 +1,16 @@
 package com.cditer.free.data.dao.base.impl;
 
+import com.cditer.free.core.enums.ModelStatus;
 import com.cditer.free.core.enums.OrderEnum;
 import com.cditer.free.core.message.data.OrderByEnum;
 import com.cditer.free.core.message.data.PagerModel;
 import com.cditer.free.core.util.CommonUtils;
 import com.cditer.free.core.util.ReflectUtils;
+import com.cditer.free.data.dao.base.ISqlExpression;
 import com.cditer.free.data.message.OrderInfo;
 import com.cditer.free.data.test.dao.ITestDataUserDao;
 import com.cditer.free.data.test.model.TestDataUser;
+import com.cditer.free.data.utils.SqlExpressionFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,10 +169,14 @@ public class SuperDaoTest extends TestDataUserBase {
         Assert.assertTrue(i==1);
     }
 
+    private String getTestUserId(){
+        return "TEST_"+CommonUtils.getShortUUID();
+    }
+
     @Test
     public void addModel() {
         TestDataUser dataUser = new TestDataUser();
-        dataUser.setId(CommonUtils.getShortUUID());
+        dataUser.setId(getTestUserId());
         dataUser.setAccount("cheng");
         dataUser.setPassword("000000");
         dataUser.setName("ch");
@@ -184,7 +191,7 @@ public class SuperDaoTest extends TestDataUserBase {
     @Test
     public void addModelSelective() {
         TestDataUser dataUser = new TestDataUser();
-        dataUser.setId(CommonUtils.getShortUUID());
+        dataUser.setId(getTestUserId());
         dataUser.setAccount("cheng");
         dataUser.setPassword("000000");
         dataUser.setName("ch");
@@ -199,7 +206,7 @@ public class SuperDaoTest extends TestDataUserBase {
     @Test
     public void updateModel() {
         TestDataUser dataUser = new TestDataUser();
-        dataUser.setId(CommonUtils.getShortUUID());
+        dataUser.setId(getTestUserId());
         dataUser.setAccount("cheng");
         dataUser.setPassword("000000");
         dataUser.setName("ch");
@@ -221,7 +228,7 @@ public class SuperDaoTest extends TestDataUserBase {
     @Test
     public void updateModelSelective() {
         TestDataUser dataUser = new TestDataUser();
-        dataUser.setId(CommonUtils.getShortUUID());
+        dataUser.setId(getTestUserId());
         dataUser.setAccount("cheng");
         dataUser.setPassword("000000");
         dataUser.setName("ch");
@@ -242,18 +249,82 @@ public class SuperDaoTest extends TestDataUserBase {
 
     @Test
     public void deleteModel() {
+        List<TestDataUser> testDataUsers = testDataUserDao.queryList(new PagerModel(5, 1));
+
+        TestDataUser testDataUser = testDataUserDao.queryModel(testDataUsers.get(0).getId());
+        Assert.assertNotNull(testDataUser);
+
+        boolean result = testDataUserDao.deleteModel(testDataUsers.get(0).getId());
+        Assert.assertTrue(result);
+
+        testDataUser = testDataUserDao.queryModel(testDataUsers.get(0).getId());
+        Assert.assertNull(testDataUser);
     }
 
     @Test
     public void testDeleteModel() {
+        List<TestDataUser> testDataUsers = testDataUserDao.queryList(new PagerModel(5, 1));
+
+        TestDataUser testDataUser = testDataUserDao.queryModel(testDataUsers.get(0).getId());
+        Assert.assertNotNull(testDataUser);
+
+        boolean result = testDataUserDao.deleteModel(testDataUsers.get(0));
+        Assert.assertTrue(result);
+
+        testDataUser = testDataUserDao.queryModel(testDataUsers.get(0).getId());
+        Assert.assertNull(testDataUser);
     }
 
     @Test
     public void applyChange() {
+        TestDataUser dataUser = new TestDataUser();
+        dataUser.setId(getTestUserId());
+        dataUser.setAccount("cheng");
+        dataUser.setPassword("000000");
+        dataUser.setName("ch");
+        dataUser.setBuId("123");
+        dataUser.setModelStatus(ModelStatus.add);
+
+        boolean result = testDataUserDao.applyChange(dataUser);
+        Assert.assertTrue(result);
+
+        TestDataUser testDataUser = testDataUserDao.queryModel(dataUser.getId());
+        Assert.assertNotNull(testDataUser);
+
+        testDataUser.setName("CH");
+        testDataUser.setModelStatus(ModelStatus.update);
+        result = testDataUserDao.applyChange(testDataUser);
+        Assert.assertTrue(result);
+
+        testDataUser = testDataUserDao.queryModel(dataUser.getId());
+        Assert.assertEquals("CH", testDataUser.getName());
     }
 
     @Test
     public void applyChanges() {
+        TestDataUser dataUser = new TestDataUser();
+        dataUser.setId(getTestUserId());
+        dataUser.setAccount("cheng");
+        dataUser.setPassword("000000");
+        dataUser.setName("ch");
+        dataUser.setBuId("123");
+        dataUser.setModelStatus(ModelStatus.add);
+
+        List<TestDataUser> testDataUsers = testDataUserDao.queryList(new PagerModel(1, 1));
+        TestDataUser testDataUser = testDataUsers.get(0);
+        testDataUser.setModelStatus(ModelStatus.update);
+        testDataUser.setName("updCh");
+
+        testDataUsers.add(dataUser);
+
+        boolean b = testDataUserDao.applyChanges(testDataUsers);
+        Assert.assertTrue(b);
+
+        TestDataUser addOfDb = testDataUserDao.queryModel(dataUser.getId());
+        Assert.assertEquals(addOfDb.getName(), dataUser.getName());
+
+        TestDataUser updOfDb = testDataUserDao.queryModel(testDataUser.getId());
+        Assert.assertEquals(updOfDb.getName(), testDataUser.getName());
     }
 
     @Test

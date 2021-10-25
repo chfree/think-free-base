@@ -110,7 +110,7 @@ public abstract class SuperService<E extends ModelBase> implements ISuperService
     }
 
     @Override
-    public int deleteModel(E e) {
+    public boolean deleteModel(E e) {
         return getSuperDao().deleteModel(e);
     }
 

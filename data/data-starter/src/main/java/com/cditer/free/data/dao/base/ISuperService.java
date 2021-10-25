@@ -50,7 +50,7 @@ public interface ISuperService<E extends ModelBase> {
 
     boolean deleteModel(String key);
 
-    int deleteModel(E e);
+    boolean deleteModel(E e);
 
     int deleteByIds(List<String> ids);
 
