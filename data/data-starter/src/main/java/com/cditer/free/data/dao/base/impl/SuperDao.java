@@ -231,61 +231,6 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
     }
 
     @Override
-    public List<Map<String, Object>> selectList(String sql) throws DaoBaseRuntimeException {
-        return sqlExecutor.selectListEx(sql);
-    }
-
-    @Override
-    public <T> List<T> selectList(String sql, Class<T> resultType) throws DaoBaseRuntimeException {
-        return sqlExecutor.selectList(sql, resultType);
-    }
-
-    @Override
-    public List<Map<String, Object>> selectList(String sql, Object value) throws DaoBaseRuntimeException {
-        return sqlExecutor.selectListEx(sql, value);
-    }
-
-    @Override
-    public List<Map<String, Object>> selectListEx(String sql, Object value, RowBounds rowBounds) throws DaoBaseRuntimeException {
-        return sqlExecutor.selectListEx(sql, value, rowBounds);
-    }
-
-    @Override
-    public <T> List<T> selectList(String sql, Object value, Class<T> resultType) throws DaoBaseRuntimeException {
-        return sqlExecutor.selectList(sql, value, resultType);
-    }
-
-    @Override
-    public Map<String, Object> selectOne(String sql) throws DaoBaseRuntimeException {
-        return sqlExecutor.selectOneEx(sql);
-    }
-
-    @Override
-    public Map<String, Object> selectOne(String sql, Object value) throws DaoBaseRuntimeException {
-        return sqlExecutor.selectOneEx(sql, value);
-    }
-
-    @Override
-    public <T> T selectOne(String sql, Object value, Class<T> resultType) throws DaoBaseRuntimeException {
-        return sqlExecutor.selectOne(sql, value, resultType);
-    }
-
-    @Override
-    public List<E> selectList(String sql, Object value, RowBounds rowBounds) throws DaoBaseRuntimeException {
-        return sqlExecutor.selectList(sql, value, rowBounds, getEntityClass());
-    }
-
-    @Override
-    public <T> List<T> selectList(String sql, RowBounds rowBounds, Class<T> resultType) throws DaoBaseRuntimeException {
-        return sqlExecutor.selectList(sql, rowBounds, resultType);
-    }
-
-    @Override
-    public <T> List<T> selectList(String sql, Object value, RowBounds rowBounds, Class<T> resultType) throws DaoBaseRuntimeException {
-        return sqlExecutor.selectList(sql, value, rowBounds, resultType);
-    }
-
-    @Override
     public int queryCount(String sql, Object value) throws DaoBaseRuntimeException {
         return sqlExecutor.selectCount(sql, value);
     }
@@ -294,11 +239,16 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
     @Override
     public E queryModel(ISqlExpression sqlExpression) {
         try {
-            return selectOne(sqlExpression.toSql(), sqlExpression.getParams(), entityClass);
+            return sqlExecutor.selectOne(sqlExpression.toSql(), sqlExpression.getParams(), entityClass);
         } catch (DaoBaseRuntimeException e) {
             e.printStackTrace();
             throw new DaoBaseRuntimeException(e);
         }
+    }
+
+    @Override
+    public Map<String, Object> queryModelEx(ISqlExpression sqlExpression) {
+        return sqlExecutor.selectOneEx(sqlExpression);
     }
 
     @Override
@@ -309,7 +259,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
     @Override
     public List<E> queryList(ISqlExpression sqlExpression) {
         try {
-            return selectList(sqlExpression.toSql(), sqlExpression.getParams(), entityClass);
+            return sqlExecutor.selectList(sqlExpression, entityClass);
         } catch (DaoBaseRuntimeException e) {
             e.printStackTrace();
             throw new DaoBaseRuntimeException(e);
@@ -325,7 +275,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
     public List<E> queryList(ISqlExpression sqlExpression, PagerModel pagerModel) {
         try {
             if (pagerModel != null) {
-                return selectList(sqlExpression.toSql(), sqlExpression.getParams(), Pager2RowBounds.getRowBounds(pagerModel), entityClass);
+                return sqlExecutor.selectList(sqlExpression, Pager2RowBounds.getRowBounds(pagerModel), entityClass);
             } else {
                 return queryList(sqlExpression);
             }
@@ -334,6 +284,11 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
             e.printStackTrace();
             throw new DaoBaseRuntimeException(e);
         }
+    }
+
+    @Override
+    public List<Map<String, Object>> queryListEx(ISqlExpression sqlExpression) {
+        return sqlExecutor.selectListEx(sqlExpression);
     }
 
     @Override

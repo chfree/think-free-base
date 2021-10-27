@@ -97,32 +97,12 @@ public interface ISuperDao<E extends ModelBase> {
 	
 	int insert(String sql,Object params) throws DaoBaseRuntimeException;
 	
-	List<Map<String, Object>> selectList(String sql) throws DaoBaseRuntimeException;
-	
-	<T> List<T> selectList(String sql, Class<T> resultType) throws DaoBaseRuntimeException;
-	
-	List<Map<String, Object>> selectList(String sql, Object value) throws DaoBaseRuntimeException;
-	
-	List<Map<String, Object>> selectListEx(String sql, Object value,RowBounds rowBounds) throws DaoBaseRuntimeException;
-	
-	<T> List<T> selectList(String sql, Object value, Class<T> resultType) throws DaoBaseRuntimeException;
-	
-	Map<String, Object> selectOne(String sql) throws DaoBaseRuntimeException;
-	
-	Map<String, Object> selectOne(String sql, Object value) throws DaoBaseRuntimeException;
-	
-	<T> T selectOne(String sql, Object value, Class<T> resultType) throws DaoBaseRuntimeException;
-	
 	int queryCount(String sql, Object value) throws DaoBaseRuntimeException;
-	
-	List<E> selectList(String sql,Object value,RowBounds rowBounds) throws DaoBaseRuntimeException;
-	
-	<T> List<T> selectList(String sql,RowBounds rowBounds, Class<T> resultType) throws DaoBaseRuntimeException;
-	
-	<T> List<T> selectList(String sql, Object value,RowBounds rowBounds,Class<T> resultType) throws DaoBaseRuntimeException;
-	
+
 	//自定义
 	E queryModel(ISqlExpression sqlExpression);
+
+	Map<String, Object> queryModelEx(ISqlExpression sqlExpression);
 	
 	<T> T queryModel(ISqlExpression sqlExpression,Class<T> resultType);
 	
@@ -131,7 +111,9 @@ public interface ISuperDao<E extends ModelBase> {
 	<T> List<T> queryList(ISqlExpression sqlExpression,Class<T> resultType);
 	
 	List<E> queryList(ISqlExpression sqlExpression,PagerModel pagerModel);
-	
+
+	List<Map<String, Object>> queryListEx(ISqlExpression sqlExpression);
+
 	List<Map<String, Object>> queryListEx(ISqlExpression sqlExpression,PagerModel pagerModel);
 	
 	<T> List<T> queryList(ISqlExpression sqlExpression,PagerModel pagerModel,Class<T> resultType);

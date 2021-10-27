@@ -329,47 +329,102 @@ public class SuperDaoTest extends TestDataUserBase {
 
     @Test
     public void update() {
+        List<TestDataUser> testDataUsers = testDataUserDao.queryList(new PagerModel(1, 1));
+        TestDataUser testDataUser = testDataUsers.get(0);
+
+        ISqlExpression updateSql = SqlExpressionFactory.createExpression();
+        updateSql.update(TestDataUser.class).setColumn(TestDataUser::getName, "CH").andEq(TestDataUser::getId, testDataUser.getId());
+
+        int update = testDataUserDao.update(updateSql);
+        Assert.assertEquals(update, 1);
+
+        TestDataUser updOfDb = testDataUserDao.queryModel(testDataUser.getId());
+        Assert.assertEquals(updOfDb.getName(), "CH");
     }
 
     @Test
     public void testUpdate() {
+        List<TestDataUser> testDataUsers = testDataUserDao.queryList(new PagerModel(1, 1));
+        TestDataUser testDataUser = testDataUsers.get(0);
+
+        ISqlExpression updateSql = SqlExpressionFactory.createExpression();
+        updateSql.update(TestDataUser.class).setColumn(TestDataUser::getName, "CH").andEq(TestDataUser::getId, testDataUser.getId());
+
+        int update = testDataUserDao.update(updateSql.toSql(), updateSql.getParams());
+        Assert.assertEquals(update, 1);
+
+        TestDataUser updOfDb = testDataUserDao.queryModel(testDataUser.getId());
+        Assert.assertEquals(updOfDb.getName(), "CH");
     }
 
     @Test
     public void delete() {
+        List<TestDataUser> testDataUsers = testDataUserDao.queryList(new PagerModel(1, 1));
+        TestDataUser testDataUser = testDataUsers.get(0);
+
+        ISqlExpression deleteSql = SqlExpressionFactory.createExpression();
+        deleteSql.delete().from(TestDataUser.class).andEq(TestDataUser::getId, testDataUser.getId());
+
+        int update = testDataUserDao.delete(deleteSql);
+        Assert.assertEquals(update, 1);
+
+        TestDataUser updOfDb = testDataUserDao.queryModel(testDataUser.getId());
+        Assert.assertNull(updOfDb);
     }
 
     @Test
     public void testDelete() {
+        List<TestDataUser> testDataUsers = testDataUserDao.queryList(new PagerModel(1, 1));
+        TestDataUser testDataUser = testDataUsers.get(0);
+
+        ISqlExpression deleteSql = SqlExpressionFactory.createExpression();
+        deleteSql.delete().from(TestDataUser.class).andEq(TestDataUser::getId, testDataUser.getId());
+
+        int update = testDataUserDao.delete(deleteSql.toSql(), deleteSql.getParams());
+        Assert.assertEquals(update, 1);
+
+        TestDataUser updOfDb = testDataUserDao.queryModel(testDataUser.getId());
+        Assert.assertNull(updOfDb);
     }
 
     @Test
     public void insert() {
+        ISqlExpression insertSql = SqlExpressionFactory.createExpression();
+        String testUserId = getTestUserId();
+        insertSql.insert(TestDataUser.class)
+                .insertColumn(TestDataUser::getId, testUserId)
+                .insertColumn(TestDataUser::getName, "CH")
+                .insertColumn(TestDataUser::getAccount, "cheng")
+                .insertColumn(TestDataUser::getPassword, "000000")
+                .insertColumn(TestDataUser::getBuId, "123");
+
+        int insert = testDataUserDao.insert(insertSql);
+        Assert.assertEquals(insert, 1);
+
+        TestDataUser insertOfDb = testDataUserDao.queryModel(testUserId);
+        Assert.assertEquals(insertOfDb.getName(), "CH");
+        Assert.assertEquals(insertOfDb.getId(), testUserId);
     }
 
     @Test
     public void testInsert() {
+        ISqlExpression insertSql = SqlExpressionFactory.createExpression();
+        String testUserId = getTestUserId();
+        insertSql.insert(TestDataUser.class)
+                .insertColumn(TestDataUser::getId, testUserId)
+                .insertColumn(TestDataUser::getName, "CH")
+                .insertColumn(TestDataUser::getAccount, "cheng")
+                .insertColumn(TestDataUser::getPassword, "000000")
+                .insertColumn(TestDataUser::getBuId, "123");
+
+        int insert = testDataUserDao.insert(insertSql.toSql(), insertSql.getParams());
+        Assert.assertEquals(insert, 1);
+
+        TestDataUser insertOfDb = testDataUserDao.queryModel(testUserId);
+        Assert.assertEquals(insertOfDb.getName(), "CH");
+        Assert.assertEquals(insertOfDb.getId(), testUserId);
     }
 
-    @Test
-    public void selectList() {
-    }
-
-    @Test
-    public void testSelectList() {
-    }
-
-    @Test
-    public void testSelectList1() {
-    }
-
-    @Test
-    public void selectListEx() {
-    }
-
-    @Test
-    public void testSelectList2() {
-    }
 
     @Test
     public void selectOne() {
@@ -381,18 +436,6 @@ public class SuperDaoTest extends TestDataUserBase {
 
     @Test
     public void testSelectOne1() {
-    }
-
-    @Test
-    public void testSelectList3() {
-    }
-
-    @Test
-    public void testSelectList4() {
-    }
-
-    @Test
-    public void testSelectList5() {
     }
 
     @Test
