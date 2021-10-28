@@ -36,7 +36,7 @@ public class QuartzTaskLogDaoImpl extends SuperDao<QuartzTaskLog> implements IQu
     public List<QuartzTaskLog> queryListBySearch(QuartzTaskLogSearch search, PagerModel pagerModel) {
         ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
         sqlExpression.selectAllFrom(QuartzTaskLog.class)
-                     .addOrder("record_time", OrderEnum.desc);
+                     .addOrder("record_time", OrderEnum.DESC);
 
         appendExpression(sqlExpression,search);
 

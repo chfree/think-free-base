@@ -36,7 +36,7 @@ public class QuartzTaskDaoImpl extends SuperDao<QuartzTask> implements IQuartzTa
     public List<QuartzTask> queryListBySearch(QuartzTaskSearch search, PagerModel pagerModel) {
         ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
         sqlExpression.selectAllFrom(QuartzTask.class)
-                     .addOrder("name", OrderEnum.asc);
+                     .addOrder("name", OrderEnum.ASC);
 
         appendExpression(sqlExpression,search);
 
