@@ -16,6 +16,13 @@ import java.util.Map;
  */
 
 public interface ISuperDao<E extends ModelBase> {
+
+	/**
+	 * 获得mapper
+	 * @return
+	 */
+	IMapper<E> getMapper();
+
 	/**
 	 * 获得当前泛型参数的类型名称
 	 * 

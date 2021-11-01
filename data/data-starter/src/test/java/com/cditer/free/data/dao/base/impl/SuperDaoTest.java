@@ -6,6 +6,7 @@ import com.cditer.free.core.message.data.OrderByEnum;
 import com.cditer.free.core.message.data.PagerModel;
 import com.cditer.free.core.util.CommonUtils;
 import com.cditer.free.core.util.ReflectUtils;
+import com.cditer.free.data.dao.base.IMapper;
 import com.cditer.free.data.dao.base.ISqlExpression;
 import com.cditer.free.data.message.OrderInfo;
 import com.cditer.free.data.test.dao.ITestDataUserDao;
@@ -27,6 +28,11 @@ public class SuperDaoTest extends TestDataUserBase {
 
     @Test
     public void getMapper() {
+        IMapper<TestDataUser> mapper = testDataUserDao.getMapper();
+
+        int i = mapper.selectCount(null);
+
+        Assert.assertTrue(i>0);
     }
 
     @Test
@@ -425,25 +431,22 @@ public class SuperDaoTest extends TestDataUserBase {
         Assert.assertEquals(insertOfDb.getId(), testUserId);
     }
 
-
-    @Test
-    public void selectOne() {
-    }
-
-    @Test
-    public void testSelectOne() {
-    }
-
-    @Test
-    public void testSelectOne1() {
-    }
-
     @Test
     public void testQueryCount1() {
+        List<TestDataUser> testDataUsers = testDataUserDao.queryList(new PagerModel(1, 1));
+        TestDataUser testDataUser = testDataUsers.get(0);
+
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.selectCount().from(TestDataUser.class).andEq(TestDataUser::getId, testDataUser.getId());
+
+        int i = testDataUserDao.queryCount(sqlExpression);
+
+        Assert.assertTrue(i==1);
     }
 
     @Test
     public void testQueryModel1() {
+
     }
 
     @Test
@@ -472,6 +475,15 @@ public class SuperDaoTest extends TestDataUserBase {
 
     @Test
     public void testQueryCount2() {
+        List<TestDataUser> testDataUsers = testDataUserDao.queryList(new PagerModel(1, 1));
+        TestDataUser testDataUser = testDataUsers.get(0);
+
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.selectCount().from(TestDataUser.class).andEq(TestDataUser::getId, testDataUser.getId());
+
+        int i = testDataUserDao.queryCount(sqlExpression.toSql(), sqlExpression.getParams());
+
+        Assert.assertTrue(i==1);
     }
 
     @Test
