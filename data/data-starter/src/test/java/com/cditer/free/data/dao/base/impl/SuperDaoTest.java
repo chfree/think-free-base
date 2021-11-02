@@ -11,13 +11,16 @@ import com.cditer.free.data.dao.base.ISqlExpression;
 import com.cditer.free.data.message.OrderInfo;
 import com.cditer.free.data.test.dao.ITestDataUserDao;
 import com.cditer.free.data.test.model.TestDataUser;
+import com.cditer.free.data.test.model.TestNoDbData;
 import com.cditer.free.data.utils.SqlExpressionFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.Column;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SuperDaoTest extends TestDataUserBase {
@@ -446,31 +449,79 @@ public class SuperDaoTest extends TestDataUserBase {
 
     @Test
     public void testQueryModel1() {
+        List<TestDataUser> testDataUsers = testDataUserDao.queryList(new PagerModel(1, 1));
+        TestDataUser testDataUser = testDataUsers.get(0);
 
+        ISqlExpression queryModelSql = SqlExpressionFactory.createExpression();
+        queryModelSql.selectAllFrom(TestDataUser.class).andEq(TestDataUser::getId, testDataUser.getId());
+
+        TestDataUser testDataUser1 = testDataUserDao.queryModel(queryModelSql);
+
+        Assert.assertEquals(testDataUser.getId(), testDataUser1.getId());
     }
 
     @Test
     public void testQueryModel2() {
+        List<TestDataUser> testDataUsers = testDataUserDao.queryList(new PagerModel(1, 1));
+        TestDataUser testDataUser = testDataUsers.get(0);
+
+        ISqlExpression queryModelSql = SqlExpressionFactory.createExpression();
+        queryModelSql.selectAllFrom(TestDataUser.class).andEq(TestDataUser::getId, testDataUser.getId());
+
+        Map<String, Object> stringObjectMap = testDataUserDao.queryModelEx(queryModelSql);
+
+        Assert.assertEquals(testDataUser.getId(), stringObjectMap.get("id"));
     }
 
     @Test
     public void testQueryList2() {
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.selectAllFrom(TestDataUser.class);
+
+        List<TestDataUser> testDataUsers = testDataUserDao.queryList(sqlExpression);
+        Assert.assertTrue(testDataUsers.size()>0);
     }
 
     @Test
     public void testQueryList3() {
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.selectAllFrom(TestDataUser.class);
+
+        List<TestDataUser> testDataUsers = testDataUserDao.queryList(sqlExpression, new PagerModel(3, 1));
+        Assert.assertTrue(testDataUsers.size()==3);
     }
 
     @Test
     public void testQueryList4() {
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.selectAllFrom(TestDataUser.class);
+
+        List<TestNoDbData> testDataUsers = testDataUserDao.queryList(sqlExpression, TestNoDbData.class);
+
+        Assert.assertTrue(testDataUsers.size()>0);
+        Assert.assertNotNull(testDataUsers.get(0).getName());
     }
 
     @Test
     public void queryListEx() {
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.selectAllFrom(TestDataUser.class);
+
+        List<Map<String, Object>> maps = testDataUserDao.queryListEx(sqlExpression, new PagerModel(3, 1));
+        Assert.assertTrue(maps.size()==3);
+
+        Assert.assertNotNull(maps.get(0).get("name"));
     }
 
     @Test
     public void testQueryList5() {
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.selectAllFrom(TestDataUser.class);
+
+        List<TestNoDbData> testDataUsers = testDataUserDao.queryList(sqlExpression, new PagerModel(3, 1), TestNoDbData.class);
+
+        Assert.assertTrue(testDataUsers.size()==3);
+        Assert.assertNotNull(testDataUsers.get(0).getName());
     }
 
     @Test
@@ -487,23 +538,46 @@ public class SuperDaoTest extends TestDataUserBase {
     }
 
     @Test
-    public void testUpdate1() {
-    }
-
-    @Test
-    public void testDelete1() {
-    }
-
-    @Test
     public void deleteByIds() {
+        List<TestDataUser> testDataUsers = testDataUserDao.queryList(new PagerModel(2, 1));
+
+        List<TestDataUser> testDataUsers1 = testDataUserDao.queryListByIds(testDataUsers.get(0).getId(), testDataUsers.get(1).getId());
+        Assert.assertTrue(!CollectionUtils.isEmpty(testDataUsers1));
+
+        testDataUserDao.deleteByIds(testDataUsers.get(0).getId(), testDataUsers.get(1).getId());
+
+        testDataUsers1 = testDataUserDao.queryListByIds(testDataUsers.get(0).getId(), testDataUsers.get(1).getId());
+        Assert.assertTrue(CollectionUtils.isEmpty(testDataUsers1));
     }
 
     @Test
     public void testDeleteByIds() {
+        List<TestDataUser> testDataUsers = testDataUserDao.queryList(new PagerModel(2, 1));
+        List<String> ids = testDataUsers.stream().map(item -> item.getId()).collect(Collectors.toList());
+
+
+        List<TestDataUser> testDataUsers1 = testDataUserDao.queryListByIds(ids);
+        Assert.assertTrue(!CollectionUtils.isEmpty(testDataUsers1));
+
+        testDataUserDao.deleteByIds(ids);
+
+        testDataUsers1 = testDataUserDao.queryListByIds(ids);
+        Assert.assertTrue(CollectionUtils.isEmpty(testDataUsers1));
     }
 
     @Test
     public void testDeleteByIds1() {
+        List<TestDataUser> testDataUsers = testDataUserDao.queryList(new PagerModel(2, 1));
+        List<String> ids = testDataUsers.stream().map(item -> item.getId()).collect(Collectors.toList());
+
+
+        List<TestDataUser> testDataUsers1 = testDataUserDao.queryListByIds(String.join(",", ids));
+        Assert.assertTrue(!CollectionUtils.isEmpty(testDataUsers1));
+
+        testDataUserDao.deleteByIds(String.join(",", ids));
+
+        testDataUsers1 = testDataUserDao.queryListByIds(String.join(",", ids));
+        Assert.assertTrue(CollectionUtils.isEmpty(testDataUsers1));
     }
 
     @Test
