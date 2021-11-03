@@ -434,16 +434,9 @@ public class SuperDaoTest extends TestDataUserBase {
         Assert.assertEquals(insertOfDb.getId(), testUserId);
     }
 
-    @Test
-<<<<<<< HEAD
-    public void selectOne() {
-        
-    }
-=======
     public void testQueryCount1() {
         List<TestDataUser> testDataUsers = testDataUserDao.queryList(new PagerModel(1, 1));
         TestDataUser testDataUser = testDataUsers.get(0);
->>>>>>> b06f5a042be0a30e18015e9ec5be4d3508795ddd
 
         ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
         sqlExpression.selectCount().from(TestDataUser.class).andEq(TestDataUser::getId, testDataUser.getId());
