@@ -335,7 +335,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
     @Override
     public int deleteByIds(String ids) {
         String[] split = ids.split(",");
-        return deleteByIds(Arrays.asList(ids));
+        return deleteByIds(Arrays.asList(split));
     }
 
     @Override
