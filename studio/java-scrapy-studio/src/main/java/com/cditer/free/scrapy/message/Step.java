@@ -32,6 +32,11 @@ public class Step {
     private String listMatch;
 
     /**
+     * 打开详情的match
+     */
+    private CaptureRule openDetailedMatch;
+
+    /**
      * 抓取规则
      */
     @Setter(AccessLevel.NONE)

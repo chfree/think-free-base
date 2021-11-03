@@ -11,14 +11,25 @@ import lombok.Data;
 
 @Data
 public class CaptureRule {
+    // 设置的对象属性
     private String property;
 
+    // 规则
     private String matchRule;
+
+    // 规则提取属性,为空则是取text
+    private String attribute;
 
     public CaptureRule(){}
 
     public CaptureRule(String property, String matchRule){
         this.property = property;
         this.matchRule = matchRule;
+    }
+
+    public CaptureRule(String property, String matchRule,String attribute){
+        this.property = property;
+        this.matchRule = matchRule;
+        this.attribute = attribute;
     }
 }

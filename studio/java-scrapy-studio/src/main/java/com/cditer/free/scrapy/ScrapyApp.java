@@ -1,8 +1,12 @@
 package com.cditer.free.scrapy;
 
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONUtil;
 import com.cditer.free.scrapy.core.IParseTask;
 import com.cditer.free.scrapy.core.impl.ParseTaskImpl;
 import com.cditer.free.scrapy.message.*;
+
+import java.util.List;
 
 /**
  * @author chfree
@@ -28,16 +32,23 @@ public class ScrapyApp {
         Step step = new Step();
         step.setOrder(0);
         step.setPageType(PageType.detailed_list);
-        step.addRule(new CaptureRule("title", ".list .title"));
-        step.addRule(new CaptureRule("authors", ".list .author"));
+        step.setListMatch("//div[@class='dqml_qbwz']");
+        step.setOpenDetailedMatch(new CaptureRule(null,"//dd/a[@class='biaoti']", "href"));
+
+        step.addRule(new CaptureRule("title", "//dd/a[@class='biaoti']"));
+        step.addRule(new CaptureRule("authors", "//dd[@class='zuozhe']"));
         task.addStep(step);
 
         Step stepDetailed = new Step();
         stepDetailed.setOrder(1);
-        step.setPageType(PageType.detailed);
+        stepDetailed.setPageType(PageType.detailed);
 
         task.addStep(stepDetailed);
 
-        parseTask.parsePageTas(task);
+
+        System.out.println(JSONUtil.toJsonStr(task));
+
+        List<PageInfo> pageInfos = parseTask.parsePageTas(task);
+        System.out.println(JSONUtil.toJsonStr(pageInfos));
     }
 }
