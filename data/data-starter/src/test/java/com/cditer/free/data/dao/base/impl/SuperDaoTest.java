@@ -428,6 +428,7 @@ public class SuperDaoTest extends TestDataUserBase {
 
     @Test
     public void selectOne() {
+        
     }
 
     @Test
