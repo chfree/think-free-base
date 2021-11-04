@@ -6,9 +6,7 @@ import com.cditer.free.scrapy.message.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
-import org.jsoup.select.Evaluator;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -40,40 +38,40 @@ public class ParseTaskImpl implements IParseTask {
 
 
     @Override
-    public List<PageInfo> parsePageTas(Task task) {
+    public List<ArticleInfo> parsePageTas(Task task) {
         Document dom = getDom(task);
 
         List<Step> steps = task.getSteps();
         List<Step> sortedSteps = steps.stream().sorted(Comparator.comparing(item -> item.getOrder())).collect(Collectors.toList());
 
         Step step = sortedSteps.get(0);
-        List<PageInfo> pageInfos = new ArrayList<>();
+        List<ArticleInfo> articleInfos = new ArrayList<>();
 
         if(step.getPageType()== PageType.detailed_list){
             Elements elements = dom.selectXpath(step.getListMatch());
             for (Element element : elements) {
-                PageInfo pageInfo = new PageInfo();
-                pageInfos.add(pageInfo);
+                ArticleInfo articleInfo = new ArticleInfo();
+                articleInfos.add(articleInfo);
 
-                pageFillVal(element, pageInfo, step);
+                pageFillVal(element, articleInfo, step);
 
                 Step step1 = sortedSteps.get(1);
                 if(step1.getPageType()==PageType.detailed){
 
-//                    String openUrl = getOpenUrl(element, step.getOpenDetailedMatch());
-//                    Document document = null;
-//                    try {
-//                        document = Jsoup.connect(openUrl).get();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-                    // pageFillVal(document, pageInfo, step1);
+                    String openUrl = getOpenUrl(element, step.getOpenDetailedMatch());
+                    Document document = null;
+                    try {
+                        document = Jsoup.connect(openUrl).get();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                     pageFillVal(document, articleInfo, step1);
                 }
             }
         }
 
 
-        return pageInfos;
+        return articleInfos;
     }
 
     private String getOpenUrl(Element element, CaptureRule captureRule){
@@ -86,17 +84,28 @@ public class ParseTaskImpl implements IParseTask {
         return defaultDetailed.text();
     }
 
-    private void pageFillVal(Element element, PageInfo pageInfo,Step step){
+    private void pageFillVal(Element element, ArticleInfo articleInfo, Step step){
         List<CaptureRule> captureRules = step.getCaptureRules();
         if(CollectionUtils.isEmpty(captureRules)){
             return;
         }
         for (CaptureRule captureRule : captureRules) {
+            if("pdfUrl".equals(captureRule.getProperty())){
+                System.out.println("pdfUrl");
+            }
             Elements elements = element.selectXpath(captureRule.getMatchRule());
             if(CollectionUtils.isEmpty(elements)){
                 continue;
             }
-            BeanUtil.setFieldValue(pageInfo, captureRule.getProperty(),elements.get(0).text());
+
+            List<String> items = elements.stream().map(item -> {
+                if (StringUtils.hasText(captureRule.getAttribute())) {
+                    return item.attr(captureRule.getAttribute());
+                }
+                return item.text();
+            }).collect(Collectors.toList());
+
+            BeanUtil.setFieldValue(articleInfo, captureRule.getProperty(),String.join(",", items));
         }
     }
 

@@ -1,6 +1,5 @@
 package com.cditer.free.scrapy;
 
-import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
 import com.cditer.free.scrapy.core.IParseTask;
 import com.cditer.free.scrapy.core.impl.ParseTaskImpl;
@@ -42,13 +41,21 @@ public class ScrapyApp {
         Step stepDetailed = new Step();
         stepDetailed.setOrder(1);
         stepDetailed.setPageType(PageType.detailed);
+        stepDetailed.addRule(new CaptureRule("enTitle","//h3[@class='abs-tit'][2]"));
+        stepDetailed.addRule(new CaptureRule("doi","//span[@class='doi-doi']/a"));
+        stepDetailed.addRule(new CaptureRule("enTitle","//h3[@class='abs-tit'][2]"));
+        stepDetailed.addRule(new CaptureRule("cnAabstract","//p[@id='C1']"));
+        stepDetailed.addRule(new CaptureRule("keyWords", "//form/p/a[contains(@onclick,'searchKeyword')]"));
+        stepDetailed.addRule(new CaptureRule("enAbstract","//p[@id='C2']"));
+        stepDetailed.addRule(new CaptureRule("enKeyWords", "//form/p/a[contains(@onclick,'searchEnKeyword')]"));
+        stepDetailed.addRule(new CaptureRule("pdfUrl", "//meta[@name='citation_pdf_url']", "content"));
 
         task.addStep(stepDetailed);
 
 
         System.out.println(JSONUtil.toJsonStr(task));
 
-        List<PageInfo> pageInfos = parseTask.parsePageTas(task);
-        System.out.println(JSONUtil.toJsonStr(pageInfos));
+        List<ArticleInfo> articleInfos = parseTask.parsePageTas(task);
+        System.out.println(JSONUtil.toJsonStr(articleInfos));
     }
 }

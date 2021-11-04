@@ -10,7 +10,7 @@ import lombok.Data;
  */
 
 @Data
-public class PageInfo {
+public class ArticleInfo {
     /**
      * 中文标题
      */

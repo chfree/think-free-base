@@ -1,6 +1,6 @@
 package com.cditer.free.scrapy.core;
 
-import com.cditer.free.scrapy.message.PageInfo;
+import com.cditer.free.scrapy.message.ArticleInfo;
 import com.cditer.free.scrapy.message.Task;
 
 import java.util.List;
@@ -13,5 +13,5 @@ import java.util.List;
  */
 
 public interface IParseTask {
-    List<PageInfo> parsePageTas(Task task);
+    List<ArticleInfo> parsePageTas(Task task);
 }
