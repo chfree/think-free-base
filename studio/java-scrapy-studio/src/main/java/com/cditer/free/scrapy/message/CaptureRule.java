@@ -2,6 +2,8 @@ package com.cditer.free.scrapy.message;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author chfree
  * @email chfree001@gmail.com
@@ -11,14 +13,25 @@ import lombok.Data;
 
 @Data
 public class CaptureRule {
-    // 设置的对象属性
+    /**
+     * 设置的对象属性
+     */
     private String property;
 
-    // 规则
+    /**
+     * 规则
+     */
     private String matchRule;
 
-    // 规则提取属性,为空则是取text
+    /**
+     * 规则提取属性,为空则是取text
+     */
     private String attribute;
+
+    /**
+     * 过滤器，提供一些过滤规则
+     */
+    private List<Filter> filters;
 
     public CaptureRule(){}
 
@@ -27,9 +40,22 @@ public class CaptureRule {
         this.matchRule = matchRule;
     }
 
+    public CaptureRule(String property, String matchRule,List<Filter> filters){
+        this.property = property;
+        this.matchRule = matchRule;
+        this.filters = filters;
+    }
+
     public CaptureRule(String property, String matchRule,String attribute){
         this.property = property;
         this.matchRule = matchRule;
         this.attribute = attribute;
+    }
+
+    public CaptureRule(String property, String matchRule,String attribute,List<Filter> filters){
+        this.property = property;
+        this.matchRule = matchRule;
+        this.attribute = attribute;
+        this.filters = filters;
     }
 }

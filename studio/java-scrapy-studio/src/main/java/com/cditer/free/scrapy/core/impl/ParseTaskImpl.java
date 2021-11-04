@@ -1,6 +1,8 @@
 package com.cditer.free.scrapy.core.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import com.cditer.free.scrapy.core.IParseTask;
 import com.cditer.free.scrapy.message.*;
 import org.jsoup.Jsoup;
@@ -21,6 +23,7 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -90,9 +93,6 @@ public class ParseTaskImpl implements IParseTask {
             return;
         }
         for (CaptureRule captureRule : captureRules) {
-            if("pdfUrl".equals(captureRule.getProperty())){
-                System.out.println("pdfUrl");
-            }
             Elements elements = element.selectXpath(captureRule.getMatchRule());
             if(CollectionUtils.isEmpty(elements)){
                 continue;
@@ -105,8 +105,48 @@ public class ParseTaskImpl implements IParseTask {
                 return item.text();
             }).collect(Collectors.toList());
 
-            BeanUtil.setFieldValue(articleInfo, captureRule.getProperty(),String.join(",", items));
+            doFilter(captureRule, articleInfo, items);
         }
+    }
+
+    private void doFilter(CaptureRule captureRule,ArticleInfo articleInfo,List<String> items){
+        if(CollectionUtils.isEmpty(items)){
+            return;
+        }
+        String value = String.join(",", items);
+        List<Filter> filters = captureRule.getFilters();
+        if(CollectionUtils.isEmpty(filters)){
+            BeanUtil.setFieldValue(articleInfo, captureRule.getProperty(), value);
+            return;
+        }
+
+        Object objVal = value;
+        for (Filter filter : filters) {
+            if(FilterType.trim==filter.getAlias()){
+                objVal = objVal.toString().trim();
+            }
+            if(FilterType.replace == filter.getAlias()){
+                if(!StringUtils.hasText(filter.getArgOne())){
+                    continue;
+                }
+                String argTwo = StringUtils.hasText(filter.getArgTwo())?filter.getArgTwo(): "";
+                objVal = objVal.toString().replace(filter.getArgOne(), argTwo);
+            }
+            if(FilterType.fmdate==filter.getAlias()){
+                if(!StringUtils.hasText(filter.getArgOne())){
+                    objVal = DateUtil.parse(objVal.toString());
+                }else{
+                    objVal = DateUtil.parse(objVal.toString(), filter.getArgOne());
+                }
+            }
+            if(FilterType.split==filter.getAlias()){
+                String argOne = StringUtils.hasText(filter.getArgOne())?filter.getArgTwo(): ",";
+
+                objVal = Arrays.stream(objVal.toString().split(argOne)).filter(item -> StringUtils.hasText(item)).collect(Collectors.toList());
+
+            }
+        }
+        BeanUtil.setFieldValue(articleInfo, captureRule.getProperty(), objVal);
     }
 
     private Document getDom(Task task){

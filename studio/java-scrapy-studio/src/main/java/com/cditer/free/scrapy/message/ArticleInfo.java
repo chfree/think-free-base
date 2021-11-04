@@ -2,6 +2,9 @@ package com.cditer.free.scrapy.message;
 
 import lombok.Data;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * @author chfree
  * @email chfree001@gmail.com
@@ -15,12 +18,12 @@ public class ArticleInfo {
      * 中文标题
      */
     private String title; //= scrapy.Field() # 中文标题
-    private String authors; // = scrapy.Field() # 作者
+    private List<String> authors; // = scrapy.Field() # 作者
     private String doi; // = scrapy.Field() # 期刊论文doi编码
     private String pdfUrl; // = scrapy.Field() # pdf文件地址
     private String wordUrl; // = scrapy.Field() # word文件地址
 
-    private String keyWords; // = scrapy.Field() # 中文关键词
+    private List<String> keyWords; // = scrapy.Field() # 中文关键词
     private String cnAabstract; // = scrapy.Field() # 中文摘要
     private String enTitle; // = scrapy.Field() # 英文标题
     private String enKeyWords; // = scrapy.Field() # 英文关键词
@@ -30,7 +33,7 @@ public class ArticleInfo {
     private String content; // = scrapy.Field() # 论文内容
     private String reference; // = scrapy.Field() # 中文参考文献
     private String enReference; // = scrapy.Field() # 英文参考文献
-    private String publishedDate; // = scrapy.Field() # 发版日期
+    private Date publishedDate; // = scrapy.Field() # 发版日期
     private String fund; // = scrapy.Field() # 论文基金
     private String source; //= scrapy.Field() # 来源
     private String theme; //= scrapy.Field() # 论文主题
