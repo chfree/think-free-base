@@ -13,5 +13,5 @@ import java.util.List;
  */
 
 public interface IParseTask {
-    List<ArticleInfo> parsePageTas(Task task);
+    List<ArticleInfo> parsePageTask(Task task);
 }

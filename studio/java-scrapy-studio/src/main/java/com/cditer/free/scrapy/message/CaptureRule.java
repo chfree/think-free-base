@@ -2,6 +2,7 @@ package com.cditer.free.scrapy.message;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +32,11 @@ public class CaptureRule {
     /**
      * 过滤器，提供一些过滤规则
      */
-    private List<Filter> filters;
+    private List<Filter> filters = new ArrayList<>();
+
+    public void addFilter(Filter filter){
+        this.filters.add(filter);
+    }
 
     public CaptureRule(){}
 

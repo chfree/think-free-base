@@ -63,6 +63,10 @@ public class Filter {
 
     public Filter(){}
 
+    public Filter(FilterType alias){
+        this.alias = alias;
+    }
+
     public Filter(FilterType alias,String args){
         this.alias = alias;
         this.args = args;

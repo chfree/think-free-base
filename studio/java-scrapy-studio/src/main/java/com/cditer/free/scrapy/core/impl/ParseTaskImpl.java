@@ -41,43 +41,53 @@ public class ParseTaskImpl implements IParseTask {
 
 
     @Override
-    public List<ArticleInfo> parsePageTas(Task task) {
-        Document dom = getDom(task);
+    public List<ArticleInfo> parsePageTask(Task task) {
+        Document dom = getDom(task.getStart().getUrl());
 
         List<Step> steps = task.getSteps();
         List<Step> sortedSteps = steps.stream().sorted(Comparator.comparing(item -> item.getOrder())).collect(Collectors.toList());
 
         Step step = sortedSteps.get(0);
-        List<ArticleInfo> articleInfos = new ArrayList<>();
+
+        List<ArticleInfo> allList = new ArrayList<>();
 
         if(step.getPageType()== PageType.detailed_list){
-            Elements elements = dom.selectXpath(step.getListMatch());
-            for (Element element : elements) {
-                ArticleInfo articleInfo = new ArticleInfo();
-                articleInfos.add(articleInfo);
+            List<ArticleInfo> articleInfos = resolveDetailedList(dom, sortedSteps, step);
+            if(!CollectionUtils.isEmpty(articleInfos)){
+                allList.addAll(articleInfos);
+            }
+        }else if(step.getPageType() == PageType.category_list){
 
-                pageFillVal(element, articleInfo, step);
+        }
+        return allList;
+    }
 
-                Step step1 = sortedSteps.get(1);
-                if(step1.getPageType()==PageType.detailed){
+    public List<ArticleInfo> resolveDetailedList(Document dom, List<Step> sortedSteps, Step step) {
+        List<ArticleInfo> articleInfos = new ArrayList<>();
 
-                    String openUrl = getOpenUrl(element, step.getOpenDetailedMatch());
-                    Document document = null;
-                    try {
-                        document = Jsoup.connect(openUrl).get();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                     pageFillVal(document, articleInfo, step1);
-                }
+        Elements elements = dom.selectXpath(step.getListMatch());
+        for (Element element : elements) {
+            ArticleInfo articleInfo = new ArticleInfo();
+            articleInfos.add(articleInfo);
+
+            pageFillVal(element, articleInfo, step);
+
+            Step step1 = sortedSteps.get(1);
+            if(step1.getPageType()==PageType.detailed){
+                String openUrl = getOpenUrl(element, step.getOpenDetailedMatch());
+                doDetailedResolve(openUrl, step1, articleInfo);
             }
         }
-
 
         return articleInfos;
     }
 
-    private String getOpenUrl(Element element, CaptureRule captureRule){
+    public void doDetailedResolve(String openUrl, Step stepDetailed, ArticleInfo articleInfo){
+        Document document = getDom(openUrl);
+        pageFillVal(document, articleInfo, stepDetailed);
+    }
+
+    public String getOpenUrl(Element element, CaptureRule captureRule){
         Elements openDetaileds = element.selectXpath(captureRule.getMatchRule());
 
         Element defaultDetailed = openDetaileds.get(0);
@@ -87,7 +97,7 @@ public class ParseTaskImpl implements IParseTask {
         return defaultDetailed.text();
     }
 
-    private void pageFillVal(Element element, ArticleInfo articleInfo, Step step){
+    public void pageFillVal(Element element, ArticleInfo articleInfo, Step step){
         List<CaptureRule> captureRules = step.getCaptureRules();
         if(CollectionUtils.isEmpty(captureRules)){
             return;
@@ -109,7 +119,7 @@ public class ParseTaskImpl implements IParseTask {
         }
     }
 
-    private void doFilter(CaptureRule captureRule,ArticleInfo articleInfo,List<String> items){
+    public void doFilter(CaptureRule captureRule,ArticleInfo articleInfo,List<String> items){
         if(CollectionUtils.isEmpty(items)){
             return;
         }
@@ -149,11 +159,11 @@ public class ParseTaskImpl implements IParseTask {
         BeanUtil.setFieldValue(articleInfo, captureRule.getProperty(), objVal);
     }
 
-    private Document getDom(Task task){
+    public Document getDom(String url){
         try {
             getTrust();
             return Jsoup
-                    .connect(task.getStart().getUrl())
+                    .connect(url)
                     .header("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36 Edg/95.0.1020.40")
                     .get();
         } catch (IOException e) {

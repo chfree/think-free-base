@@ -37,9 +37,13 @@ public class Step {
     private CaptureRule openDetailedMatch;
 
     /**
+     * 分页信息
+     */
+    private Pager pager;
+
+    /**
      * 抓取规则
      */
-    @Setter(AccessLevel.NONE)
     private List<CaptureRule> captureRules = new ArrayList<>();
 
     public void addRule(CaptureRule rule){

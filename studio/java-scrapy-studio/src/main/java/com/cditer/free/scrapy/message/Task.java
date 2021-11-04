@@ -20,7 +20,6 @@ public class Task {
 
     private End end;
 
-    @Setter(AccessLevel.NONE)
     private List<Step> steps = new ArrayList<>();
 
     public void addStep(Step step){
