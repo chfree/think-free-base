@@ -26,6 +26,8 @@ public class User {
 
     private int age;
 
+    private String id;
+
     public User(){}
 
     public User(String name,int age){
