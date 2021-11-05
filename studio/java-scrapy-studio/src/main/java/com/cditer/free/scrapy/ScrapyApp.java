@@ -23,7 +23,7 @@ public class ScrapyApp {
 
     public static void main(String[] args) {
 
-//        IParseTask parseTask = new ParseTaskImpl();
+        IParseTask parseTask = new ParseTaskImpl();
 //
 //        Task task = new Task();
 //
@@ -64,17 +64,21 @@ public class ScrapyApp {
 //        List<ArticleInfo> articleInfos = parseTask.parsePageTask(task);
 //        System.out.println(JSONUtil.toJsonStr(articleInfos));
 
-        String path = ScrapyApp.class.getClassLoader().getResource("taskjson/journal.shu.edu.cn.01task.json").getPath();
+        // String path = ScrapyApp.class.getClassLoader().getResource("taskjson/journal.shu.edu.cn.01task.json").getPath();
+        String path = ScrapyApp.class.getClassLoader().getResource("taskjson/xuebao.sjtu.edu.cn.01task.json").getPath();
 
         String taskJson = FileUtil.readString(path, Charset.defaultCharset());
 
         List<Task> tasks = JSONUtil.toList(JSONUtil.parseArray(taskJson), Task.class);
-        System.out.println(tasks.get(0).getSteps().get(0).getOrder());
+        List<ArticleInfo> articleInfos = parseTask.parsePageTask(tasks.get(0));
+        System.out.println(JSONUtil.toJsonPrettyStr(articleInfos));
 
-        System.out.println(JSONUtil.toJsonStr(tasks));
-
-        Element element = new Element("div");
-        element.html("<span>aaa</span>");
-        System.out.println(element.selectXpath("//div/span").get(0).text());
+//        System.out.println(tasks.get(0).getSteps().get(0).getOrder());
+//
+//        System.out.println(JSONUtil.toJsonStr(tasks));
+//
+//        Element element = new Element("div");
+//        element.html("<span>aaa</span>");
+//        System.out.println(element.selectXpath("//div/span").get(0).text());
     }
 }

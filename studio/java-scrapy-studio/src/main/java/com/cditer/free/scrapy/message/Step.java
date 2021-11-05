@@ -41,6 +41,8 @@ public class Step {
      */
     private Pager pager;
 
+    private boolean test;
+
     /**
      * 抓取规则
      */

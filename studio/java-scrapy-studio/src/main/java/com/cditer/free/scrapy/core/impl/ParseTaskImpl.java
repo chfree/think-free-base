@@ -77,6 +77,10 @@ public class ParseTaskImpl implements IParseTask {
                 String openUrl = getOpenUrl(element, step.getOpenDetailedMatch());
                 doDetailedResolve(openUrl, step1, articleInfo);
             }
+
+            if(step.isTest()){
+                break;
+            }
         }
 
         return articleInfos;
