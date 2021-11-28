@@ -168,17 +168,19 @@ public class SqlMapper {
 	 */
 	public List<Map<String, Object>> selectListEx(String sql, Object value,RowBounds rowBounds) {
 		Class<?> parameterType = value != null ? value.getClass() : null;
+		sql = rowBound2Limit(sql, rowBounds);
 		String msId = msUtils.selectDynamic(sql, parameterType);
 		if(rowBounds ==null){
 			return sqlSession.selectList(msId, value);
 		}
-		return sqlSession.selectList(msId, value,rowBounds);
+		return sqlSession.selectList(msId, value);
 	}
 	
 	public <T> List<T> selectList(String sql,Object value,RowBounds rowBounds) {
 		Class<?> parameterType = value != null ? value.getClass() : null;
+		sql = rowBound2Limit(sql, rowBounds);
 		String msId = msUtils.selectDynamic(sql, parameterType);
-		return sqlSession.selectList(msId,value,rowBounds);
+		return sqlSession.selectList(msId,value);
 	}
 
 	/**
@@ -203,13 +205,14 @@ public class SqlMapper {
 	}
 	
 	public <T> List<T> selectList(String sql,RowBounds rowBounds, Class<T> resultType) {
+		sql = rowBound2Limit(sql, rowBounds);
 		String msId;
 		if (resultType == null) {
 			msId = msUtils.select(sql);
 		} else {
 			msId = msUtils.select(sql, resultType);
 		}
-		return sqlSession.selectList(msId,null,rowBounds);
+		return sqlSession.selectList(msId,null);
 	}
 	
 
@@ -240,6 +243,7 @@ public class SqlMapper {
 	
 	
 	public <T> List<T> selectList(String sql, Object value,RowBounds rowBounds, Class<T> resultType) {
+		sql = rowBound2Limit(sql, rowBounds);
 		String msId;
 		Class<?> parameterType = value != null ? value.getClass() : null;
 		if (resultType == null) {
@@ -247,7 +251,21 @@ public class SqlMapper {
 		} else {
 			msId = msUtils.selectDynamic(sql, parameterType, resultType);
 		}
-		return sqlSession.selectList(msId, value,rowBounds);
+		return sqlSession.selectList(msId, value);
+	}
+
+	public String rowBound2Limit(String sql,RowBounds rowBounds){
+		String lsql = sql.toLowerCase();
+		String limit = String.format(" limit %d,%d",rowBounds.getOffset(), rowBounds.getLimit());
+		if(lsql.indexOf("for")>0&&lsql.indexOf("update")>0){ // 有for update，则把limit 分页放到for update之前
+			StringBuilder stringBuilder = new StringBuilder(sql);
+			stringBuilder.insert(lsql.indexOf("for")-1, limit);
+
+			sql = stringBuilder.toString();
+		}else{
+			sql = sql + limit;
+		}
+		return sql;
 	}
 
 	/**
