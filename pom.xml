@@ -17,7 +17,7 @@
         <module>web/webmvc-starter</module>
         <module>web/webmvc-starter-run</module>
         <module>swagger/swagger-starter</module>
-        <module>swagger/think-swagger-ui-starter</module>
+<!--        <module>swagger/think-swagger-ui-starter</module>-->
         <module>activiti/activiti-starter</module>
         <module>activiti/activiti-starter-run</module>
         <module>extend/rate-limiter-starter</module>

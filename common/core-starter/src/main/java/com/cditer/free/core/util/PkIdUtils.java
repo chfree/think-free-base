@@ -18,6 +18,9 @@ public class PkIdUtils {
         if(coreBootConfig == null){
             coreBootConfig = SpringContextUtils.getCurrentContext().getBean(CoreBootConfig.class);
         }
+        if(coreBootConfig==null){
+            return IdUtil.randomUUID();
+        }
         if(IdModeEnum.SNOW.getValue().equals(coreBootConfig.getIdMode())){
             return SnowFlakeIdUtils.nextId().toString();
         }
