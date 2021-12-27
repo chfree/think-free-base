@@ -2,6 +2,8 @@ package com.cditer.free.core.message.security;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author chfree
  * @email chfree001@gmail.com
@@ -10,7 +12,7 @@ import lombok.Data;
  */
 
 @Data
-public class LoginModel {
+public class LoginModel implements Serializable {
     private String id;
 
     private String name;
