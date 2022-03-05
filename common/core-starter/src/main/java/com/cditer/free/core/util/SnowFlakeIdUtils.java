@@ -1,6 +1,7 @@
 package com.cditer.free.core.util;
 
 import com.cditer.free.core.autoconfig.CoreBootConfig;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author chfree
@@ -9,15 +10,24 @@ import com.cditer.free.core.autoconfig.CoreBootConfig;
  * @comment
  */
 
+@Slf4j
 public class SnowFlakeIdUtils {
     protected static SnowFlakeId snowFlakeId;
 
     static CoreBootConfig coreBootConfig;
 
-    public static Long nextId(){
-        if(snowFlakeId == null){
-            coreBootConfig = SpringContextUtils.getCurrentContext().getBean(CoreBootConfig.class);
-            snowFlakeId = new SnowFlakeId(coreBootConfig.getDataCenterId(),coreBootConfig.getMachineId());
+    public static Long nextId() {
+        if (snowFlakeId == null) {
+            int dataCenterId = 1;
+            int machineId = 1;
+            try {
+                coreBootConfig = SpringContextUtils.getCurrentContext().getBean(CoreBootConfig.class);
+                dataCenterId = coreBootConfig.getDataCenterId();
+                machineId = coreBootConfig.getMachineId();
+            } catch (Exception ex) {
+                log.warn("无法获取CoreBootConfig配置信息");
+            }
+            snowFlakeId = new SnowFlakeId(dataCenterId, machineId);
         }
         return snowFlakeId.nextId();
     }
@@ -70,9 +80,8 @@ class SnowFlakeId {
 
     /**
      * 根据指定的数据中心ID和机器标志ID生成指定的序列号
-     *
      */
-    public SnowFlakeId(int dcId,int mchId) {
+    public SnowFlakeId(int dcId, int mchId) {
         if (dcId > MAX_DATA_CENTER_NUM || dcId < 0) {
             throw new IllegalArgumentException("DtaCenterId can't be greater than MAX_DATA_CENTER_NUM or less than 0！");
         }

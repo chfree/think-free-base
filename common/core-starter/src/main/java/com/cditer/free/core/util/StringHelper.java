@@ -16,7 +16,7 @@ public class StringHelper {
     }
 
     public static int getStringLength(String str,String encoding) {
-        if(StringUtils.isEmpty(str)) {
+        if(!StringUtils.hasText(str)) {
             return 0;
         } else {
             try {
