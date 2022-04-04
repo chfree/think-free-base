@@ -8,7 +8,7 @@ package com.cditer.free.core.exception;
  */
 
 public class BizException extends RuntimeException {
-    protected static int defaultErrorCode = 1998;
+    protected static int defaultErrorCode = 1888;
     public BizException(Object... params) {
         this(defaultErrorCode,params);
     }

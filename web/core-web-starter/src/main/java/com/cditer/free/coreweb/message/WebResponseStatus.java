@@ -3,20 +3,23 @@ package com.cditer.free.coreweb.message;
 import com.cditer.free.core.message.web.ResponseStatus;
 
 public class WebResponseStatus extends ResponseStatus {
-    public static final String STATUS_KEY="status";
+    public static final String STATUS_KEY = "status";
 
     //请求成功
-    public static final int SUCCESS=200;
+    public static final int SUCCESS = 200;
 
     //授权失败
-    public static final int AUTHORIZE_ERROR=999;
+    public static final int AUTHORIZE_ERROR = 999;
 
     //服务器异常
-    public static final int SERVER_ERROR=1000;
+    public static final int SERVER_ERROR = 1000;
+
+    // 自定义异常
+    public static final int CUSTOM_ERROR = 1888;
 
     //数据异常
-    public static final int DATA_ERROR=1999;
+    public static final int DATA_ERROR = 1999;
 
     //数据异常
-    public static final int DATA_NULL_ERROR=1998;
+    public static final int DATA_NULL_ERROR = 1998;
 }
