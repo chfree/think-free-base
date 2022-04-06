@@ -4,7 +4,6 @@ import com.cditer.free.core.message.data.PagerModel;
 import com.cditer.free.data.dao.base.ISqlExecutor;
 import com.cditer.free.data.dao.base.ISqlExpression;
 import com.cditer.free.data.dao.base.mapper.SqlMapper;
-import com.cditer.free.data.message.DaoBaseRuntimeException;
 import com.cditer.free.data.utils.Pager2RowBounds;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;

@@ -11,6 +11,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @comment
  */
 @Mapper
-public interface BusinessMapper extends IMapper<Business> {
+public interface BusinessEx2Mapper extends IMapper<Business> {
 
 }

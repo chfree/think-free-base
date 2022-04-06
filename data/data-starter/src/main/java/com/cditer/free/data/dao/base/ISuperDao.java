@@ -4,7 +4,6 @@ import com.cditer.free.core.message.data.ModelBase;
 import com.cditer.free.core.message.data.PagerModel;
 import com.cditer.free.data.message.DaoBaseRuntimeException;
 import com.cditer.free.data.message.OrderInfo;
-import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
 import java.util.Map;

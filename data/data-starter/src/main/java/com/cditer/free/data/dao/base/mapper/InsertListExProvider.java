@@ -16,8 +16,8 @@ import tk.mybatis.mapper.provider.SpecialProvider;
  * @createtime  2016年5月15日 下午1:35:20
  * @comment 
  */
-public class SpecialExProvider extends SpecialProvider{
-	public SpecialExProvider(Class<?> mapperClass, MapperHelper mapperHelper) {
+public class InsertListExProvider extends SpecialProvider{
+	public InsertListExProvider(Class<?> mapperClass, MapperHelper mapperHelper) {
 		super(mapperClass, mapperHelper);
 	}
 

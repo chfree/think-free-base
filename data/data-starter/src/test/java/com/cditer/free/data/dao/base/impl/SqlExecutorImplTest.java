@@ -8,6 +8,7 @@ import com.cditer.free.data.dao.base.ISqlExecutor;
 import com.cditer.free.data.dao.base.ISqlExpression;
 import com.cditer.free.data.test.mapper.ITestDataUserMapper;
 import com.cditer.free.data.test.model.TestDataUser;
+import com.cditer.free.data.test.viewmodel.TestDataUserView;
 import com.cditer.free.data.utils.Pager2RowBounds;
 import com.cditer.free.data.utils.SqlExpressionFactory;
 import org.apache.ibatis.exceptions.TooManyResultsException;
@@ -15,6 +16,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 

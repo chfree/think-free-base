@@ -1,8 +1,9 @@
 package com.cditer.free.data.dao.base.mapper;
 
-import java.util.List;
-
+import com.cditer.free.core.message.data.ModelBase;
 import org.apache.ibatis.annotations.InsertProvider;
+
+import java.util.List;
 
 /** 
  * @author      chenghuan
@@ -11,6 +12,6 @@ import org.apache.ibatis.annotations.InsertProvider;
  * @comment 
  */
 public interface InsertListExMapper<T>  {
-	@InsertProvider(type = SpecialExProvider.class, method = "dynamicSQL")
+	@InsertProvider(type = InsertListExProvider.class, method = "dynamicSQL")
     int insertListEx(List<T> recordList);
 }
