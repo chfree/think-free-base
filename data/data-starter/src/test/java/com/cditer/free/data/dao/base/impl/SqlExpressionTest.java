@@ -1328,4 +1328,12 @@ public class SqlExpressionTest {
         Assert.assertEquals(sqlExpression.function2ColumnName(TestNoDbData::getAge), "age");
 
     }
+
+    @Test
+    public void testToSql(){
+        ISqlExpression sqlExpression = getEmptySql();
+        sqlExpression.select("name").from("user").andWhere("(name=1 or sex=2)");
+
+        Assert.assertEquals(sqlExpression.toSql(), "select name from user where ((name=1 or sex=2))");
+    }
 }

@@ -593,8 +593,12 @@ public class SqlExpression implements ISqlExpression {
             return "";
         }
 
-        if (wheres.get(0).indexOf("and ") == 0 || wheres.get(0).indexOf("or ") == 0) {
-            String firstWhere = wheres.get(0).replaceFirst("and ", "").replaceFirst("or ", "");
+        if (wheres.get(0).indexOf("and ") == 0) {
+            String firstWhere = wheres.get(0).replaceFirst("and ", "");
+            wheres.set(0, firstWhere);
+        }
+        if(wheres.get(0).indexOf("or ") == 0){
+            String firstWhere = wheres.get(0).replaceFirst("or ", "");
             wheres.set(0, firstWhere);
         }
 
