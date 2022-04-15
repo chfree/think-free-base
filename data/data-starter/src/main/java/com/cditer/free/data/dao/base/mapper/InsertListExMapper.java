@@ -1,6 +1,5 @@
 package com.cditer.free.data.dao.base.mapper;
 
-import com.cditer.free.core.message.data.ModelBase;
 import org.apache.ibatis.annotations.InsertProvider;
 
 import java.util.List;

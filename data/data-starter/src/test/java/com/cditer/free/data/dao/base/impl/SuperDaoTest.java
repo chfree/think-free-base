@@ -2,7 +2,6 @@ package com.cditer.free.data.dao.base.impl;
 
 import com.cditer.free.core.enums.ModelStatus;
 import com.cditer.free.core.enums.OrderEnum;
-import com.cditer.free.core.message.data.OrderByEnum;
 import com.cditer.free.core.message.data.PagerModel;
 import com.cditer.free.core.util.CommonUtils;
 import com.cditer.free.core.util.PkIdUtils;
@@ -11,12 +10,10 @@ import com.cditer.free.data.dao.base.IMapper;
 import com.cditer.free.data.dao.base.ISqlExpression;
 import com.cditer.free.data.message.OrderInfo;
 import com.cditer.free.data.test.dao.ITestDataUserDao;
-import com.cditer.free.data.test.mapper.ITestDataUserMapper;
 import com.cditer.free.data.test.model.TestDataUser;
 import com.cditer.free.data.test.model.TestNoDbData;
-import com.cditer.free.data.test.viewmodel.TestDataUserView;
+import com.cditer.free.data.test.viewmodel.TestDataUserViewEx;
 import com.cditer.free.data.utils.SqlExpressionFactory;
-import lombok.Data;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -606,7 +603,7 @@ public class SuperDaoTest extends TestDataUserBase {
 
     @Test
     public void testInsertListEx() {
-        TestDataUserView dataUserView = new TestDataUserView();
+        TestDataUserViewEx dataUserView = new TestDataUserViewEx();
         dataUserView.setId("TEST_"+PkIdUtils.getId());
         dataUserView.setName("chfree");
         dataUserView.setPassword("chfree");
