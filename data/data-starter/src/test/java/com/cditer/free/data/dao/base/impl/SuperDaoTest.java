@@ -11,6 +11,7 @@ import com.cditer.free.data.dao.base.IMapper;
 import com.cditer.free.data.dao.base.ISqlExpression;
 import com.cditer.free.data.message.OrderInfo;
 import com.cditer.free.data.test.dao.ITestDataUserDao;
+import com.cditer.free.data.test.mapper.ITestDataUserMapper;
 import com.cditer.free.data.test.model.TestDataUser;
 import com.cditer.free.data.test.model.TestNoDbData;
 import com.cditer.free.data.test.viewmodel.TestDataUserView;
@@ -31,7 +32,6 @@ public class SuperDaoTest extends TestDataUserBase {
 
     @Autowired
     ITestDataUserDao testDataUserDao;
-
 
     @Test
     public void getMapper() {
