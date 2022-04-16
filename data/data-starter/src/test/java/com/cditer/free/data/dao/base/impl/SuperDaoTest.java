@@ -10,6 +10,7 @@ import com.cditer.free.data.dao.base.IMapper;
 import com.cditer.free.data.dao.base.ISqlExpression;
 import com.cditer.free.data.message.OrderInfo;
 import com.cditer.free.data.test.dao.ITestDataUserDao;
+import com.cditer.free.data.test.mapper.ITestDataUserMapper;
 import com.cditer.free.data.test.model.TestDataUser;
 import com.cditer.free.data.test.model.TestNoDbData;
 import com.cditer.free.data.test.viewmodel.TestDataUserViewEx;
@@ -29,6 +30,9 @@ public class SuperDaoTest extends TestDataUserBase {
 
     @Autowired
     ITestDataUserDao testDataUserDao;
+
+    @Autowired
+    ITestDataUserMapper testDataUserMapper;
 
     @Test
     public void getMapper() {
@@ -609,7 +613,8 @@ public class SuperDaoTest extends TestDataUserBase {
         dataUserView.setPassword("chfree");
         dataUserView.setAccount(PkIdUtils.getId());
 
-        testDataUserDao.insertListEx(Arrays.asList(dataUserView));
+        testDataUserMapper.insertListEx(Arrays.asList(dataUserView));
+        // testDataUserDao.insertListEx(Arrays.asList(dataUserView));
     }
 
     @Test
