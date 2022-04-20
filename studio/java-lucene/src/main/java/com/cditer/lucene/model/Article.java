@@ -2,6 +2,9 @@ package com.cditer.lucene.model;
 
 import lombok.Data;
 
+import java.util.Date;
+import java.util.List;
+
 @Data
 public class Article {
     /**
@@ -23,4 +26,24 @@ public class Article {
      * 正文
      */
     private String content;
+
+    /**
+     * 状态
+     */
+    private String status;
+
+    /**
+     * 发表时间
+     */
+    private Date publishDate;
+
+    /**
+     * 来源
+     */
+    private String src;
+
+    /**
+     * tag
+     */
+    private List<String> tag;
 }
