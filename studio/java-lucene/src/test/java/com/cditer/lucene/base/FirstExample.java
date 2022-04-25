@@ -91,6 +91,25 @@ public class FirstExample {
 
     }
 
+    @Test
+    public void queryArticleMulTest() {
+        // in查找
+        BooleanQuery.Builder builder = new BooleanQuery.Builder();
+
+        BooleanQuery.Builder builderOne = new BooleanQuery.Builder();
+        BooleanQuery.Builder builderTwo = new BooleanQuery.Builder();
+
+        builderOne.add(new TermQuery(new Term("id", "001")), BooleanClause.Occur.MUST);
+        builderTwo.add(new TermQuery(new Term("id", "004")), BooleanClause.Occur.MUST);
+
+
+        builder.add(builderOne.build(), BooleanClause.Occur.SHOULD);
+        builder.add(builderTwo.build(), BooleanClause.Occur.SHOULD);
+
+        List<Article> articles = getArticle(builder.build());
+        System.out.println(articles.size());
+    }
+
     private List<Article> getArticle(Query query) {
         IndexReader indexReader = null;
         Directory directory = null;
