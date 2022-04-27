@@ -12,5 +12,5 @@ import java.util.List;
  */
 public interface InsertListExMapper<T>  {
 	@InsertProvider(type = InsertListExProvider.class, method = "dynamicSQL")
-    int insertListEx(List<T> recordList);
+    int insertListEx(List<? extends T> recordList);
 }

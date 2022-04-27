@@ -62,7 +62,7 @@ public interface ISuperService<E extends ModelBase> {
 
     boolean applyChanges(List<E> list);
 
-    int insertListEx(List<E> list);
+    int insertListEx(List<? extends E> list);
 
     int insertListEx(List<E> list, int batchSize);
 

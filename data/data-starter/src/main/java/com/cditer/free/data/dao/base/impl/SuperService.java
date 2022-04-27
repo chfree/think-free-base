@@ -138,7 +138,7 @@ public abstract class SuperService<E extends ModelBase> implements ISuperService
     }
 
 
-    public int insertListEx(List<E> list) {
+    public int insertListEx(List<? extends E> list) {
         return getSuperDao().insertListEx(list);
     }
 

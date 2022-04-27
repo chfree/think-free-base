@@ -5,17 +5,17 @@ import com.cditer.free.core.enums.ModelStatus;
 import com.cditer.free.core.message.data.ModelBase;
 import com.cditer.free.core.message.data.PagerModel;
 import com.cditer.free.core.util.CommonUtils;
-import com.cditer.free.data.dao.base.*;
-import com.cditer.free.data.dao.base.mapper.SqlMapper;
+import com.cditer.free.data.dao.base.IBatchInsertProcessor;
+import com.cditer.free.data.dao.base.IMapper;
+import com.cditer.free.data.dao.base.ISqlExecutor;
+import com.cditer.free.data.dao.base.ISqlExpression;
+import com.cditer.free.data.dao.base.ISuperDao;
 import com.cditer.free.data.message.DaoBaseRuntimeException;
 import com.cditer.free.data.message.OrderInfo;
 import com.cditer.free.data.utils.ClassAnnotationUtils;
 import com.cditer.free.data.utils.Pager2RowBounds;
 import com.cditer.free.data.utils.SqlExpressionFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.RowBounds;
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author chenghuan
@@ -179,12 +178,12 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
     }
 
     @Override
-    public boolean applyChanges(List<E> list) throws DaoBaseRuntimeException {
+    public boolean applyChanges(List<? extends E> list) throws DaoBaseRuntimeException {
         if (list == null || list.size() == 0) {
             return false;
         }
         boolean result = false;
-        List<E> insertList = new ArrayList<E>();
+        List<E> insertList = new ArrayList<>();
         for (E e : list) {
             if (ModelStatus.add.equals(e.getModelStatus())) {
                 insertList.add(e);
@@ -359,7 +358,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
     }
 
     @Override
-    public int insertListEx(List<E> list) {
+    public int insertListEx(List<? extends E> list) {
         if (list == null || list.isEmpty()) {
             return 0;
         }
@@ -367,14 +366,14 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
     }
 
     @Override
-    public int insertListEx(List<E> list, int batchSize) {
+    public int insertListEx(List<? extends E> list, int batchSize) {
         if (list == null || list.isEmpty()) {
             return 0;
         }
         int insertCount = 0;
 
-        List<List<E>> lists = CommonUtils.listSlice(list, batchSize);
-        for (List<E> currentList : lists) {
+        List<? extends List<? extends E>> lists = CommonUtils.listSlice(list, batchSize);
+        for (List<? extends E> currentList : lists) {
             insertCount += mapper.insertListEx(currentList);
         }
 
@@ -388,38 +387,38 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
     }
 
     @Override
-    public int batchInsertList(List<E> list) {
+    public int batchInsertList(List<? extends E> list) {
         return batchInsertList(list, 64);
     }
 
     @Override
-    public int batchInsertList(List<E> list, int batchSize) {
+    public int batchInsertList(List<? extends E> list, int batchSize) {
         String sqlId = getSqlId("insert");
 
         return batchInsertProcessor.insertListBatch(sqlId, list, batchSize);
     }
 
     @Override
-    public int batchUpdateList(List<E> list) {
+    public int batchUpdateList(List<? extends E> list) {
         String sqlId = getSqlId("update");
 
         return batchInsertProcessor.updateListBatch(sqlId, list);
     }
 
     @Override
-    public int batchInsertSelectiveList(List<E> list) {
+    public int batchInsertSelectiveList(List<? extends E> list) {
         return batchInsertSelectiveList(list, 64);
     }
 
     @Override
-    public int batchInsertSelectiveList(List<E> list, int batchSize) {
+    public int batchInsertSelectiveList(List<? extends E> list, int batchSize) {
         String sqlId = getSqlId("insertSelective");
 
         return batchInsertProcessor.insertListBatch(sqlId, list, batchSize);
     }
 
     @Override
-    public int batchUpdateSelectiveList(List<E> list) {
+    public int batchUpdateSelectiveList(List<? extends E> list) {
         String sqlId = getSqlId("updateSelective");
 
         return batchInsertProcessor.updateListBatch(sqlId, list);
