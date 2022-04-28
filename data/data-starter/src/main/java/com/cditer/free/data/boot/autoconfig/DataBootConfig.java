@@ -17,4 +17,7 @@ public class DataBootConfig {
 
     @Value("${think.data.sql.print:true}")
     private boolean printSql;
+
+    @Value("${think.data.db-model-save.error-break:false}")
+    private boolean dbModelSaveErrorBreak;
 }

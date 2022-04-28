@@ -13,6 +13,7 @@ import com.cditer.free.data.dao.base.ISuperDao;
 import com.cditer.free.data.message.DaoBaseRuntimeException;
 import com.cditer.free.data.message.OrderInfo;
 import com.cditer.free.data.utils.ClassAnnotationUtils;
+import com.cditer.free.data.utils.DbModelSaveInceptorHelper;
 import com.cditer.free.data.utils.Pager2RowBounds;
 import com.cditer.free.data.utils.SqlExpressionFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,9 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Autowired
     ISqlExecutor sqlExecutor;
+
+    @Autowired
+    DbModelSaveInceptorHelper dbModelSaveInceptorHelper;
 
     @Override
     public String getModelName() {
@@ -138,22 +142,38 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public boolean addModel(E e) throws DaoBaseRuntimeException {
-        return getMapper().insert(e) == 1;
+        dbModelSaveInceptorHelper.dbModelSaveBefore(Arrays.asList(e));
+        boolean result = getMapper().insert(e) == 1;
+        dbModelSaveInceptorHelper.dbModelSaveAfter(Arrays.asList(e));
+
+        return result;
     }
 
     @Override
     public boolean addModelSelective(E e) throws DaoBaseRuntimeException {
-        return getMapper().insertSelective(e) == 1;
+        dbModelSaveInceptorHelper.dbModelSaveBefore(Arrays.asList(e));
+        boolean result = getMapper().insertSelective(e) == 1;
+        dbModelSaveInceptorHelper.dbModelSaveAfter(Arrays.asList(e));
+
+        return result;
     }
 
     @Override
     public boolean updateModel(E e) throws DaoBaseRuntimeException {
-        return getMapper().updateByPrimaryKey(e) == 1;
+        dbModelSaveInceptorHelper.dbModelSaveBefore(Arrays.asList(e));
+        boolean result = getMapper().updateByPrimaryKey(e) == 1;
+        dbModelSaveInceptorHelper.dbModelSaveAfter(Arrays.asList(e));
+
+        return result;
     }
 
     @Override
     public boolean updateModelSelective(E e) throws DaoBaseRuntimeException {
-        return getMapper().updateByPrimaryKeySelective(e) == 1;
+        dbModelSaveInceptorHelper.dbModelSaveBefore(Arrays.asList(e));
+        boolean result = getMapper().updateByPrimaryKeySelective(e) == 1;
+        dbModelSaveInceptorHelper.dbModelSaveAfter(Arrays.asList(e));
+
+        return result;
     }
 
     @Override
@@ -163,19 +183,24 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public boolean deleteModel(E e) throws DaoBaseRuntimeException {
-        return getMapper().delete(e) == 1;
+        dbModelSaveInceptorHelper.dbModelSaveBefore(Arrays.asList(e));
+        boolean result = getMapper().delete(e) == 1;
+        dbModelSaveInceptorHelper.dbModelSaveAfter(Arrays.asList(e));
+
+        return result;
     }
 
     @Override
     public boolean applyChange(E e) throws DaoBaseRuntimeException {
+        boolean result = false;
         if (ModelStatus.add.equals(e.getModelStatus())) {
-            return addModelSelective(e);
+            result = addModelSelective(e);
         } else if (ModelStatus.update.equals(e.getModelStatus())) {
-            return updateModelSelective(e);
+            result = updateModelSelective(e);
         } else if (ModelStatus.delete.equals(e.getModelStatus())) {
-            return deleteModel(e);
+            result = deleteModel(e);
         }
-        return false;
+        return result;
     }
 
     @Override
@@ -195,7 +220,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
             }
         }
         if (insertList.size() > 0) {
-            return getMapper().insertListEx(insertList) == insertList.size();
+            result = insertListEx(insertList) == insertList.size();
         }
         return result;
     }
@@ -373,10 +398,12 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
         }
         int insertCount = 0;
 
+        dbModelSaveInceptorHelper.dbModelSaveBefore(list);
         List<? extends List<? extends E>> lists = CommonUtils.listSlice(list, batchSize);
         for (List<? extends E> currentList : lists) {
             insertCount += mapper.insertListEx(currentList);
         }
+        dbModelSaveInceptorHelper.dbModelSaveAfter(list);
 
         return insertCount;
     }
@@ -395,8 +422,11 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
     @Override
     public int batchInsertList(List<? extends E> list, int batchSize) {
         String sqlId = getSqlId("insert");
+        dbModelSaveInceptorHelper.dbModelSaveBefore(list);
+        int count = batchInsertProcessor.insertListBatch(sqlId, list, batchSize);
+        dbModelSaveInceptorHelper.dbModelSaveAfter(list);
 
-        return batchInsertProcessor.insertListBatch(sqlId, list, batchSize);
+        return count;
     }
 
     @Override
@@ -405,8 +435,11 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
             return 0;
         }
         String sqlId = getSqlId("update");
+        dbModelSaveInceptorHelper.dbModelSaveBefore(list);
+        int count = batchInsertProcessor.updateListBatch(sqlId, list);
+        dbModelSaveInceptorHelper.dbModelSaveAfter(list);
 
-        return batchInsertProcessor.updateListBatch(sqlId, list);
+        return count;
     }
 
     @Override
@@ -420,8 +453,11 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
             return 0;
         }
         String sqlId = getSqlId("insertSelective");
+        dbModelSaveInceptorHelper.dbModelSaveBefore(list);
+        int count = batchInsertProcessor.insertListBatch(sqlId, list, batchSize);
+        dbModelSaveInceptorHelper.dbModelSaveAfter(list);
 
-        return batchInsertProcessor.insertListBatch(sqlId, list, batchSize);
+        return count;
     }
 
     @Override
@@ -430,7 +466,10 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
             return 0;
         }
         String sqlId = getSqlId("updateSelective");
+        dbModelSaveInceptorHelper.dbModelSaveBefore(list);
+        int count = batchInsertProcessor.updateListBatch(sqlId, list);
+        dbModelSaveInceptorHelper.dbModelSaveAfter(list);
 
-        return batchInsertProcessor.updateListBatch(sqlId, list);
+        return count;
     }
 }
