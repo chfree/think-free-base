@@ -17,6 +17,7 @@ import com.cditer.free.data.utils.Pager2RowBounds;
 import com.cditer.free.data.utils.SqlExpressionFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -179,7 +180,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public boolean applyChanges(List<? extends E> list) throws DaoBaseRuntimeException {
-        if (list == null || list.size() == 0) {
+        if (CollectionUtils.isEmpty(list)) {
             return false;
         }
         boolean result = false;
@@ -317,7 +318,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public int deleteByIds(List<String> ids) {
-        if (ids == null || ids.isEmpty()) {
+        if (CollectionUtils.isEmpty(ids)) {
             return 0;
         }
         ISqlExpression deleteSql = SqlExpressionFactory.createExpression();
@@ -359,7 +360,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public int insertListEx(List<? extends E> list) {
-        if (list == null || list.isEmpty()) {
+        if (CollectionUtils.isEmpty(list)) {
             return 0;
         }
         return insertListEx(list, 32);
@@ -367,7 +368,7 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public int insertListEx(List<? extends E> list, int batchSize) {
-        if (list == null || list.isEmpty()) {
+        if (CollectionUtils.isEmpty(list)) {
             return 0;
         }
         int insertCount = 0;
@@ -400,6 +401,9 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public int batchUpdateList(List<? extends E> list) {
+        if(CollectionUtils.isEmpty(list)){
+            return 0;
+        }
         String sqlId = getSqlId("update");
 
         return batchInsertProcessor.updateListBatch(sqlId, list);
@@ -412,6 +416,9 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public int batchInsertSelectiveList(List<? extends E> list, int batchSize) {
+        if(CollectionUtils.isEmpty(list)){
+            return 0;
+        }
         String sqlId = getSqlId("insertSelective");
 
         return batchInsertProcessor.insertListBatch(sqlId, list, batchSize);
@@ -419,6 +426,9 @@ public abstract class SuperDao<E extends ModelBase> extends DbContext<E> impleme
 
     @Override
     public int batchUpdateSelectiveList(List<? extends E> list) {
+        if(CollectionUtils.isEmpty(list)){
+            return 0;
+        }
         String sqlId = getSqlId("updateSelective");
 
         return batchInsertProcessor.updateListBatch(sqlId, list);
