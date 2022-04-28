@@ -51,7 +51,7 @@ public class ModelBase implements IDbModel{
 		}
 		String fieldName = first.get().getName();
 		Object fieldValue = BeanUtil.getFieldValue(this, fieldName);
-		if(fieldValue==null|| StringUtils.hasText(fieldValue.toString())){
+		if(fieldValue==null|| !StringUtils.hasText(fieldValue.toString())){
 			BeanUtil.setFieldValue(this, fieldName, PkIdUtils.getId());
 			this.setModelStatus(ModelStatus.add);
 		}else{
