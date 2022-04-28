@@ -11,6 +11,9 @@ import java.lang.annotation.Annotation;
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,6 +25,25 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class ReflectUtils {
+    public static List<Field> getAllFieldList(Class<?> clazz, Class<?> pClazz){
+        List<Field> allList = new ArrayList<>();
+        loopSuperFields(clazz,pClazz, allList);
+
+        return allList;
+    }
+
+    private static void loopSuperFields(Class<?> clazz,Class<?> pClazz, List<Field> allList){
+        if(clazz.getTypeName().equals(pClazz.getTypeName())||clazz.getTypeName().equals(Object.class.getTypeName())){
+            return;
+        }
+        Field[] declaredFields = clazz.getDeclaredFields();
+        if(declaredFields!=null&&declaredFields.length>0){
+            allList.addAll(Arrays.asList(declaredFields));
+        }
+
+        loopSuperFields(clazz.getSuperclass(),pClazz, allList);
+    }
+
     public static ClassMetadata getField(Object object, String fieldName) {
         if (object == null) {
             return null;
