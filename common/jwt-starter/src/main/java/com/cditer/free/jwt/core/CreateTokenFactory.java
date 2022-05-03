@@ -30,7 +30,7 @@ public class CreateTokenFactory {
     public ITokenCreate newTokenCreate(){
         String tokenCreateBean = DEFAULT_TOKEN_CREATE;
 
-        if(!"default".equals(jwtConfig.getCreateTokenBean())&&!StringUtils.hasLength(jwtConfig.getCreateTokenBean())){
+        if(!"default".equals(jwtConfig.getCreateTokenBean())&&!StringUtils.hasText(jwtConfig.getCreateTokenBean())){
             tokenCreateBean = jwtConfig.getCreateTokenBean();
         }
         return (ITokenCreate) SpringContextUtils.getCurrentContext().getBean(tokenCreateBean);

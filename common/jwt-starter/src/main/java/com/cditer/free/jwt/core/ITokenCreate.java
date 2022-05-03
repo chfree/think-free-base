@@ -1,5 +1,7 @@
 package com.cditer.free.jwt.core;
 
+import java.util.Map;
+
 /**
  * @author chfree
  * @email chfree001@gmail.com
@@ -11,5 +13,7 @@ public interface ITokenCreate {
     /**
      * 创建token
      */
-    String createToken(String userId,String account,String name);
+    String createToken(String userId, Map<String,Object> claims);
+
+
 }

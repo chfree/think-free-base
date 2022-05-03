@@ -4,7 +4,6 @@ import com.cditer.free.jwt.config.JwtConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -24,11 +23,7 @@ public class DefaultTokenCreate implements ITokenCreate {
     private JwtConfig jwtConfig;
 
     @Override
-    public String createToken(String userId,String account,String name) {
-        Map<String,Object> claims = new HashMap<>();
-        claims.put("account",account);
-        claims.put("name",name);
-
+    public String createToken(String userId, Map<String, Object> claims) {
         long expiresSecond = jwtConfig.getExpiresSecond()*1000L;
 
         return jwtHelper.createJwt(userId,claims,expiresSecond);
