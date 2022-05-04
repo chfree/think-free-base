@@ -13,11 +13,28 @@ import java.io.Serializable;
 
 @Data
 public class LoginModel implements Serializable {
+    /**
+     * 用户id
+     */
     private String id;
 
+    /**
+     * 用户名称
+     */
     private String name;
 
-    private String account;
-
+    /**
+     * token
+     */
     private String token;
+
+    /**
+     * 角色
+     */
+    private String roleId;
+
+    /**
+     * 部门
+     */
+    private String deptId;
 }

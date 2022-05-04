@@ -124,7 +124,6 @@ public class JwtHelper {
 
         loginModel.setId(claims.getId());
         loginModel.setName(claims.get("name",String.class));
-        loginModel.setAccount(claims.get("account", String.class));
         loginModel.setToken(token);
 
         return loginModel;
