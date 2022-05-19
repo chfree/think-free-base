@@ -1,5 +1,9 @@
 package com.cditer.poi.word;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.json.JSONUtil;
+import com.cditer.export.word.model.QuestionPaper;
+import com.cditer.export.word.model.Topic;
 import com.cditer.free.core.util.PkIdUtils;
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.Borders;
@@ -8,44 +12,123 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.junit.Test;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSectPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTabStop;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTabJc;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class WordTest {
-    @Test
-    public void testExportWord() throws Exception {
-        createWordExport();
+
+    private List<Topic> queryTopics() {
+        String path = WordTest.class.getClassLoader().getResource(String.format("question.json")).getPath();
+        String navJson = FileUtil.readString(path, Charset.defaultCharset());
+        List<Topic> topics = JSONUtil.toList(JSONUtil.parseArray(navJson), Topic.class);
+
+        return topics;
     }
 
-    private void createWordExport() throws Exception {
+    private QuestionPaper buildPager() {
+        QuestionPaper pager = new QuestionPaper();
+        pager.setTitle("期末考试严选测试");
+        pager.setSubTitle("数学");
+        pager.setHeaderTitle("熟尔教育");
+
+        List<Topic> topics = queryTopics();
+        topics.forEach(consumerWithIndex((item, index) -> {
+            item.setSeq(++index);
+        }));
+        pager.setTopics(topics);
+
+        return pager;
+    }
+
+    // 工具方法
+    public static <T> Consumer<T> consumerWithIndex(BiConsumer<T, Integer> consumer) {
+        class Obj {
+            int i;
+        }
+        Obj obj = new Obj();
+        return t -> {
+            int index = obj.i++;
+            consumer.accept(t, index);
+        };
+    }
+
+    @Test
+    public void testExportWord() throws Exception {
+        createWordExport(buildPager());
+    }
+
+    private void createWordExport(QuestionPaper pager) throws Exception {
+        List<Topic> topics = pager.getTopics();
+        if (CollectionUtils.isEmpty(topics)) {
+            return;
+        }
         XWPFDocument doc = new XWPFDocument();
-//        XWPFParagraph para;  //代表文档、表格、标题等种的段落，由多个XWPFRun组成
-//        XWPFRun run;  //代表具有同样风格的一段文本
-//        XWPFTableRow row;//代表表格的一行
-//        XWPFTableCell cell;//代表表格的一个单元格
-//        CTTcPr cellPr; //单元格属性
+        createHeader(doc, pager.getHeaderTitle());
 
+        insertTitle(doc, pager.getTitle());
 
+        for (Topic topic : topics) {
+            createTopic(topic, doc);
+        }
+
+        saveDocToDisk(doc);
+    }
+
+    private void createTopic(Topic topic, XWPFDocument doc) {
         XWPFParagraph paragraph = doc.createParagraph();//新建一个标题段落对象（就是一段文字）
         paragraph.setAlignment(ParagraphAlignment.LEFT);//样式居中
         XWPFRun coverRun0 = paragraph.createRun();    //创建文本对象
         coverRun0.setBold(true); //加粗
         coverRun0.setFontSize(12);    //字体大小
-        coverRun0.setText("这是一个测试");
+        coverRun0.setText(String.format("%d. %s", topic.getSeq(), topic.getTitle()));
 
-        saveDocToDisk(doc);
+        XWPFRun separtor = paragraph.createRun();
+        /**两段之间添加换行*/
+        separtor.setText("\r");
+
+        XWPFRun separtor2 = paragraph.createRun();
+        /**两段之间添加换行*/
+        separtor2.setText("\r");
+    }
+
+
+    //插入大标题
+    public void insertTitle(XWPFDocument doc, String title) {
+        XWPFParagraph paragraph = doc.createParagraph();
+
+        /**3.插入新的Run即将新的文本插入段落*/
+        XWPFRun createRun = paragraph.insertNewRun(0);
+        createRun.setStyle("标题");
+        createRun.setText(title);
+        XWPFRun separtor = paragraph.insertNewRun(1);
+        /**两段之间添加换行*/
+        separtor.setText("\r\n");
+        //设置字体大小
+        createRun.setFontSize(22);
+        //是否加粗
+        createRun.setBold(true);
+        //设置字体
+        createRun.setFontFamily("宋体");
+        //设置居中
+        paragraph.setAlignment(ParagraphAlignment.CENTER);
+    }
+
+    public void createHeader(XWPFDocument doc, String orgFullName) throws Exception {
+        createHeader(doc, orgFullName, null);
     }
 
     public void createHeader(XWPFDocument doc, String orgFullName, String logoFilePath) throws Exception {
@@ -54,7 +137,7 @@ public class WordTest {
         XWPFHeaderFooterPolicy headerFooterPolicy = new XWPFHeaderFooterPolicy(doc, sectPr);
         XWPFHeader header = headerFooterPolicy.createHeader(XWPFHeaderFooterPolicy.DEFAULT);
 
-        XWPFParagraph paragraph = header.getParagraphArray(0);
+        XWPFParagraph paragraph = header.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraph.setBorderBottom(Borders.THICK);
 
@@ -68,19 +151,7 @@ public class WordTest {
 
         /* * 根据公司logo在ftp上的路径获取到公司到图片字节流 * 添加公司logo到页眉，logo在左边 * */
         if (StringUtils.hasText(logoFilePath)) {
-//            String imgFile = FileUploadUtil.getLogoFilePath(logoFilePath);
-//            byte[] bs = FtpUtil.downloadFileToIo(imgFile);
-//            InputStream is = new ByteArrayInputStream(bs);
-//
-//            XWPFPicture picture = run.addPicture(is, XWPFDocument.PICTURE_TYPE_JPEG, imgFile, Units.toEMU(80), Units.toEMU(45));
-//
-//            String blipID = "";
-//            for(XWPFPictureData picturedata : header.getAllPackagePictures()) { //这段必须有，不然打开的logo图片不显示
-//                blipID = header.getRelationId(picturedata);
-//            }
-//            picture.getCTPicture().getBlipFill().getBlip().setEmbed(blipID);
-//            run.addTab();
-//            is.close();
+
         }
 
         /* * 添加字体页眉，公司全称 * 公司全称在右边 * */

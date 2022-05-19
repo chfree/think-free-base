@@ -1,0 +1,50 @@
+[
+  {
+    "type": "choice",
+    "title": "（2018年武昌七校期中T10）如图，AD为等边△ABC的高，E、F 分别为线段AD、AC上的动点，\n且AE＝CF，当BF＋CE取最小值时，∠AFB的度数为\n",
+    "imgs": [
+      "01.png",
+      "02.png"
+    ]
+  },
+  {
+    "type": "shortAnswer",
+    "title": "在平面直角坐标系中，点A、B分别在x轴和y轴上，直线l是第一、三象限的夹角平分线，P为直\n线l上的一点，且AP⊥AB，AP＝AB．过点B作射线m⊥AB，M为线段PB上的一动点，N是射线m上一动点，且PM＝BN，连接AM、AN，当AM＋AN最小时，求∠ANB的度数．\n",
+    "imgs": [
+      "03.png"
+    ]
+  },
+  {
+    "type": "shortAnswer",
+    "title": "如图，在△ABC中，∠A＝30°，∠ACB＝70°，延长CB至D，使CD＝CA，E、F分别为AC、\nAB上的动点，且CE＝AF，当DE＋CF的值最小时，则∠DEC的度数为\n",
+    "imgs": [
+      "04.png"
+    ]
+  },
+  {
+    "type": "shortAnswer",
+    "title": "如图，在△ABC中，∠A＝60°，∠ACB＝90°，AC＝2，F为BC中点，D、E分别在AC、AB上，\nCD＝AE，连接DF、CE，则DF＋CE的最小值为\n",
+    "imgs": [
+      "05.png"
+    ]
+  },
+  {
+    "type": "shortAnswer",
+    "title": "如图，在边上为6的等边△ABC中，D为AC的中点，射线DE∥BC，M、N分别为线段AB于DE\n上的点，连接CM、CN，若BM＝DN，求CM＋CN的最小值．\n",
+    "imgs": [
+      "01.png",
+      "02.png",
+      "03.png"
+    ]
+  },
+  {
+    "type:": "shortAnswer",
+    "title": "如图，在长方形ABCD中，AB＝2，AD＝2\\sqrt{3} ，P、Q分别为对角线AC，边CD上的两点，且AP\n＝CQ，则BP＋BQ的最小值为\n",
+    "imgs": [
+      "01.png",
+      "05.png",
+      "02.png",
+      "03.png"
+    ]
+  }
+]
