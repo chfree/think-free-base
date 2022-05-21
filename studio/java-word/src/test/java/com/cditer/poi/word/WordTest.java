@@ -5,6 +5,8 @@ import cn.hutool.json.JSONUtil;
 import com.cditer.export.word.model.QuestionPaper;
 import com.cditer.export.word.model.Topic;
 import com.cditer.free.core.util.PkIdUtils;
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.converter.WordToFoConverter;
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.Borders;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
@@ -21,8 +23,18 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.STTabJc;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.Writer;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -30,6 +42,30 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class WordTest {
+
+    /**
+     * Word转Fo
+     * @throws Exception
+     */
+    @Test
+    public void testWordToFo() throws Exception {
+        InputStream is = new FileInputStream("E:\\document\\testfile\\export\\word\\test.doc");
+        HWPFDocument wordDocument = new HWPFDocument(is);
+
+        WordToFoConverter converter = new WordToFoConverter(DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument());
+
+        //对HWPFDocument进行转换
+        converter.processDocument(wordDocument);
+        Writer writer = new FileWriter(new File("E:\\document\\testfile\\export\\word\\converter.xml"));
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        transformer.setOutputProperty( OutputKeys.ENCODING, "utf-8" );
+        //是否添加空格
+        transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
+//     transformer.setOutputProperty( OutputKeys.METHOD, "html" );
+        transformer.transform(
+                new DOMSource(converter.getDocument() ),
+                new StreamResult( writer ) );
+    }
 
     private List<Topic> queryTopics() {
         String path = WordTest.class.getClassLoader().getResource(String.format("question.json")).getPath();
