@@ -34,12 +34,12 @@ public class Topic {
     /**
      * 下间距
      */
-    private int downSpace;
+    private int downSpace = 5;
 
     /**
      * 上间距
      */
-    private int upSpace;
+    private int upSpace = 1;
 
     private boolean isFirst() {
         return seq == 1;

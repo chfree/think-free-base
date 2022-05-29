@@ -14,6 +14,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFHeader;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.XWPFStyles;
 import org.junit.Test;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTRPr;
@@ -31,8 +32,10 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.math.BigInteger;
@@ -65,6 +68,14 @@ public class WordTest {
         transformer.transform(
                 new DOMSource(converter.getDocument() ),
                 new StreamResult( writer ) );
+    }
+
+    @Test
+    public void getStyle() throws IOException {
+        InputStream is = new FileInputStream("E:\\document\\testfile\\export\\word\\test.docx");
+        XWPFDocument wordDocument = new XWPFDocument(is);
+
+        System.out.println("xx");
     }
 
     private List<Topic> queryTopics() {
@@ -112,10 +123,18 @@ public class WordTest {
         if (CollectionUtils.isEmpty(topics)) {
             return;
         }
+        InputStream is = new FileInputStream("E:\\document\\testfile\\export\\word\\test.docx");
+        XWPFDocument wordDocument = new XWPFDocument(is);
+
         XWPFDocument doc = new XWPFDocument();
+        XWPFStyles styles = doc.createStyles();
+        styles.setStyles(wordDocument.getStyle());
+
         createHeader(doc, pager.getHeaderTitle());
 
         insertTitle(doc, pager.getTitle());
+
+        insertSubTitle(doc, pager.getSubTitle());
 
         for (Topic topic : topics) {
             createTopic(topic, doc);
@@ -127,18 +146,21 @@ public class WordTest {
     private void createTopic(Topic topic, XWPFDocument doc) {
         XWPFParagraph paragraph = doc.createParagraph();//新建一个标题段落对象（就是一段文字）
         paragraph.setAlignment(ParagraphAlignment.LEFT);//样式居中
+
+        XWPFRun upSepartor = paragraph.createRun();
+        for (int i = 0; i < topic.getUpSpace(); i++) {
+            upSepartor.addCarriageReturn();
+        }
+
         XWPFRun coverRun0 = paragraph.createRun();    //创建文本对象
-        coverRun0.setBold(true); //加粗
+        coverRun0.setBold(false); //加粗
         coverRun0.setFontSize(12);    //字体大小
         coverRun0.setText(String.format("%d. %s", topic.getSeq(), topic.getTitle()));
 
-        XWPFRun separtor = paragraph.createRun();
-        /**两段之间添加换行*/
-        separtor.setText("\r");
-
-        XWPFRun separtor2 = paragraph.createRun();
-        /**两段之间添加换行*/
-        separtor2.setText("\r");
+        XWPFRun downSepartor = paragraph.createRun();
+        for (int i = 0; i < topic.getDownSpace(); i++) {
+            downSepartor.addCarriageReturn();
+        }
     }
 
 
@@ -150,11 +172,27 @@ public class WordTest {
         XWPFRun createRun = paragraph.insertNewRun(0);
         createRun.setStyle("标题");
         createRun.setText(title);
-        XWPFRun separtor = paragraph.insertNewRun(1);
-        /**两段之间添加换行*/
-        separtor.setText("\r\n");
         //设置字体大小
         createRun.setFontSize(22);
+        //是否加粗
+        createRun.setBold(true);
+        //设置字体
+        createRun.setFontFamily("宋体");
+        //设置居中
+        paragraph.setAlignment(ParagraphAlignment.CENTER);
+    }
+
+    public void insertSubTitle(XWPFDocument doc, String title) {
+        XWPFParagraph paragraph = doc.createParagraph();
+        XWPFRun upSepartor = paragraph.createRun();
+        upSepartor.addCarriageReturn();
+
+        /**3.插入新的Run即将新的文本插入段落*/
+        XWPFRun createRun = paragraph.createRun();
+        createRun.setStyle("副标题");
+        createRun.setText(title);
+        //设置字体大小
+        createRun.setFontSize(18);
         //是否加粗
         createRun.setBold(true);
         //设置字体
