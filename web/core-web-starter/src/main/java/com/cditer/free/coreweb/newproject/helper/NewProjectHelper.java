@@ -28,11 +28,11 @@ public class NewProjectHelper {
     String rootPath = null;
 
     private void loadSetting(){
-        if(!StringUtils.isEmpty(this.rootPath)){
+        if(StringUtils.hasText(this.rootPath)){
             return;
         }
         String templatePath = thinkWebConfig.getTemplatePath();
-        if(StringUtils.isEmpty(templatePath)){
+        if(!StringUtils.hasText(templatePath)){
             throw new BizException("think.path.template-path未正确配置");
         }
         if((templatePath.length()-1)!=templatePath.lastIndexOf(File.separator)){

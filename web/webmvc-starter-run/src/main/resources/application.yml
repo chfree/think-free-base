@@ -4,11 +4,15 @@ server:
     context-path: /tennetcn
 think:
   path:
-    template-path: /Users/chenghuan/Desktop/ccbworkbak/20210917/
+    template-path: E:\document\testfile\project\
   checkmac:
     enabled: true
 logging:
   config: classpath:logback-dev.xml
+spring:
+  mvc:
+    view:
+      prefix:
 #think:
 #  ratelimit:
 #    enabled: true
@@ -16,3 +20,5 @@ logging:
 #      type: URL
 #      limit: 10
 #      matcher: /tennetcn/home/hello
+
+
