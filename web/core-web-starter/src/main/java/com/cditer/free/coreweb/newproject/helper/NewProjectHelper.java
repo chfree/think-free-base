@@ -69,7 +69,7 @@ public class NewProjectHelper {
 
         // 不能单纯的进行复制，如果先复制了，后面在进行重命名逻辑就比较麻烦
         // 将模板路径对应着用户主目录进行创建，然后路径下有直属根文件的进行复制，并重命名
-        loopCopyFile(new File(unzipPath + "${name}"), uuid, userPathDisk,projectNewTemplate);
+        loopCopyFile(new File(unzipPath + "${artifactId}"), uuid, userPathDisk,projectNewTemplate);
 
         FileUtil.del(unzipPath);
 
@@ -138,7 +138,9 @@ public class NewProjectHelper {
     }
 
     private String convertNewPath(String path,String userPathDisk,ProjectNewTemplate projectNewTemplate){
-        return path.replace(rootPath, userPathDisk).replace("${name}", projectNewTemplate.getProjectName()).replace("${packageName}", projectNewTemplate.getPackageName());
+        return path.replace(rootPath, userPathDisk).replace("${name}", projectNewTemplate.getProjectName())
+                .replace("${packageName}", projectNewTemplate.getPackageName())
+                .replace("${artifactId}", projectNewTemplate.getArtifactId());
     }
 
     private String replaceAll(String content,String key,String value){
