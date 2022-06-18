@@ -1,8 +1,12 @@
 package com.cditer.free.jwt.core;
 
-import com.cditer.free.jwt.config.JwtConfig;
 import com.cditer.free.core.message.security.LoginModel;
-import io.jsonwebtoken.*;
+import com.cditer.free.jwt.config.JwtConfig;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -124,6 +128,8 @@ public class JwtHelper {
 
         loginModel.setId(claims.getId());
         loginModel.setName(claims.get("name",String.class));
+        loginModel.setRoleId(claims.get("roleId",String.class));
+        loginModel.setDeptId(claims.get("deptId",String.class));
         loginModel.setToken(token);
 
         return loginModel;
