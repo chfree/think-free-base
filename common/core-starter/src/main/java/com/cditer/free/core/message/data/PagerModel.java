@@ -51,4 +51,8 @@ public class PagerModel implements Serializable {
 		}
 		return this.currentSize;
 	}
+
+	public static PagerModel asOf(int pageIndex, int pageSize){
+		return new PagerModel(pageSize, pageIndex);
+	}
 }
