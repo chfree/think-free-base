@@ -60,7 +60,7 @@
         <javax.persistence.version>1.0.2</javax.persistence.version>
         <tk.mybatis.mapper.version>2.1.5</tk.mybatis.mapper.version>
         <cn.hutool.version>4.5.16</cn.hutool.version>
-        <mysql-connector-java.version>8.0.16</mysql-connector-java.version>
+        <mysql-connector-java.version>8.0.28</mysql-connector-java.version>
         <org.activiti-spring.version>6.0.0</org.activiti-spring.version>
         <commons-io.version>2.7</commons-io.version>
         <org.quartz-scheduler.quartz.version>2.3.2</org.quartz-scheduler.quartz.version>
