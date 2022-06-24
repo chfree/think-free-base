@@ -14,6 +14,7 @@ import java.util.Map;
  * @comment
  */
 
+@Deprecated
 public interface ISuperDao<E extends ModelBase> {
 
     /**

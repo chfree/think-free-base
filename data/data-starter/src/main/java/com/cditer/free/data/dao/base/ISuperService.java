@@ -20,6 +20,8 @@ public interface ISuperService<E extends ModelBase> {
      */
     String getModelName();
 
+    String getTableName();
+
     List<E> queryList();
 
     List<E> queryListByIds(String ids);
@@ -64,7 +66,7 @@ public interface ISuperService<E extends ModelBase> {
 
     int insertListEx(List<? extends E> list);
 
-    int insertListEx(List<E> list, int batchSize);
+    int insertListEx(List<? extends E> list, int batchSize);
 
     int batchInsertList(List<E> list);
 

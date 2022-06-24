@@ -32,6 +32,7 @@ import java.util.Map;
  * @comment
  */
 @Slf4j
+@Deprecated
 public abstract class SuperDao<E extends ModelBase> extends DbContext<E> implements ISuperDao<E> {
 
     @Autowired

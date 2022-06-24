@@ -1,14 +1,30 @@
 package com.cditer.free.data.dao.base.impl;
 
+import cn.hutool.core.util.ReflectUtil;
+import com.cditer.free.core.enums.ModelStatus;
 import com.cditer.free.core.message.data.ModelBase;
 import com.cditer.free.core.message.data.PagerModel;
+import com.cditer.free.core.util.CommonUtils;
+import com.cditer.free.data.dao.base.IBatchInsertProcessor;
+import com.cditer.free.data.dao.base.IMapper;
+import com.cditer.free.data.dao.base.ISqlExecutor;
+import com.cditer.free.data.dao.base.ISqlExpression;
 import com.cditer.free.data.dao.base.ISuperDao;
 import com.cditer.free.data.dao.base.ISuperService;
+import com.cditer.free.data.message.DaoBaseRuntimeException;
+import com.cditer.free.data.utils.ClassAnnotationUtils;
+import com.cditer.free.data.utils.DbModelSaveInceptorHelper;
+import com.cditer.free.data.utils.Pager2RowBounds;
+import com.cditer.free.data.utils.SqlExpressionFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -19,162 +35,327 @@ import java.util.List;
  */
 
 @Slf4j
-public abstract class SuperService<E extends ModelBase> implements ISuperService<E> {
+public abstract class SuperService<E extends ModelBase> extends DbContext implements ISuperService<E> {
 
     @Autowired
-    private ISuperDao<E> superDao;
+    private IMapper<E> mapper;
 
-    public ISuperDao<E> getSuperDao() {
-        return superDao;
+    protected IMapper<E> getMapper() {
+        return mapper;
+    }
+
+    @Autowired
+    private ISqlExecutor sqlExecutor;
+
+    @Autowired
+    private DbModelSaveInceptorHelper dbModelSaveInceptorHelper;
+
+    @Autowired
+    private IBatchInsertProcessor batchInsertProcessor;
+
+    protected ISqlExecutor getSqlExecutor() {
+        return this.sqlExecutor;
+    }
+
+    protected DbModelSaveInceptorHelper getDbModelSaveInceptorHelper() {
+        return this.dbModelSaveInceptorHelper;
+    }
+
+    protected IBatchInsertProcessor getBatchInsertProcessor() {
+        return this.batchInsertProcessor;
+    }
+
+    protected String getDbFirstColumnKey() {
+        return ClassAnnotationUtils.getFirstColumnKey(entityClass);
     }
 
     @Override
     public String getModelName() {
-        return getSuperDao().getModelName();
+        return ClassAnnotationUtils.getModelName(entityClass);
+    }
+
+    @Override
+    public String getTableName() {
+        return ClassAnnotationUtils.getTableName(entityClass);
+    }
+
+    protected List<E> queryList(ISqlExpression sqlExpression) {
+        try {
+            return sqlExecutor.selectList(sqlExpression, entityClass);
+        } catch (DaoBaseRuntimeException e) {
+            e.printStackTrace();
+            throw new DaoBaseRuntimeException(e);
+        }
     }
 
     @Override
     public List<E> queryList() {
-        return getSuperDao().queryList();
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.selectAllFrom(entityClass);
+
+        return queryList(sqlExpression);
     }
+
 
     @Override
     public List<E> queryListByIds(String ids) {
-        return getSuperDao().queryListByIds(ids);
+        if (!StringUtils.hasText(ids)) {
+            return null;
+        }
+        return queryListByIds(Arrays.asList(ids.split(",")));
     }
 
     @Override
     public List<E> queryListByIds(List<String> ids) {
-        return getSuperDao().queryListByIds(ids);
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.selectAllFrom(entityClass).andWhereInString(getDbFirstColumnKey(), ids);
+
+        return queryList(sqlExpression);
     }
 
     @Override
     public List<E> queryListByIds(String... ids) {
-        return getSuperDao().queryListByIds(ids);
+        if (ids == null || ids.length <= 0) {
+            return null;
+        }
+        return queryListByIds(Arrays.asList(ids));
     }
 
 
     @Override
     public List<E> queryList(PagerModel pagerModel) {
-        return getSuperDao().queryList(pagerModel);
+        return getMapper().selectByRowBounds(null, Pager2RowBounds.getRowBounds(pagerModel));
     }
 
     @Override
     public List<E> queryList(E e) {
-        return getSuperDao().queryList(e);
+        return getMapper().select(e);
     }
 
     @Override
     public int queryCount(E e) {
-        return getSuperDao().queryCount(e);
+        return getMapper().selectCount(e);
     }
 
     @Override
     public int queryCount() {
-        return getSuperDao().queryCount();
+        ISqlExpression sqlExpression = SqlExpressionFactory.createExpression();
+        sqlExpression.addBody("select count(1) from " + getTableName());
+
+        return queryCount(sqlExpression);
+    }
+
+    protected int queryCount(ISqlExpression sqlExpression) {
+        return sqlExecutor.selectCount(sqlExpression);
+    }
+
+    protected int delete(ISqlExpression sqlExpression) {
+        return sqlExecutor.delete(sqlExpression);
     }
 
     @Override
     public E queryModel(String key) {
-        return getSuperDao().queryModel(key);
+        return getMapper().selectByPrimaryKey(key);
     }
 
     @Override
     public E queryModel(E e) {
-        return getSuperDao().queryModel(e);
+        return getMapper().selectOne(e);
     }
 
     @Override
     public boolean addModel(E e) {
-        return getSuperDao().addModel(e);
+        dbModelSaveInceptorHelper.dbModelSaveBefore(Arrays.asList(e));
+        boolean result = getMapper().insert(e) == 1;
+        dbModelSaveInceptorHelper.dbModelSaveAfter(Arrays.asList(e));
+
+        return result;
     }
 
     @Override
     public boolean addModelSelective(E e) {
-        return getSuperDao().addModelSelective(e);
+        dbModelSaveInceptorHelper.dbModelSaveBefore(Arrays.asList(e));
+        boolean result = getMapper().insertSelective(e) == 1;
+        dbModelSaveInceptorHelper.dbModelSaveAfter(Arrays.asList(e));
+
+        return result;
     }
 
     @Override
     public boolean updateModel(E e) {
-        return getSuperDao().updateModel(e);
+        dbModelSaveInceptorHelper.dbModelSaveBefore(Arrays.asList(e));
+        boolean result = getMapper().updateByPrimaryKey(e) == 1;
+        dbModelSaveInceptorHelper.dbModelSaveAfter(Arrays.asList(e));
+
+        return result;
     }
 
     @Override
     public boolean updateModelSelective(E e) {
-        return getSuperDao().updateModelSelective(e);
+        dbModelSaveInceptorHelper.dbModelSaveBefore(Arrays.asList(e));
+        boolean result = getMapper().updateByPrimaryKeySelective(e) == 1;
+        dbModelSaveInceptorHelper.dbModelSaveAfter(Arrays.asList(e));
+
+        return result;
     }
 
     @Override
     public boolean deleteModel(String key) {
-        return getSuperDao().deleteModel(key);
+        return getMapper().deleteByPrimaryKey(key) == 1;
     }
 
     @Override
     public boolean deleteModel(E e) {
-        return getSuperDao().deleteModel(e);
+        dbModelSaveInceptorHelper.dbModelSaveBefore(Arrays.asList(e));
+        boolean result = getMapper().delete(e) == 1;
+        dbModelSaveInceptorHelper.dbModelSaveAfter(Arrays.asList(e));
+
+        return result;
     }
 
     @Override
     public int deleteByIds(List<String> ids) {
-        return getSuperDao().deleteByIds(ids);
+        if (CollectionUtils.isEmpty(ids)) {
+            return 0;
+        }
+        ISqlExpression deleteSql = SqlExpressionFactory.createExpression();
+        deleteSql.delete().from(entityClass).andWhereInString(getDbFirstColumnKey(), ids);
+
+        return delete(deleteSql);
     }
 
     @Override
     public int deleteByIds(String... ids) {
-        return getSuperDao().deleteByIds(ids);
+        return deleteByIds(Arrays.asList(ids));
     }
 
     @Override
     public int deleteByIds(String ids) {
-        return getSuperDao().deleteByIds(ids);
+        String[] split = ids.split(",");
+        return deleteByIds(Arrays.asList(split));
     }
 
     public boolean applyChange(E e) {
-        return getSuperDao().applyChange(e);
+        boolean result = false;
+        if (ModelStatus.add.equals(e.getModelStatus())) {
+            result = addModelSelective(e);
+        } else if (ModelStatus.update.equals(e.getModelStatus())) {
+            result = updateModelSelective(e);
+        } else if (ModelStatus.delete.equals(e.getModelStatus())) {
+            result = deleteModel(e);
+        }
+        return result;
     }
 
     public boolean applyChanges(List<E> list) {
-        return getSuperDao().applyChanges(list);
+        if (CollectionUtils.isEmpty(list)) {
+            return false;
+        }
+        boolean result = false;
+        List<E> insertList = new ArrayList<>();
+        for (E e : list) {
+            if (ModelStatus.add.equals(e.getModelStatus())) {
+                insertList.add(e);
+            } else if (ModelStatus.update.equals(e.getModelStatus())) {
+                result = updateModelSelective(e);
+            } else if (ModelStatus.delete.equals(e.getModelStatus())) {
+                result = deleteModel(e);
+            }
+        }
+        if (insertList.size() > 0) {
+            result = insertListEx(insertList) == insertList.size();
+        }
+        return result;
     }
 
 
     public int insertListEx(List<? extends E> list) {
-        return getSuperDao().insertListEx(list);
+        if (CollectionUtils.isEmpty(list)) {
+            return 0;
+        }
+        return insertListEx(list, 32);
     }
 
     @Override
-    public int insertListEx(List<E> list, int batchSize) {
-        return getSuperDao().insertListEx(list, batchSize);
+    public int insertListEx(List<? extends E> list, int batchSize) {
+        if (CollectionUtils.isEmpty(list)) {
+            return 0;
+        }
+        int insertCount = 0;
+
+        dbModelSaveInceptorHelper.dbModelSaveBefore(list);
+        List<? extends List<? extends E>> lists = CommonUtils.listSlice(list, batchSize);
+        for (List<? extends E> currentList : lists) {
+            insertCount += mapper.insertListEx(currentList);
+        }
+        dbModelSaveInceptorHelper.dbModelSaveAfter(list);
+
+        return insertCount;
+    }
+
+    private String getSqlId(String methodName) {
+        Class clazz = (Class) ReflectUtil.getFieldValue(ReflectUtil.getFieldValue(this.mapper, "h"), "mapperInterface");
+
+        return clazz.getName() + "." + methodName;
     }
 
     @Override
     public int batchInsertList(List<E> list) {
-        return getSuperDao().batchInsertList(list);
+        return batchInsertList(list, 64);
     }
 
     @Override
     public int batchInsertList(List<E> list, int batchSize) {
-        return getSuperDao().batchInsertList(list,batchSize);
+        String sqlId = getSqlId("insert");
+        dbModelSaveInceptorHelper.dbModelSaveBefore(list);
+        int count = batchInsertProcessor.insertListBatch(sqlId, list, batchSize);
+        dbModelSaveInceptorHelper.dbModelSaveAfter(list);
+
+        return count;
     }
 
     @Override
     public int batchUpdateList(List<E> list) {
-        return getSuperDao().batchUpdateList(list);
+        if (CollectionUtils.isEmpty(list)) {
+            return 0;
+        }
+        String sqlId = getSqlId("update");
+        dbModelSaveInceptorHelper.dbModelSaveBefore(list);
+        int count = batchInsertProcessor.updateListBatch(sqlId, list);
+        dbModelSaveInceptorHelper.dbModelSaveAfter(list);
+
+        return count;
     }
 
     @Override
     public int batchInsertSelectiveList(List<E> list) {
-        return getSuperDao().batchInsertSelectiveList(list);
+        return batchInsertSelectiveList(list, 64);
     }
 
     @Override
     public int batchInsertSelectiveList(List<E> list, int batchSize) {
-        return getSuperDao().batchInsertSelectiveList(list,batchSize);
+        if (CollectionUtils.isEmpty(list)) {
+            return 0;
+        }
+        String sqlId = getSqlId("insertSelective");
+        dbModelSaveInceptorHelper.dbModelSaveBefore(list);
+        int count = batchInsertProcessor.insertListBatch(sqlId, list, batchSize);
+        dbModelSaveInceptorHelper.dbModelSaveAfter(list);
+
+        return count;
     }
 
     @Override
     public int batchUpdateSelectiveList(List<E> list) {
-        return getSuperDao().batchUpdateSelectiveList(list);
+        if (CollectionUtils.isEmpty(list)) {
+            return 0;
+        }
+        String sqlId = getSqlId("updateSelective");
+        dbModelSaveInceptorHelper.dbModelSaveBefore(list);
+        int count = batchInsertProcessor.updateListBatch(sqlId, list);
+        dbModelSaveInceptorHelper.dbModelSaveAfter(list);
+
+        return count;
     }
 }
 
