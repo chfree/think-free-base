@@ -1,5 +1,7 @@
 package com.cditer.free.core.message.web;
 
+import lombok.Data;
+
 /**
  * @author chfree
  * @email chfree001@gmail.com
@@ -7,5 +9,7 @@ package com.cditer.free.core.message.web;
  * @comment
  */
 
-public class BaseRequest {
+@Data
+public class BaseRequest<T> {
+    private T search;
 }

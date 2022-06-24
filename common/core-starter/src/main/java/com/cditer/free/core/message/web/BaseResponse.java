@@ -19,9 +19,7 @@ import java.util.Map;
  */
 
 @Data
-@Builder
-@AllArgsConstructor
-public class BaseResponse {
+public class BaseResponse<T> {
 
     public static String defaultResultKey = "result";
 
@@ -44,6 +42,8 @@ public class BaseResponse {
      * 跟踪号
      */
     private String traceId;
+
+    private T data;
 
     private Map<String,Object> arguments= null;
 
@@ -89,5 +89,20 @@ public class BaseResponse {
     @JsonAnyGetter
     public Map<String,Object> getArguments(){
         return this.arguments;
+    }
+
+    public static <T> BaseResponse<T> success(){
+        BaseResponse<T> resp = new BaseResponse<>();
+        resp.setStatus(ResponseStatus.SUCCESS);
+
+        return resp;
+    }
+
+    public static <T> BaseResponse<T> success(T t){
+        BaseResponse<T> resp = new BaseResponse<>();
+        resp.setStatus(ResponseStatus.SUCCESS);
+        resp.setData(t);
+
+        return resp;
     }
 }

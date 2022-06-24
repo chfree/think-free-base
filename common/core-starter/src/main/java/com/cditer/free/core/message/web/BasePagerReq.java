@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
  */
 
 @Data
-public class BasePagerReq extends BaseRequest {
+public class BasePagerReq<T> extends BaseRequest<T> {
     @NotNull(message = "分页信息不能为空")
     private PagerModel pager;
 }

@@ -10,6 +10,15 @@ import lombok.Data;
  */
 
 @Data
-public class BasePagerResp extends BaseResponse {
+public class BasePagerResp<T> extends BaseResponse<T> {
     private int totalCount;
+
+    public static <T> BasePagerResp<T> success(T t,int totalCount){
+        BasePagerResp<T> resp = new BasePagerResp<>();
+        resp.setStatus(ResponseStatus.SUCCESS);
+        resp.setData(t);
+        resp.setTotalCount(totalCount);
+
+        return resp;
+    }
 }
