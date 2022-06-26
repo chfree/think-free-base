@@ -17,7 +17,7 @@ public class ReqRespTest {
     public void test01(){
         BasePagerReq<TestUser> req = new BasePagerReq<>();
         PagerModel pager = req.getPager();
-        TestUser search = req.getSearch();
+        TestUser search = req.getData();
 
         BasePagerResp<TestUser> resp = new BasePagerResp<>();
         resp.setTotalCount(10);

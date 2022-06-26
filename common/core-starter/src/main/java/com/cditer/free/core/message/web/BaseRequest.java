@@ -11,5 +11,5 @@ import lombok.Data;
 
 @Data
 public class BaseRequest<T> {
-    private T search;
+    private T data;
 }
