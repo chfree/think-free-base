@@ -152,7 +152,7 @@ public class PerformanceInterceptor implements Interceptor {
         } else {
             value = obj != null ? obj.toString() : "";
         }
-        return value;
+        return value.replaceAll("\\$", "\\\\\\$");
     }
 
     public Object plugin(Object target) {
