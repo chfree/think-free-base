@@ -283,6 +283,8 @@ public abstract class SuperService<E extends ModelBase> extends DbContext implem
         }
         int insertCount = 0;
 
+        list.forEach(item -> item.setModelStatus(ModelStatus.add));
+
         dbModelSaveInceptorHelper.dbModelSaveBefore(list);
         List<? extends List<? extends E>> lists = CommonUtils.listSlice(list, batchSize);
         for (List<? extends E> currentList : lists) {
@@ -300,13 +302,19 @@ public abstract class SuperService<E extends ModelBase> extends DbContext implem
     }
 
     @Override
-    public int batchInsertList(List<E> list) {
+    public int batchInsertList(List<? extends E> list) {
         return batchInsertList(list, 64);
     }
 
     @Override
-    public int batchInsertList(List<E> list, int batchSize) {
+    public int batchInsertList(List<? extends E> list, int batchSize) {
+        if(CollectionUtils.isEmpty(list)){
+            return 0;
+        }
+        list.forEach(item -> item.setModelStatus(ModelStatus.add));
+
         String sqlId = getSqlId("insert");
+
         dbModelSaveInceptorHelper.dbModelSaveBefore(list);
         int count = batchInsertProcessor.insertListBatch(sqlId, list, batchSize);
         dbModelSaveInceptorHelper.dbModelSaveAfter(list);
@@ -315,10 +323,12 @@ public abstract class SuperService<E extends ModelBase> extends DbContext implem
     }
 
     @Override
-    public int batchUpdateList(List<E> list) {
+    public int batchUpdateList(List<? extends E> list) {
         if (CollectionUtils.isEmpty(list)) {
             return 0;
         }
+        list.forEach(item -> item.setModelStatus(ModelStatus.update));
+
         String sqlId = getSqlId("update");
         dbModelSaveInceptorHelper.dbModelSaveBefore(list);
         int count = batchInsertProcessor.updateListBatch(sqlId, list);
@@ -328,16 +338,19 @@ public abstract class SuperService<E extends ModelBase> extends DbContext implem
     }
 
     @Override
-    public int batchInsertSelectiveList(List<E> list) {
+    public int batchInsertSelectiveList(List<? extends E> list) {
         return batchInsertSelectiveList(list, 64);
     }
 
     @Override
-    public int batchInsertSelectiveList(List<E> list, int batchSize) {
+    public int batchInsertSelectiveList(List<? extends E> list, int batchSize) {
         if (CollectionUtils.isEmpty(list)) {
             return 0;
         }
+        list.forEach(item -> item.setModelStatus(ModelStatus.add));
+
         String sqlId = getSqlId("insertSelective");
+
         dbModelSaveInceptorHelper.dbModelSaveBefore(list);
         int count = batchInsertProcessor.insertListBatch(sqlId, list, batchSize);
         dbModelSaveInceptorHelper.dbModelSaveAfter(list);
@@ -346,10 +359,12 @@ public abstract class SuperService<E extends ModelBase> extends DbContext implem
     }
 
     @Override
-    public int batchUpdateSelectiveList(List<E> list) {
+    public int batchUpdateSelectiveList(List<? extends E> list) {
         if (CollectionUtils.isEmpty(list)) {
             return 0;
         }
+        list.forEach(item -> item.setModelStatus(ModelStatus.add));
+
         String sqlId = getSqlId("updateSelective");
         dbModelSaveInceptorHelper.dbModelSaveBefore(list);
         int count = batchInsertProcessor.updateListBatch(sqlId, list);
