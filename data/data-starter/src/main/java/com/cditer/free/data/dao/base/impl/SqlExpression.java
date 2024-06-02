@@ -718,6 +718,20 @@ public class SqlExpression implements ISqlExpression {
     }
 
     @Override
+    public ISqlExpression selectDistinctAllFrom(Class<?> tClass) {
+        return selectDistinct(SqlHelper.getAllColumns(tClass)).from(tClass);
+    }
+
+    @Override
+    public ISqlExpression selectDistinctAllFrom(Class<?> tClass, String alias) {
+        // "aa,bb,cc"  replace ,->,xx.  ="aa,xx.bb,xx.cc"
+        // and add start xx.
+        String allColumns = alias + "." + SqlHelper.getAllColumns(tClass).replace(",", "," + alias + ".");
+
+        return selectDistinct(allColumns).from(tClass, alias);
+    }
+
+    @Override
     public ISqlExpression select(String body) {
         if (bodyBuffer.indexOf("select ") >= 0) {
             addBody("," + body);

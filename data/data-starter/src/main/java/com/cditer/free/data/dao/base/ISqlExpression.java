@@ -202,6 +202,10 @@ public interface ISqlExpression {
 
     ISqlExpression selectAllFrom(Class<?> tClass, String alias);
 
+    ISqlExpression selectDistinctAllFrom(Class<?> tClass);
+
+    ISqlExpression selectDistinctAllFrom(Class<?> tClass, String alias);
+
     ISqlExpression select(String body);
 
     ISqlExpression appendSelect(String body);
