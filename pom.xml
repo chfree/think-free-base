@@ -24,22 +24,35 @@
         <module>extend/standby-data-starter</module>
         <module>quartz/quartz-starter</module>
         <module>quartz/quartz-demo-run</module>
+
+        <module>studio/java-sqlparse</module>
+        <module>studio/java-common-collect</module>
+        <module>studio/java-lucene</module>
+        <module>studio/java-word</module>
     </modules>
 
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>tennetcn_nexus</id>-->
+<!--            <name>tennetcn nexus repository</name>-->
+<!--            <url>http://nexus.tennetcn.com/nexus/content/groups/public/</url>-->
+<!--        </repository>-->
+<!--    </repositories>-->
+<!--    <distributionManagement>-->
+<!--        <repository>-->
+<!--            <id>tennetcn_nexus_release</id>-->
+<!--            <name>tennetcn nexus release</name>-->
+<!--            <url>http://nexus.tennetcn.com/nexus/content/repositories/tennetcn</url>-->
+<!--        </repository>-->
+<!--    </distributionManagement>-->
     <repositories>
         <repository>
-            <id>tennetcn_nexus</id>
-            <name>tennetcn nexus repository</name>
-            <url>http://nexus.tennetcn.com/nexus/content/groups/public/</url>
+            <id>aliyunmaven</id>
+            <name>阿里云公共仓库</name>
+            <url>https://maven.aliyun.com/repository/public</url>
         </repository>
     </repositories>
-    <distributionManagement>
-        <repository>
-            <id>tennetcn_nexus_release</id>
-            <name>tennetcn nexus release</name>
-            <url>http://nexus.tennetcn.com/nexus/content/repositories/tennetcn</url>
-        </repository>
-    </distributionManagement>
+
 
     <parent>
         <groupId>org.springframework.boot</groupId>

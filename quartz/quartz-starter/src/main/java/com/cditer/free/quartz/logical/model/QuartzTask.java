@@ -74,4 +74,11 @@ public class QuartzTask extends ModelBase {
     @Column(name="concurrent")
     private String concurrent;
 
+    /**
+     * 清理日志时长
+     * 小时
+     */
+    @Column(name="clear_log_time")
+    private int clearLogTime;
+
 }
