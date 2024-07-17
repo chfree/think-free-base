@@ -19,6 +19,7 @@ import com.cditer.free.quartz.logical.model.QuartzTaskLog;
 import com.cditer.free.quartz.logical.service.IQuartzTaskLogService;
 import com.cditer.free.quartz.logical.service.IQuartzTaskService;
 import com.cditer.free.quartz.logical.viewmodel.QuartzTaskSearch;
+import com.cditer.free.quartz.logical.viewmodel.TaskExecResult;
 import com.cditer.free.quartz.service.IQuartzService;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
@@ -201,10 +202,11 @@ public class QuartzServiceImpl implements IQuartzService {
         taskLog.setExecId(CommonUtils.getTraceId());
         taskLog.setStartTime(DateUtil.date());
         try {
-            new BatchConcurrentJob().invoke(map);
-
-
-
+            TaskExecResult invoke = new BatchConcurrentJob().invoke(map);
+            if(invoke!=null){
+                taskLog.setLogType(invoke.getLogType());
+                taskLog.setExecMessage(invoke.getExecMessage());
+            }
         }catch (Exception ex){
             taskLog.setResult("error");
             taskLog.setErrorMessage(ex.getMessage());

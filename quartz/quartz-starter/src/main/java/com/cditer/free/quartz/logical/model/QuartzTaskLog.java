@@ -99,4 +99,16 @@ public class QuartzTaskLog extends ModelBase {
     @Column(name="error_message")
     private String errorMessage;
 
+    /**
+     * 日志类型
+     */
+    @Column(name="log_type")
+    private String logType;
+
+    /**
+     * 执行消息
+     */
+    @Column(name="exec_message")
+    private String execMessage;
+
 }

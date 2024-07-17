@@ -9,76 +9,75 @@ import com.cditer.free.core.message.data.ModelBase;
 import lombok.Data;
 
 /**
- * @author      auto build code by think
- * @email       chfree001@gmail.com
- * @createtime  2020-02-25 23:12:04
- * @comment     定时任务表
+ * @author auto build code by think
+ * @email chfree001@gmail.com
+ * @createtime 2020-02-25 23:12:04
+ * @comment 定时任务表
  */
 
 @Data
 @Entity
-@Table(name="base_quartz_task")
+@Table(name = "base_quartz_task")
 public class QuartzTask extends ModelBase {
     /**
      * 主键
      */
     @Id
-    @Column(name="id")
+    @Column(name = "id")
     private String id;
 
     /**
      * 任务名称
      */
-    @Column(name="name")
+    @Column(name = "name")
     private String name;
 
     /**
      * 方法名称
      */
-    @Column(name="method_name")
+    @Column(name = "method_name")
     private String methodName;
 
     /**
      * 对象名称
      */
-    @Column(name="bean_name")
+    @Column(name = "bean_name")
     private String beanName;
 
     /**
      * 时间表达式
      */
-    @Column(name="cron")
+    @Column(name = "cron")
     private String cron;
 
     /**
      * 参数
      */
-    @Column(name="parameter")
+    @Column(name = "parameter")
     private String parameter;
 
     /**
      * 描述
      */
-    @Column(name="description")
+    @Column(name = "description")
     private String description;
 
     /**
      * 状态
      */
-    @Column(name="status")
+    @Column(name = "status")
     private String status;
 
     /**
      * 并发标记
      */
-    @Column(name="concurrent")
+    @Column(name = "concurrent")
     private String concurrent;
 
     /**
-     * 清理日志时长
-     * 小时
+     * 清除之前的时间间隔
      */
-    @Column(name="clear_log_time")
-    private int clearLogTime;
+    @Column(name = "clear_before_interval")
+    private int clearBeforeInterval;
 
 }
