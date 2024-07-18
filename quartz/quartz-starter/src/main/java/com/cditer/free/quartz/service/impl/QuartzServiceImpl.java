@@ -202,10 +202,14 @@ public class QuartzServiceImpl implements IQuartzService {
         taskLog.setExecId(CommonUtils.getTraceId());
         taskLog.setStartTime(DateUtil.date());
         try {
-            TaskExecResult invoke = new BatchConcurrentJob().invoke(map);
-            if(invoke!=null){
-                taskLog.setLogType(invoke.getLogType());
-                taskLog.setExecMessage(invoke.getExecMessage());
+            new BatchConcurrentJob().invoke(map);
+
+            Object taskExecResultObj = map.get("taskExecResult");
+            if(taskExecResultObj!=null&& taskExecResultObj instanceof TaskExecResult){
+                TaskExecResult taskExecResult = (TaskExecResult) taskExecResultObj;
+                taskLog.setLogType(taskExecResult.getLogType());
+                taskLog.setExecMessage(taskExecResult.getExecMessage());
+                taskLog.setExecResult(String.valueOf(taskExecResult.isExecResult()));
             }
         }catch (Exception ex){
             taskLog.setResult("error");

@@ -8,6 +8,7 @@ import com.cditer.free.quartz.enums.ExecPhaseEnum;
 import com.cditer.free.quartz.job.commJob.BatchCommonJob;
 import com.cditer.free.quartz.logical.model.QuartzTaskLog;
 import com.cditer.free.quartz.logical.service.IQuartzTaskLogService;
+import com.cditer.free.quartz.logical.viewmodel.TaskExecResult;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 
@@ -77,6 +78,14 @@ public class ThinkJobListener implements JobListener {
         if(e!=null){
             taskLog.setResult("error");
             taskLog.setErrorMessage(e.getMessage());
+        }
+
+        Object taskExecResultObj = jobExecutionContext.getJobDetail().getJobDataMap().get("taskExecResult");
+        if(taskExecResultObj!=null&& taskExecResultObj instanceof TaskExecResult){
+            TaskExecResult taskExecResult = (TaskExecResult) taskExecResultObj;
+            taskLog.setLogType(taskExecResult.getLogType());
+            taskLog.setExecMessage(taskExecResult.getExecMessage());
+            taskLog.setExecResult(String.valueOf(taskExecResult.isExecResult()));
         }
 
         quartzTaskLogService.addModel(taskLog);

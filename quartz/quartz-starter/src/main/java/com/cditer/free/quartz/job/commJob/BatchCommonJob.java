@@ -22,7 +22,7 @@ public abstract class BatchCommonJob implements BaseJob {
     public static final String EXEC_PARAMETER = "EXEC_PARAMETER";
     public static final String TASK_NAME = "TASK_NAME";
 
-    public TaskExecResult invoke(JobDataMap map) throws JobExecutionException {
+    public void invoke(JobDataMap map) throws JobExecutionException {
         String json = null;
         try {
             json = JSONUtil.toJsonStr(map);
@@ -43,10 +43,13 @@ public abstract class BatchCommonJob implements BaseJob {
                 Method mt = clazz.getMethod(method);
                 invoke = mt.invoke(obj);
             }
+            TaskExecResult taskExecResult = null;
             if (invoke instanceof TaskExecResult) {
-                return (TaskExecResult) invoke;
+                taskExecResult = (TaskExecResult) invoke;
+            }else{
+                taskExecResult = TaskExecResult.newResult(true);
             }
-            return TaskExecResult.newResult(true);
+            map.put("taskExecResult", taskExecResult);
         } catch (NoSuchMethodException ne) {
             log.error("execute job fail,no method find. " + json, ne);
             throw new JobExecutionException("execute job fail,no method find. " + ne.getMessage() + ";" + json, ne);

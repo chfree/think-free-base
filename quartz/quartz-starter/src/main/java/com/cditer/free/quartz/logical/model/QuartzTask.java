@@ -73,11 +73,4 @@ public class QuartzTask extends ModelBase {
      */
     @Column(name = "concurrent")
     private String concurrent;
-
-    /**
-     * 清除之前的时间间隔
-     */
-    @Column(name = "clear_before_interval")
-    private int clearBeforeInterval;
-
 }

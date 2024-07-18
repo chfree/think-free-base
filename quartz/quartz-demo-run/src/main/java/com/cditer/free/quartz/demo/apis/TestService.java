@@ -3,6 +3,7 @@ package com.cditer.free.quartz.demo.apis;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.cditer.free.quartz.logical.viewmodel.TaskExecResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,15 +13,16 @@ import org.springframework.stereotype.Component;
  * @comment
  */
 
+@Slf4j
 @Component
 public class TestService {
     public TaskExecResult test() throws Exception{
         long sleepTime = RandomUtil.randomLong(1000,2000);
-        System.out.println("sleepTime:"+sleepTime);
+        log.info("sleepTime:"+sleepTime);
         Thread.sleep(sleepTime);
-        System.out.print(DateUtil.now());
-        System.out.println("test is success");
+        log.info(DateUtil.now());
+        log.info("test is success");
 
-        return TaskExecResult.newResult(true);
+        return TaskExecResult.newResult(true, "info", String.format("执行时长:%s", sleepTime));
     }
 }

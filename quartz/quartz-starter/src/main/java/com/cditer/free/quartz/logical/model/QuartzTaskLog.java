@@ -89,6 +89,7 @@ public class QuartzTaskLog extends ModelBase {
 
     /**
      * 结果
+     * 任务调度情况的执行，非业务结果
      */
     @Column(name="result")
     private String result;
@@ -110,5 +111,12 @@ public class QuartzTaskLog extends ModelBase {
      */
     @Column(name="exec_message")
     private String execMessage;
+
+    /**
+     * 执行结果
+     * 业务返回的执行结果
+     */
+    @Column(name="exec_result")
+    private String execResult;
 
 }
