@@ -27,6 +27,7 @@ import org.quartz.impl.matchers.EverythingMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -52,22 +53,23 @@ public class QuartzServiceImpl implements IQuartzService {
 
     @Override
     public boolean initTask(QuartzTask task) {
-        if(task==null){
+        if (task == null) {
             throw new QuartzBizException("quartz task is null");
         }
         if (!QuartzTaskStatus.OPEN.getValue().equals(task.getStatus())) {
             return false;
         }
+        log.debug("load quartz task:{};scope:{},beanName:{},methodName:{};", task.getName(), task.getScope(), task.getBeanName(), task.getMethodName());
         try {
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
 
-            JobKey jobKey = new JobKey(task.getName(),task.getBeanName());
-            TriggerKey triggerKey = new TriggerKey(task.getName(),task.getBeanName());
+            JobKey jobKey = new JobKey(task.getName(), task.getBeanName());
+            TriggerKey triggerKey = new TriggerKey(task.getName(), task.getBeanName());
 
             Trigger trigger = TriggerBuilder.newTrigger().withIdentity(triggerKey)
                     .withSchedule(CronScheduleBuilder.cronSchedule(task.getCron())).build();
 
-            if(scheduler.checkExists(jobKey)) {
+            if (scheduler.checkExists(jobKey)) {
                 scheduler.unscheduleJob(triggerKey);
                 scheduler.deleteJob(jobKey);
             }
@@ -79,14 +81,14 @@ public class QuartzServiceImpl implements IQuartzService {
                     .setJobData(map).storeDurably().build();
 
             scheduler.scheduleJob(jobDetail, trigger);
-        }catch (Exception ex){
-            log.error("init quartz task for job fail",ex);
-            throw new QuartzBizException("init quartz task for job fail",ex);
+        } catch (Exception ex) {
+            log.error("init quartz task for job fail", ex);
+            throw new QuartzBizException("init quartz task for job fail", ex);
         }
         return true;
     }
 
-    private Class<? extends BatchCommonJob>  getJob(QuartzTask task){
+    private Class<? extends BatchCommonJob> getJob(QuartzTask task) {
         Class<? extends BatchCommonJob> jobClass = null;
         if (QuartzTaskConcurrent.YES.getValue().equals(task.getConcurrent())) {
             jobClass = BatchDisallowConcurrentJob.class;
@@ -98,7 +100,7 @@ public class QuartzServiceImpl implements IQuartzService {
 
     @Override
     public boolean stopTask(QuartzTask task) {
-        if(task==null){
+        if (task == null) {
             throw new QuartzBizException("quartz task is null");
         }
         try {
@@ -106,13 +108,13 @@ public class QuartzServiceImpl implements IQuartzService {
 
             JobKey jobKey = new JobKey(task.getName(), task.getBeanName());
             TriggerKey triggerKey = new TriggerKey(task.getName(), task.getBeanName());
-            if(scheduler.checkExists(jobKey)){
+            if (scheduler.checkExists(jobKey)) {
                 scheduler.unscheduleJob(triggerKey);
                 scheduler.deleteJob(jobKey);
             }
-        }catch (Exception ex){
-            log.error("stop quartz task for job fail",ex);
-            throw new QuartzBizException("stop quartz task for job fail",ex);
+        } catch (Exception ex) {
+            log.error("stop quartz task for job fail", ex);
+            throw new QuartzBizException("stop quartz task for job fail", ex);
         }
         return true;
     }
@@ -132,10 +134,13 @@ public class QuartzServiceImpl implements IQuartzService {
     }
 
     @Override
-    public boolean initAllTask() {
+    public boolean initAllTask(String scope) {
         QuartzTaskSearch search = new QuartzTaskSearch();
         search.setStatus(QuartzTaskStatus.OPEN.getValue());
-        List<QuartzTask> list = quartzTaskService.queryListBySearch(search,null);
+        if (StringUtils.hasText(scope)) {
+            search.setScope(scope);
+        }
+        List<QuartzTask> list = quartzTaskService.queryListBySearch(search, null);
 
         if (list == null) {
             return true;
@@ -147,17 +152,22 @@ public class QuartzServiceImpl implements IQuartzService {
     }
 
     @Override
+    public boolean initAllTask() {
+        return initAllTask(null);
+    }
+
+    @Override
     public boolean stopAllTask() {
         return schedulerClear();
     }
 
-    private boolean schedulerClear(){
+    private boolean schedulerClear() {
         try {
             Scheduler scheduler = schedulerFactoryBean.getScheduler();
             scheduler.clear();
-        }catch (Exception ex){
-            log.error("stop all quartz task for job fail",ex);
-            throw new QuartzBizException("stop all quartz task for job fail",ex);
+        } catch (Exception ex) {
+            log.error("stop all quartz task for job fail", ex);
+            throw new QuartzBizException("stop all quartz task for job fail", ex);
         }
         return true;
     }
@@ -184,11 +194,11 @@ public class QuartzServiceImpl implements IQuartzService {
             jobListener.setQuartzTaskLogService(quartzTaskLogService);
 
             listenerManager.addJobListener(jobListener, EverythingMatcher.allJobs());
-            listenerManager.addTriggerListener(new ThinkTriggerListener(),EverythingMatcher.allTriggers());
+            listenerManager.addTriggerListener(new ThinkTriggerListener(), EverythingMatcher.allTriggers());
             listenerManager.addSchedulerListener(new ThinkSchedulerListener());
-        }catch (Exception ex){
-            log.error("注册listener失败",ex);
-            throw new QuartzBizException("注册listener失败",ex);
+        } catch (Exception ex) {
+            log.error("注册listener失败", ex);
+            throw new QuartzBizException("注册listener失败", ex);
         }
     }
 
@@ -205,20 +215,20 @@ public class QuartzServiceImpl implements IQuartzService {
             new BatchConcurrentJob().invoke(map);
 
             Object taskExecResultObj = map.get("taskExecResult");
-            if(taskExecResultObj!=null&& taskExecResultObj instanceof TaskExecResult){
+            if (taskExecResultObj != null && taskExecResultObj instanceof TaskExecResult) {
                 TaskExecResult taskExecResult = (TaskExecResult) taskExecResultObj;
                 taskLog.setLogType(taskExecResult.getLogType());
                 taskLog.setExecMessage(taskExecResult.getExecMessage());
                 taskLog.setExecResult(String.valueOf(taskExecResult.isExecResult()));
             }
-        }catch (Exception ex){
+        } catch (Exception ex) {
             taskLog.setResult("error");
             taskLog.setErrorMessage(ex.getMessage());
 
-            throw new BizException("QuartzService runTask is error",ex);
-        }finally {
+            throw new BizException("QuartzService runTask is error", ex);
+        } finally {
             taskLog.setEndTime(DateUtil.date());
-            long msDiff=DateUtil.betweenMs(taskLog.getEndTime(),taskLog.getStartTime());
+            long msDiff = DateUtil.betweenMs(taskLog.getEndTime(), taskLog.getStartTime());
             taskLog.setMsDiff(msDiff);
 
             quartzTaskLogService.addModel(taskLog);
@@ -226,7 +236,7 @@ public class QuartzServiceImpl implements IQuartzService {
         return true;
     }
 
-    private QuartzTaskLog getQuartzTaskLog(JobDataMap map){
+    private QuartzTaskLog getQuartzTaskLog(JobDataMap map) {
         QuartzTaskLog taskLog = new QuartzTaskLog();
         taskLog.setId(PkIdUtils.getId());
         taskLog.setRecordTime(DateUtil.date());
@@ -245,7 +255,7 @@ public class QuartzServiceImpl implements IQuartzService {
         map.put(BatchCommonJob.EXEC_SERVICE, entity.getBeanName());
         map.put(BatchCommonJob.EXEC_METHOD, entity.getMethodName());
         map.put(BatchCommonJob.EXEC_PARAMETER, entity.getParameter());
-        map.put(BatchCommonJob.TASK_NAME,entity.getName());
+        map.put(BatchCommonJob.TASK_NAME, entity.getName());
         return map;
     }
 }

@@ -73,4 +73,12 @@ public class QuartzTask extends ModelBase {
      */
     @Column(name = "concurrent")
     private String concurrent;
+
+    /**
+     * 所属系统
+     * 一种场景，比如有三个部署单元，到cron后，每个部署单元要进行执行
+     * 所以一份任务添加3分，initTask的时候部署到所属单元就可以
+     */
+    @Column(name = "scope")
+    private String scope;
 }

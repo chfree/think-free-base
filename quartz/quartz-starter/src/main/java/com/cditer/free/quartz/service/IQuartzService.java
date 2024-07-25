@@ -30,6 +30,9 @@ public interface IQuartzService {
      */
     boolean stopTask(String taskName);
 
+
+    boolean initAllTask(String scope);
+
     /**
      * 初始化所有task
      */
