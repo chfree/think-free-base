@@ -54,4 +54,8 @@ public interface IDataCleanTaskService extends ISuperService<DataCleanTask>{
      */
     boolean saveDataCleanTask(DataCleanTask dataCleanTask);
 
+    /**
+     * 执行一个数据清理任务
+     */
+    void execCleanTask(DataCleanTask dataCleanTask);
 }

@@ -53,4 +53,9 @@ public class DataCleanTaskServiceImpl extends SuperService<DataCleanTask> implem
         return applyChange(dataCleanTask);
     }
 
+    @Override
+    public void execCleanTask(DataCleanTask dataCleanTask) {
+
+    }
+
 }
