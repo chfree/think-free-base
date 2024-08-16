@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cditer.free.common.data.mapper.ICommonLogMapper">
+    <!-- 通用日志Mapper -->
+    <sql id="tableName">base_common_log commonLog</sql>
+    <sql id="mainTableAlias"> commonLog.</sql>
+
+    <sql id="allColumns">
+        commonLog.id,
+        commonLog.bsn_id,
+        commonLog.short_message,
+        commonLog.message,
+        commonLog.bsn_type,
+        commonLog.sub_type,
+        commonLog.thd_type,
+        commonLog.record_start_time,
+        commonLog.record_end_time,
+        commonLog.log_type,
+        commonLog.log_status,
+        commonLog.user_id,
+        commonLog.dept_id,
+        commonLog.role_id,
+        commonLog.comment,
+        commonLog.rmrk1,
+        commonLog.rmrk2
+    </sql>
+
+    <resultMap type="com.cditer.free.common.data.entity.model.CommonLog" id="commonLogMap">
+        <id column="id" property="id"/>    <!-- 主键 -->
+        <result column="bsn_id" property="bsnId"/>    <!-- 业务id -->
+        <result column="short_message" property="shortMessage"/>    <!-- 短消息 -->
+        <result column="message" property="message"/>    <!-- 消息 -->
+        <result column="bsn_type" property="bsnType"/>    <!-- 业务类型 -->
+        <result column="sub_type" property="subType"/>    <!-- 子类型 -->
+        <result column="thd_type" property="thdType"/>    <!-- 第三类型 -->
+        <result column="record_start_time" property="recordStartTime"/>    <!-- 记录开始时间 -->
+        <result column="record_end_time" property="recordEndTime"/>    <!-- 记录结束时间 -->
+        <result column="log_type" property="logType"/>    <!-- 日志类型 -->
+        <result column="log_status" property="logStatus"/>    <!-- 日志状态 -->
+        <result column="user_id" property="userId"/>    <!-- 用户id -->
+        <result column="dept_id" property="deptId"/>    <!-- 部门id -->
+        <result column="role_id" property="roleId"/>    <!-- 角色id -->
+        <result column="comment" property="comment"/>    <!-- 备注 -->
+        <result column="rmrk1" property="rmrk1"/>    <!-- 备注1 -->
+        <result column="rmrk2" property="rmrk2"/>    <!-- 备注2 -->
+    </resultMap>
+
+    <!-- where条件语句：当字段为String时，不为空并且不为空串才作为条件；否则不为空就作为条件-->
+    <sql id="whereSql">
+        <where>
+            <if test="search.id != null  and search.id != ''">
+                and commonLog.id = #{search.id}
+            </if>
+            <if test="search.notId != null  and search.notId != ''">
+                and commonLog.id != #{search.notId}
+            </if>
+            <if test="search.bsnId != null  and search.bsnId != ''">
+                and commonLog.bsn_id = #{search.bsnId}
+            </if>
+            <if test="search.shortMessage != null  and search.shortMessage != ''">
+                and commonLog.short_message = #{search.shortMessage}
+            </if>
+            <if test="search.message != null  and search.message != ''">
+                and commonLog.message = #{search.message}
+            </if>
+            <if test="search.bsnType != null  and search.bsnType != ''">
+                and commonLog.bsn_type = #{search.bsnType}
+            </if>
+            <if test="search.subType != null  and search.subType != ''">
+                and commonLog.sub_type = #{search.subType}
+            </if>
+            <if test="search.thdType != null  and search.thdType != ''">
+                and commonLog.thd_type = #{search.thdType}
+            </if>
+            <if test="search.recordStartTime != null  and search.recordStartTime != ''">
+                and commonLog.record_start_time = #{search.recordStartTime}
+            </if>
+            <if test="search.recordEndTime != null  and search.recordEndTime != ''">
+                and commonLog.record_end_time = #{search.recordEndTime}
+            </if>
+            <if test="search.logType != null  and search.logType != ''">
+                and commonLog.log_type = #{search.logType}
+            </if>
+            <if test="search.logStatus != null  and search.logStatus != ''">
+                and commonLog.log_status = #{search.logStatus}
+            </if>
+            <if test="search.userId != null  and search.userId != ''">
+                and commonLog.user_id = #{search.userId}
+            </if>
+            <if test="search.deptId != null  and search.deptId != ''">
+                and commonLog.dept_id = #{search.deptId}
+            </if>
+            <if test="search.roleId != null  and search.roleId != ''">
+                and commonLog.role_id = #{search.roleId}
+            </if>
+            <if test="search.comment != null  and search.comment != ''">
+                and commonLog.comment = #{search.comment}
+            </if>
+            <if test="search.rmrk1 != null  and search.rmrk1 != ''">
+                and commonLog.rmrk1 = #{search.rmrk1}
+            </if>
+            <if test="search.rmrk2 != null  and search.rmrk2 != ''">
+                and commonLog.rmrk2 = #{search.rmrk2}
+            </if>
+        </where>
+    </sql>
+
+    <resultMap id="commonLogViewMap" extends="commonLogMap" type="com.cditer.free.common.data.entity.viewmodel.CommonLogView">
+
+    </resultMap>
+
+    <select id="queryCountBySearch" resultType="java.lang.Integer">
+        select
+        count(1)
+        from base_common_log commonLog
+        <include refid="whereSql" />
+    </select>
+
+    <sql id="viewSql">
+        select
+        <include refid="allColumns" />
+        from base_common_log commonLog
+    </sql>
+
+    <select id="queryListViewBySearch" resultMap="commonLogViewMap">
+        <include refid="viewSql" />
+        <include refid="whereSql" />
+        order by commonLog.add_date desc
+        limit #{pager.currentSize},#{pager.pageSize}
+    </select>
+
+    <select id="queryModelViewBySearch" resultMap="commonLogViewMap">
+        <include refid="viewSql" />
+        <include refid="whereSql" />
+    </select>
+
+</mapper>
