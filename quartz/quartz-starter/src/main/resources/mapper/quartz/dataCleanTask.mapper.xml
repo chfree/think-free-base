@@ -10,6 +10,7 @@
         dataCleanTask.name,
         dataCleanTask.title,
         dataCleanTask.exec_type,
+        dataCleanTask.exec_cycle,
         dataCleanTask.table_name,
         dataCleanTask.filter,
         dataCleanTask.status,
@@ -23,6 +24,7 @@
         <result column="name" property="name"/>    <!-- 名称 -->
         <result column="title" property="title"/>    <!-- 标题 -->
         <result column="exec_type" property="execType"/>    <!-- 类型 -->
+        <result column="exec_cycle" property="execCycle"/>    <!-- 执行周期 -->
         <result column="table_name" property="tableName"/>    <!-- 表名 -->
         <result column="filter" property="filter"/>    <!-- 过滤条件 -->
         <result column="status" property="status"/>    <!-- 状态 -->
@@ -48,6 +50,9 @@
             </if>
             <if test="search.execType != null  and search.execType != ''">
                 and dataCleanTask.exec_type = #{search.execType}
+            </if>
+            <if test="search.execCycle != null  and search.execCycle != ''">
+                and dataCleanTask.exec_cycle = #{search.execCycle}
             </if>
             <if test="search.tableName != null  and search.tableName != ''">
                 and dataCleanTask.table_name = #{search.tableName}

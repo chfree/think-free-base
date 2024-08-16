@@ -1,5 +1,9 @@
-package com.cditer.free.quartz.service.impl;
+package com.cditer.free.quartz.logical.service.impl;
 
+import com.cditer.free.data.dao.base.ISqlExecutor;
+import com.cditer.free.data.dao.base.ISqlExpression;
+import com.cditer.free.data.utils.SqlExpressionFactory;
+import com.cditer.free.quartz.enums.DataCleanExecType;
 import com.cditer.free.quartz.logical.mapper.IDataCleanTaskMapper;
 import com.cditer.free.quartz.logical.model.DataCleanTask;
 import com.cditer.free.quartz.logical.viewmodel.DataCleanTaskSearch;
@@ -9,6 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.cditer.free.data.dao.base.impl.SuperService;
 import com.cditer.free.core.message.data.PagerModel;
+import org.springframework.util.StringUtils;
+
 import java.util.List;
 
 
@@ -23,6 +29,9 @@ import java.util.List;
 public class DataCleanTaskServiceImpl extends SuperService<DataCleanTask> implements IDataCleanTaskService {
     @Autowired
     IDataCleanTaskMapper dataCleanTaskMapper;
+
+    @Autowired
+    ISqlExecutor sqlExecutor;
 
     @Override
     public int queryCountBySearch(DataCleanTaskSearch search) {
@@ -55,7 +64,19 @@ public class DataCleanTaskServiceImpl extends SuperService<DataCleanTask> implem
 
     @Override
     public void execCleanTask(DataCleanTask dataCleanTask) {
+        if(DataCleanExecType.DATA_TABLE.getValue().equals(dataCleanTask.getExecType())){
+            execDataTable(dataCleanTask);
+        }
+    }
 
+    private void execDataTable(DataCleanTask dataCleanTask) {
+        ISqlExpression delSqlExp = SqlExpressionFactory.createExpression();
+
+        delSqlExp.delete().from(dataCleanTask.getTableName());
+        if(StringUtils.hasText(dataCleanTask.getFilter())){
+            delSqlExp.andWhere(dataCleanTask.getFilter());
+        }
+        sqlExecutor.delete(delSqlExp);
     }
 
 }

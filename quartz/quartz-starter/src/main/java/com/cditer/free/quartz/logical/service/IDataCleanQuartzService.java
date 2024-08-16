@@ -1,4 +1,4 @@
-package com.cditer.free.quartz.service;
+package com.cditer.free.quartz.logical.service;
 
 public interface IDataCleanQuartzService {
     /**

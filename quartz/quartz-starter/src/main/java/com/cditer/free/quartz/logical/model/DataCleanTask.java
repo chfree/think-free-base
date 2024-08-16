@@ -44,6 +44,12 @@ public class DataCleanTask extends ModelBase{
     private String execType;
 
     /**
+     * 执行周期
+     */
+    @Column(name="exec_cycle")
+    private String execCycle;
+
+    /**
      * 表名
      */
     @Column(name="table_name")
