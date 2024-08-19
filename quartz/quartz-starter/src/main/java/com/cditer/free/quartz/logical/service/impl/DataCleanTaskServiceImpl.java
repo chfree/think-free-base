@@ -66,7 +66,21 @@ public class DataCleanTaskServiceImpl extends SuperService<DataCleanTask> implem
     public void execCleanTask(DataCleanTask dataCleanTask) {
         if(DataCleanExecType.DATA_TABLE.getValue().equals(dataCleanTask.getExecType())){
             execDataTable(dataCleanTask);
+            return;
         }
+        if(DataCleanExecType.SHELL.getValue().equals(dataCleanTask.getExecType())){
+            execShell(dataCleanTask);
+            return;
+        }
+        if(DataCleanExecType.SERVICE.getValue().equals(dataCleanTask.getExecType())){
+            execService(dataCleanTask);
+        }
+    }
+
+    private void execService(DataCleanTask dataCleanTask) {
+    }
+
+    private void execShell(DataCleanTask dataCleanTask) {
     }
 
     private void execDataTable(DataCleanTask dataCleanTask) {
@@ -78,5 +92,4 @@ public class DataCleanTaskServiceImpl extends SuperService<DataCleanTask> implem
         }
         sqlExecutor.delete(delSqlExp);
     }
-
 }
