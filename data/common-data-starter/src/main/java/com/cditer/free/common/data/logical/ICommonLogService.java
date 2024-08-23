@@ -53,4 +53,13 @@ public interface ICommonLogService extends ISuperService<CommonLog>{
      */
     boolean saveCommonLog(CommonLog commonLog);
 
+    void setLoginModel(CommonLog commonLog);
+
+    void info(String bsnType,String bsnId,String shortMessage);
+
+    void warn(String bsnType,String bsnId,String shortMessage);
+
+    void debug(String bsnType,String bsnId,String shortMessage);
+
+    void error(String bsnType,String bsnId,String shortMessage);
 }

@@ -76,6 +76,7 @@ public class CommonLog extends ModelBase{
 
     /**
      * 日志类型
+     * 比如Info/Debug/Error/Warn
      */
     @Column(name="log_type")
     private String logType;
